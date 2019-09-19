@@ -48,7 +48,7 @@ app.use(logger('dev'));
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        var dest = 'files';//`files/${Date.now()}/`;
+        var dest = 'public/files';//`files/${Date.now()}/`;
         //mkdirp.sync(dest);
         cb(null, dest)
     },
@@ -74,6 +74,7 @@ async function updateLatest(document){
         latest.ogName = document.ogName;
         latest.latestName = document.name;
         latest.fileBsonId = document._id;
+        latest.versions.push(document.name);
         
         latest.revisions = 1;
         latest.save().then(() => {
@@ -88,6 +89,7 @@ async function updateLatest(document){
 
         exists.latestName = document.name;
         exists.fileBsonId = document._id;
+        exists.versions.push(document.name);
 
         exists.save()
           .then(() => {

@@ -6,7 +6,6 @@ const Document = new Schema(
         id: {type: Number},
         ogName: { type: String, required: true },
         name: { type: String, required: true },
-        versions: { type: [String], required: true },
         // rating: { type: Number, required: true },
     },
     { timestamps: true },

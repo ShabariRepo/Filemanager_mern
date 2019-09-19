@@ -1,9 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import UploadForm from './Components/Upload';
+import Dashboard from './Components/Dashboard';
+
+const routing = (
+    <Router>
+        <div>
+            <Route exact path="/" component={App} />
+            <Route path="/upload" component={UploadForm} />
+            {/* <Route path="/contact" component={Contact} /> */}
+        </div>
+    </Router>
+)
+
+// ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(routing, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
