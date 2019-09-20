@@ -1,0 +1,2 @@
+export const ADD_DOCUMENNT = "ADD_DOCUMENT";
+export const FETCH_DOCUMENTS = "FETCH_DOCUMENTS";

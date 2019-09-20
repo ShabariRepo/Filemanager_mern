@@ -14,9 +14,10 @@ const Doc = require('./models/document');
  */
 const API_PORT = 8000;
 
-
 var app = express();
 app.use(cors());
+// make the folder static & momunt
+app.use(express.static('./public')) 
 const router = express.Router();
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
@@ -162,14 +163,21 @@ router.delete('/deleteData', (req, res) => {
     });
   });
 
-  router.delete('/deleteLatest', (req, res) => {
-    const { id } = req.body;
-    Latest.findOneAndDelete(id, (err) => {
-      if (err) return res.send(err);
-      return res.json({ success: true });
-    });
+router.delete('/deleteLatest', (req, res) => {
+  const { id } = req.body;
+  Latest.findOneAndDelete(id, (err) => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
   });
+});
 
+// get all the latest docs
+router.get('/getLatest', (req, res) => {
+  Latest.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
 /*  sample apis
 
 // this method fetches all available data in our database
