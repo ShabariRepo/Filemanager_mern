@@ -178,6 +178,14 @@ router.get('/getLatest', (req, res) => {
     return res.json({ success: true, data: data });
   });
 });
+
+// get all individual docs
+router.get('/getAllDocs', (req, res) => {
+  Doc.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
 /*  sample apis
 
 // this method fetches all available data in our database

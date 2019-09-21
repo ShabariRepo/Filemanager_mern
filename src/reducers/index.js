@@ -1,7 +1,7 @@
 import { ADD_DOCUMENNT, FETCH_DOCUMENTS } from "../actions/types";
 
 const initialState = {
-  documentsId: [],
+  documents: [],
   documentsHash: {}
 };
 function rootReducer(state = initialState, action) {
@@ -12,9 +12,8 @@ function rootReducer(state = initialState, action) {
         documents: state.documents.concat(action.payload)
       });
     case FETCH_DOCUMENTS:
-        return Object.assign({}, state, {
-          documents: state.documents.concat(action.payload)
-        });
+        state.documents = action.payload;
+        return state;
       // return {
       //   documentsHash: {
       //     ...state.documentsHash,
