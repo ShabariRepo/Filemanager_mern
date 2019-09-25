@@ -44,19 +44,20 @@ function App() {
               <Menu.Item as={Link} to="/">Overview</Menu.Item>
               {/* <NavLink to="/upload">Upload</NavLink> */}
               <Menu.Item as={Link} to="/upload">Upload</Menu.Item>
-              <Menu.Item as="a">Reports</Menu.Item>
-              <Menu.Item as="a">Analytics</Menu.Item>
-              <Menu.Item as="a">Export</Menu.Item>
               <Divider hidden />
-              <Menu.Item as="a">Nav item</Menu.Item>
-              <Menu.Item as="a">Nav item again</Menu.Item>
-              <Menu.Item as="a">One more nav</Menu.Item>
-              <Menu.Item as="a">Another nav item</Menu.Item>
-              <Menu.Item as="a">More navigation</Menu.Item>
+              <Menu.Item as="a">Reports (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Analytics (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Export (coming soon..)</Menu.Item>
+              {/* <Divider hidden />
+              <Menu.Item as="a">Nav item (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Nav item again (coming soon..)</Menu.Item>
+              <Menu.Item as="a">One more nav (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Another nav item (coming soon..)</Menu.Item>
+              <Menu.Item as="a">More navigation (coming soon..)</Menu.Item>
               <Divider hidden />
-              <Menu.Item as="a">Macintoch</Menu.Item>
-              <Menu.Item as="a">Linux</Menu.Item>
-              <Menu.Item as="a">Windows</Menu.Item>
+              <Menu.Item as="a">Macintoch (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Linux (coming soon..)</Menu.Item>
+              <Menu.Item as="a">Windows (coming soon..)</Menu.Item> */}
             </Menu>
           </Grid.Column>
           <Grid.Column
