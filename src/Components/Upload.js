@@ -37,11 +37,11 @@ class Upload extends Component {
     return (
       <Container fluid>
         <Header as="h2">Upload a file</Header>
-        <div class="row" style={{ textAlign: "center" }}>
-          <div class="col-md-12">
+        <div className="row" style={{ textAlign: "center" }}>
+          <div className="col-md-12">
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="#">
-                <div class="form-group files" style={{ paddingTop: 99 }}>
+                <div className="form-group files" style={{ paddingTop: 99 }}>
                   <label>Upload Your File </label>
                   <input
                     type="file"
@@ -53,7 +53,7 @@ class Upload extends Component {
             </div>
 
             <Button animated="vertical"
-              color="red"
+              color="blue"
               // content="Like"
               size='massive'
               style={{ marginTop: 20 }}
