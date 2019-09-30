@@ -12,6 +12,7 @@ import "./App.css";
 
 import UploadForm from './Components/Upload';
 import Dashboard from './Components/Dashboard';
+import File from './Components/FileView';
 
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
             {/* <Dashboard /> */}
             <Route exact path="/" component={Dashboard} />
             <Route path="/upload" component={UploadForm} />
+            <Route path="/file" component={File} />
           </Switch>
           </Grid.Column>
         </Grid>

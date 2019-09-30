@@ -10,6 +10,10 @@ class Upload extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   onChangeHandler = event => {
     this.setState({
       selectedFile: event.target.files[0],
@@ -24,7 +28,7 @@ class Upload extends Component {
     console.log(data);
     console.log(this.state.selectedFile);
     axios
-      .post("http://localhost:8000/api/upload", data, {
+      .post("http://localhost:49160/api/upload", data, {
         // receive two parameter endpoint url ,form data
       })
       .then(res => {
@@ -57,6 +61,7 @@ class Upload extends Component {
               // content="Like"
               size='massive'
               style={{ marginTop: 20 }}
+              onClick={this.onClickHandler}
             >
               <Button.Content hidden>
                 Upload

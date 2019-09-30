@@ -12,8 +12,8 @@ import {
 
 import image from '../static/images/square-image.png'
 import axios from 'axios'
-import _ from 'lodash'
 import Loader from 'react-loader-spinner';
+import { Link } from "react-router-dom";
 
 class Dashboard extends Component {
   state = {
@@ -49,7 +49,7 @@ class Dashboard extends Component {
   getLatestPosts = async () => {
     // this.setState({ loading: true });
     await axios
-      .get("http://localhost:8000/api/getLatest")
+      .get("http://localhost:49160/api/getLatest")
       .then(response => {
         console.log(response.data.data);
         this.setState({ latest: response.data.data, 
@@ -72,7 +72,20 @@ class Dashboard extends Component {
       let children = [];
       
       
-      children.push(<Table.Cell key={1}>{element.ogName}</Table.Cell>);
+      children.push(
+        <Table.Cell key={1}>
+          <Link
+            to={{
+              pathname: "/file",
+              state: {
+                selectedFile: element.ogName
+              }
+            }}
+          >
+            {element.ogName}
+          </Link>
+        </Table.Cell>
+      );
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);

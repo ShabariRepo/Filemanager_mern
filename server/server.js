@@ -186,6 +186,23 @@ router.get('/getAllDocs', (req, res) => {
     return res.json({ success: true, data: data });
   });
 });
+
+// get all files named that original name
+getDocsByOg = async (req, res) => {
+  //let exists = await Latest.findOne({"ogName": document.ogName});
+  const { ogName } = req.body;
+  // console.log(req);
+  await Doc.find( {"ogName": ogName}, (err, data) => {
+    if(err) return res.json({ success: false, error: err});
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  });
+}
+
+router.post('/getDoc', getDocsByOg)
+
 /*  sample apis
 
 // this method fetches all available data in our database

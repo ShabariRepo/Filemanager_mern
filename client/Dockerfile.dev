@@ -7,5 +7,4 @@ RUN npm install
 
 copy . .
 
-CMD ["nodemon", "server.js"]
 CMD ["npm", "run", "start"]
