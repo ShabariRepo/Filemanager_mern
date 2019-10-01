@@ -65,6 +65,7 @@ var upload = multer({ storage: storage }).single('file')
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ API ENDPOINT SECTION (EXPRESS) */
 // delete the file from the file system
 const deleteFile = (file) => {
+  console.log(`inside delete file to unlink:  ${file}`);
   fs.unlink("/public/files/"+file, (err) => {
     if (err) console.log(err);
   })
@@ -95,6 +96,7 @@ async function updateLatest(document, remove){
         return;
     } else {
         if (remove) {
+          console.log('inside removing the file');
           // shouldn't be able to delete latest
           if(exists.latestName === document.name){
             console.log(`Cannot Delete latest version please override if you want to delete latest`);
@@ -208,7 +210,7 @@ router.post('/upload', function (req, res) {
 });
 
 router.delete('/deleteDoc', function(req, res){
-  console.log(req)
+  console.log(req.body)
   const { name } = req.body;
   Doc.findOneAndRemove({ "name": name }, (err, doc, result) => {
     if(err) return res.send(err);

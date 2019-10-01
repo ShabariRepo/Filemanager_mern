@@ -75,7 +75,13 @@ class File extends Component {
 
     try{
       const res = await axios.delete("http://10.228.19.13:49160/api/deleteDoc", {
-        name: versionName
+        headers: {
+          Authorization: "token"
+        }
+      }, {
+        data: {
+          name: versionName
+        }
       })
         
       this.setState({
