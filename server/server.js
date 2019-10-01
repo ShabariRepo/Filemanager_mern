@@ -64,10 +64,10 @@ var upload = multer({ storage: storage }).single('file')
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ API ENDPOINT SECTION (EXPRESS) */
 // delete the file from the file system
-function deleteFile(file){
+const deleteFile = (file) => {
   fs.unlink("/public/files/"+file, (err) => {
     if (err) console.log(err);
-  }
+  })
 }
 
 /// put for update without incomming https
