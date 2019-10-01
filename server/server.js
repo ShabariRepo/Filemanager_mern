@@ -30,7 +30,7 @@ const dbRoute = 'mongodb://10.228.19.13:27017/documents'
 //'mongodb://<your-db-username-here>:<your-db-password-here>@ds249583.mlab.com:49583/fullstack_app';
 
 // connects our back end code with the database
-mongoose.connect(dbRoute, { useNewUrlParser: true });
+mongoose.connect(dbRoute, { useNewUrlParser: true, useFindAndModify: false });
 
 let db = mongoose.connection;
 
