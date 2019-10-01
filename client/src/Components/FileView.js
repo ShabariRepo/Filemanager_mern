@@ -63,6 +63,7 @@ class File extends Component {
   // delete version
   deleteVersion = async versionName => {
     console.log('deleting version' + versionName);
+    console.log(this.state.selectedFile);
     if(versionName === this.state.selectedFile){
       console.log('cannot delete latest version');
       return;
