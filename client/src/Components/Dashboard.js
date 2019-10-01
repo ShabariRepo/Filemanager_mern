@@ -78,7 +78,8 @@ class Dashboard extends Component {
             to={{
               pathname: "/file",
               state: {
-                selectedFile: element.ogName
+                selectedFile: element.ogName,
+                latestVersion: element.latestName
               }
             }}
           >

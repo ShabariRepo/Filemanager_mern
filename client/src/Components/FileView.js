@@ -28,7 +28,8 @@ class File extends Component {
   componentDidMount() {
     console.log(this.props.location);
     this.setState({
-      selectedFile: this.props.location.state.selectedFile
+      selectedFile: this.props.location.state.selectedFile,
+      latestVersion: this.props.location.state.latestVersion
     });
 
     this.displayAllFiles(this.props.location.state.selectedFile);
@@ -64,7 +65,7 @@ class File extends Component {
   deleteVersion = async versionName => {
     console.log('deleting version' + versionName);
     console.log(this.state.selectedFile);
-    if(versionName === this.state.selectedFile){
+    if(versionName === this.state.latestVersion){
       console.log('cannot delete latest version');
       return;
     }
@@ -73,7 +74,7 @@ class File extends Component {
     });
 
     try{
-      const res = await axios.post("http://10.228.19.13:49160/api/deleteDoc", {
+      const res = await axios.delete("http://10.228.19.13:49160/api/deleteDoc", {
         name: versionName
       })
         
