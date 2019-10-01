@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const Latest = require('./models/data');
 const Doc = require('./models/document');
+const fs = require('fs');
 
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,8 +63,15 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('file')
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ API ENDPOINT SECTION (EXPRESS) */
+// delete the file from the file system
+function deleteFile(file){
+  fs.unlink("/public/files/"+file, (err) => {
+    if (err) console.log(err);
+  }
+}
+
 /// put for update without incomming https
-async function updateLatest(document){
+async function updateLatest(document, remove){
 
     let exists = await Latest.findOne({"ogName": document.ogName});
 
@@ -86,22 +94,69 @@ async function updateLatest(document){
         });
         return;
     } else {
-        exists.revisions = exists.revisions + 1;
+        if (remove) {
+          // shouldn't be able to delete latest
+          if(exists.latestName === document.name){
+            console.log(`Cannot Delete latest version please override if you want to delete latest`);
+            return;
+          }
 
-        exists.latestName = document.name;
-        exists.fileBsonId = document._id;
-        exists.versions.push(document.name);
+          exists.revisions = (exists.revisions > 0) ? exists.revisions - 1 : exists.revisions;
 
-        exists.save()
-          .then(() => {
-            console.log(`saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`);
-          })
-         .catch(err => {
-          console.log(err);
-        });
+          
+          // if the last one is removed then remove the latest document
+          if(exists.versions == 0){
+            exists.remove().then(() => {
+              console.log(`removed file from latest cuz it was the only one and was deleted ${exists._id}`)
+            });
+            return;
+          }
+          
+          // if array contains the given name then remove it at the index
+          if(exists.versions.includes(document.name)){
+            let idx = exists.versions.lastIndexOf(document.name);
+            exists.versions.splice(idx, 1);
+          } else{
+            console.log(`this file did not exist in the versions array ${document.name}`);
+            return;
+          }
 
-        // //latest.save();
-        return;
+          // else save the document with 1 version less and check if the latest was removed
+          deleteFile(document.name);
+          exists
+            .save()
+            .then(() => {
+              console.log(
+                `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
+              );
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
+          // //latest.save();
+          return;
+        } else {
+          exists.revisions = exists.revisions + 1;
+
+          exists.latestName = document.name;
+          exists.fileBsonId = document._id;
+          exists.versions.push(document.name);
+
+          exists
+            .save()
+            .then(() => {
+              console.log(
+                `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
+              );
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
+          // //latest.save();
+          return;
+        }
     }
 }
 
@@ -128,7 +183,7 @@ router.post('/upload', function (req, res) {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data);
+            updateLatest(data, false);
             return res.status(201).json({
                 success: true,
                 id: data._id,
@@ -152,6 +207,16 @@ router.post('/upload', function (req, res) {
 
 });
 
+router.delete('/deleteDoc', function(req, res){
+  const { name } = req.body;
+  Doc.findOneAndRemove({ "name": name }, (err, doc, result) => {
+    if(err) return res.send(err);
+
+    console.log(doc);
+    updateLatest(doc, true);
+    return res.json({ success: true });
+  })
+});
 
 // this is our delete method
 // this method removes existing data in our database

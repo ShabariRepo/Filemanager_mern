@@ -5,7 +5,9 @@ import {
   Grid,
   Header,
   Table,
-  Container
+  Container,
+  Button,
+  Icon
 } from "semantic-ui-react";
 import Loader from 'react-loader-spinner';
 
@@ -58,6 +60,30 @@ class File extends Component {
     }
   };
 
+  // delete version
+  deleteVersion = async versionName => {
+    console.log('deleting version' + versionName);
+    if(versionName === this.state.selectedFile){
+      console.log('cannot delete latest version');
+      return;
+    }
+    this.setState({
+      loading: true
+    });
+
+    try{
+      const res = await axios.post("http://10.228.19.13:49160/api/deleteDoc", {
+        name: versionName
+      })
+        
+      this.setState({
+        loading: false
+      });
+    } catch (err){
+      console.log(err);
+    }
+  }
+
   populateTable = () => {
     console.log(this.state.versions);
 
@@ -77,6 +103,22 @@ class File extends Component {
         );
         children.push(<Table.Cell key={3}><TimeAgo date={element.createdAt} /></Table.Cell>);
         children.push(<Table.Cell key={5}>download</Table.Cell>);
+        children.push(<Table.Cell key={5}>
+          <Button animated="vertical"
+            color="red"
+            // content="Like"
+            size='massive'
+            style={{ marginTop: 20 }}
+            onClick={this.deleteVersion(element.name)}
+          >
+            <Button.Content hidden>
+              Delete
+            </Button.Content>
+            <Button.Content visible>
+              <Icon name="trash" />
+            </Button.Content>
+          </Button>
+        </Table.Cell>);
         table.push(<Table.Row key={element._id} children={children} />);
       });
 
@@ -107,6 +149,7 @@ class File extends Component {
                     <Table.HeaderCell>Version Name</Table.HeaderCell>
                     <Table.HeaderCell>Updated At</Table.HeaderCell>
                     <Table.HeaderCell>Download Version</Table.HeaderCell>
+                    <Table.HeaderCell>Delete Version</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>{this.populateTable()}</Table.Body>
