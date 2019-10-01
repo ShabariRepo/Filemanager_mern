@@ -28,7 +28,7 @@ class Upload extends Component {
     console.log(data);
     console.log(this.state.selectedFile);
     axios
-      .post("http://localhost:49160/api/upload", data, {
+      .post("http://10.228.19.13:49160/api/upload", data, {
         // receive two parameter endpoint url ,form data
       })
       .then(res => {

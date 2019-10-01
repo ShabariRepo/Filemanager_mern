@@ -42,7 +42,7 @@ class File extends Component {
     console.log('in display files');
     console.log(this.state.selectedFile);
     try {
-      const res = await axios.post("http://localhost:49160/api/getDoc", {
+      const res = await axios.post("http://10.228.19.13:49160/api/getDoc", {
         ogName: selectedFile
       });
 

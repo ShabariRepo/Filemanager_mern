@@ -49,7 +49,7 @@ class Dashboard extends Component {
   getLatestPosts = async () => {
     // this.setState({ loading: true });
     await axios
-      .get("http://localhost:49160/api/getLatest")
+      .get("http://10.228.19.13:49160/api/getLatest")
       .then(response => {
         console.log(response.data.data);
         this.setState({ latest: response.data.data, 
