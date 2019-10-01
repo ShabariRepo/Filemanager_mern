@@ -79,6 +79,8 @@ class File extends Component {
       this.setState({
         loading: false
       });
+
+      console.log(res);
     } catch (err){
       console.log(err);
     }
