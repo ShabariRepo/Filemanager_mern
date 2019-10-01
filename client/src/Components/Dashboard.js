@@ -204,7 +204,7 @@ class Dashboard extends Component {
         <Divider section hidden />
         <Grid.Row>
           <Header dividing size="huge" as="h1">
-            All Files
+            All Latest Versions
           </Header>
           {this.state.loading ? (
             <Loader type="Puff" color="#2BAD60" height={100} width={100} />

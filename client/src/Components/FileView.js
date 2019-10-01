@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import TimeAgo from 'react-timeago';
 import axios from "axios";
 import { 
   Grid,
@@ -74,7 +75,7 @@ class File extends Component {
               {element.name}
           </Table.Cell>
         );
-        children.push(<Table.Cell key={3}>{element.createdAt}</Table.Cell>);
+        children.push(<Table.Cell key={3}><TimeAgo date={element.createdAt} /></Table.Cell>);
         children.push(<Table.Cell key={5}>download</Table.Cell>);
         table.push(<Table.Row key={element._id} children={children} />);
       });
