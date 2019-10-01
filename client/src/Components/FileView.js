@@ -109,7 +109,7 @@ class File extends Component {
             // content="Like"
             size='massive'
             style={{ marginTop: 20 }}
-            onClick={this.deleteVersion(element.name)}
+            onClick={() => this.deleteVersion(element.name)}
           >
             <Button.Content hidden>
               Delete
