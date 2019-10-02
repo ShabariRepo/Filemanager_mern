@@ -97,10 +97,11 @@ async function updateLatest(document, remove){
     } else {
         if (remove) {
           console.log('inside removing the file');
+          var latestFlag = false;
           // shouldn't be able to delete latest
           if(exists.latestName === document.name){
             console.log(`Cannot Delete latest version please override if you want to delete latest`);
-            return;
+            latestFlag = true;
           }
 
           exists.revisions = (exists.revisions > 0) ? exists.revisions - 1 : exists.revisions;
@@ -117,7 +118,15 @@ async function updateLatest(document, remove){
           // if array contains the given name then remove it at the index
           if(exists.versions.includes(document.name)){
             let idx = exists.versions.lastIndexOf(document.name);
-            exists.versions.splice(idx, 1);
+            
+            if(latestFlag){
+              let prior = idx - 1;
+              exists.latestName = exists.versions[prior];
+              exists.versions.splice(idx, 1);
+              console.log(`Deleting latest version ${exists.versions[idx]} and moving previous up ${exists.versions[prior]}`);
+            } else {
+              exists.versions.splice(idx, 1);
+            }
           } else{
             console.log(`this file did not exist in the versions array ${document.name}`);
             return;
