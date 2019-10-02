@@ -74,15 +74,15 @@ class File extends Component {
     });
 
     try{
-      const res = await axios.delete("http://10.228.19.13:49160/api/deleteDoc", {
-        headers: {
-          Authorization: "token"
-        }
-      }, {
-        data: {
-          name: versionName
-        }
-      })
+      const res = await axios.delete(
+        "http://10.228.19.13:49160/api/deleteDoc",
+        {headers: {
+          Authorization: "authorizationToken"
+        },
+        data:{
+          source:versionName
+        }}
+      );
         
       this.setState({
         loading: false
