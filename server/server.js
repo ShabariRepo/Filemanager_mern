@@ -211,8 +211,8 @@ router.post('/upload', function (req, res) {
 
 router.delete('/deleteDoc', function(req, res){
   console.log(req.body)
-  const { name } = req.body;
-  Doc.findOneAndRemove({ "name": name }, (err, doc, result) => {
+  const { source } = req.body;
+  Doc.findOneAndRemove({ "name": source }, (err, doc, result) => {
     if(err) return res.send(err);
 
     console.log(doc);
