@@ -66,7 +66,7 @@ var upload = multer({ storage: storage }).single('file')
 // delete the file from the file system
 const deleteFile = (file) => {
   console.log(`inside delete file to unlink:  ${file}`);
-  fs.unlink("/public/files/"+file, (err) => {
+  fs.unlink("public/files/"+file, (err) => {
     if (err) console.log(err);
   })
 }
