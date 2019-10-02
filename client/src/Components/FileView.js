@@ -137,7 +137,7 @@ class File extends Component {
 
   render() {
     return (
-      <Container fluid>
+      <Container>
         <Grid padded>
           <div class="ui teal raised segment">
             <a class="ui blue ribbon label">{this.state.selectedFile}</a>
