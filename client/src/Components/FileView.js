@@ -66,8 +66,8 @@ class File extends Component {
     console.log('deleting version' + versionName);
     console.log(this.state.selectedFile);
     if(versionName === this.state.latestVersion){
-      console.log('cannot delete latest version');
-      return;
+      console.log('deleting latest version');
+      // return;
     }
     this.setState({
       loading: true
