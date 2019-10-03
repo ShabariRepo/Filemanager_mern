@@ -198,6 +198,8 @@ router.post('/upload', function (req, res) {
             return res.status(201).json({
                 success: true,
                 id: data._id,
+                data: data,
+                url: `http://10.228.19.13:3000/files/${data.name}`,
                 message: 'Document uploaded!',
             })
         })
