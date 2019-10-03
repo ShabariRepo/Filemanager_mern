@@ -117,7 +117,7 @@ class File extends Component {
           <Button animated="vertical"
             color="red"
             // content="Like"
-            size='massive'
+            size='large'
             style={{ marginTop: 20 }}
             onClick={() => this.deleteVersion(element.name)}
           >
