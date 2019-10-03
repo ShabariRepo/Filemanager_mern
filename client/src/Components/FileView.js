@@ -107,7 +107,7 @@ class File extends Component {
           </Table.Cell>
         );
         children.push(
-          <Table.Cell key={2} style={{ wordWrap: 'break-word' }}>
+          <Table.Cell key={2} style={{ whiteSpace: 'unset', wordWrap: 'break-word' }}>
               {element.name}
           </Table.Cell>
         );
