@@ -234,7 +234,7 @@ router.delete('/deleteDoc', function(req, res){
 // this method removes existing data in our database
 router.delete('/deleteData', (req, res) => {
     const { id } = req.body;
-    Doc.findOneAndDelete(id, (err) => {
+    Doc.findOneAndDelete({ "_id": id }, (err) => {
       if (err) return res.send(err);
       return res.json({ success: true });
     });
@@ -242,7 +242,7 @@ router.delete('/deleteData', (req, res) => {
 
 router.delete('/deleteLatest', (req, res) => {
   const { id } = req.body;
-  Latest.findOneAndDelete(id, (err) => {
+  Latest.findOneAndDelete({ "_id": id }, (err) => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
