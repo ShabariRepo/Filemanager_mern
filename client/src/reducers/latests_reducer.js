@@ -84,7 +84,7 @@ export default function(state = initialState, action) {
             ...state.dHash[exists._id],
             exists
           }
-          console.log(...state);
+         // console.log(...state);
 
           return {
             ...state
