@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import TimeAgo from 'react-timeago';
+import TimeAgo from "react-timeago";
 import axios from "axios";
-import { 
+import {
   Grid,
   Header,
   Table,
@@ -9,7 +9,12 @@ import {
   Button,
   Icon
 } from "semantic-ui-react";
-import Loader from 'react-loader-spinner';
+import Loader from "react-loader-spinner";
+import _ from "lodash";
+import { connect } from "react-redux";
+import { deleteDocument } from "../actions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class File extends Component {
   // constructor(props) {
@@ -22,17 +27,36 @@ class File extends Component {
   state = {
     selectedFile: null,
     loading: true,
-    versions: []
+    versions: [],
+    docs: this.props.docs
   };
 
   componentDidMount() {
-    console.log(this.props.location);
+    console.log("in did mount FileView.js");
     this.setState({
       selectedFile: this.props.location.state.selectedFile,
       latestVersion: this.props.location.state.latestVersion
     });
 
+    console.log(this.props);
+
     this.displayAllFiles(this.props.location.state.selectedFile);
+  }
+
+  
+  //toastify message
+  notify = () => toast("Deleted File!!");
+
+  componentWillReceiveProps(nextProps) {
+    console.log("in will receive FileView.js");
+    console.log(nextProps);
+
+    this.setState({
+      loading: false,
+      docs: nextProps.docs
+    });
+
+    this.notify();
   }
 
   onChangeHandler = event => {
@@ -42,9 +66,22 @@ class File extends Component {
     });
   };
 
-  displayAllFiles = async (selectedFile) => {
-    console.log('in display files');
+  displayAllFiles = async selectedFile => {
+    console.log("in display files");
     console.log(this.state.selectedFile);
+    // var arr = _.map(this.state.docs, doc => {
+    //   return doc.ogName === selectedFile;
+    // });
+
+    // var sid = _.filter(this.state.docs, doc => {
+    //   return doc.ogName === selectedFile;
+    // });
+    //// Remove undefines from the array
+    // johns = _.without(johns, undefined)
+
+    // console.log(arr);
+    // console.log(sid);
+
     try {
       const res = await axios.post("http://10.228.19.13:49160/api/getDoc", {
         ogName: selectedFile
@@ -62,82 +99,79 @@ class File extends Component {
   };
 
   // delete version
-  deleteVersion = async versionName => {
-    console.log('deleting version' + versionName);
+  deleteVersion = versionName => {
+    console.log("deleting version" + versionName);
     console.log(this.state.selectedFile);
-    if(versionName === this.state.latestVersion){
-      console.log('deleting latest version');
+    if (versionName === this.state.latestVersion) {
+      console.log("deleting latest version");
       // return;
     }
     this.setState({
       loading: true
     });
 
-    try{
-      const res = await axios.delete(
-        "http://10.228.19.13:49160/api/deleteDoc",
-        {headers: {
-          Authorization: "authorizationToken"
-        },
-        data:{
-          source:versionName
-        }}
-      );
-        
-      this.setState({
-        loading: false
-      });
-
-      console.log(res);
-    } catch (err){
-      console.log(err);
-    }
-  }
+    this.props.deleteDocument(versionName);
+  };
 
   populateTable = () => {
     console.log(this.state.versions);
 
     let table = [];
-      this.state.versions.forEach(element => {
-        let children = [];
+    this.state.versions.forEach(element => {
+      let children = [];
 
-        children.push(
-          <Table.Cell key={1}>
-              {element.ogName}
-          </Table.Cell>
-        );
-        children.push(
-          <Table.Cell key={2} style={{ whiteSpace: 'unset', wordWrap: 'break-word' }}>
-              {element.name}
-          </Table.Cell>
-        );
-        children.push(<Table.Cell key={3}><TimeAgo date={element.createdAt} /></Table.Cell>);
-        children.push(<Table.Cell key={5}>download</Table.Cell>);
-        children.push(<Table.Cell key={5}>
-          <Button animated="vertical"
+      children.push(<Table.Cell key={1}>{element.ogName}</Table.Cell>);
+      children.push(
+        <Table.Cell
+          key={2}
+          style={{ whiteSpace: "unset", wordWrap: "break-word" }}
+        >
+          {element.name}
+        </Table.Cell>
+      );
+      children.push(
+        <Table.Cell key={3}>
+          <TimeAgo date={element.createdAt} />
+        </Table.Cell>
+      );
+      children.push(<Table.Cell key={5}>download</Table.Cell>);
+      children.push(
+        <Table.Cell key={5}>
+          <Button
+            animated="vertical"
             color="red"
             // content="Like"
-            size='large'
+            size="large"
             style={{ marginTop: 20 }}
             onClick={() => this.deleteVersion(element.name)}
           >
-            <Button.Content hidden>
-              Delete
-            </Button.Content>
+            <Button.Content hidden>Delete</Button.Content>
             <Button.Content visible>
               <Icon name="trash" />
             </Button.Content>
           </Button>
-        </Table.Cell>);
-        table.push(<Table.Row key={element._id} children={children} />);
-      });
+        </Table.Cell>
+      );
+      table.push(<Table.Row key={element._id} children={children} />);
+    });
 
-      return table;
-  }
+    return table;
+  };
 
   render() {
     return (
       <Container fluid>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <Grid padded>
           <div class="ui teal raised segment">
             <a class="ui blue ribbon label">{this.state.selectedFile}</a>
@@ -172,4 +206,14 @@ class File extends Component {
   }
 }
 
-export default File;
+const mapStateToProps = ({ documents }) => {
+  console.log("in map state to props FileView.js");
+  //console.log(documents);
+
+  return { docs: documents };
+};
+
+export default connect(
+  mapStateToProps,
+  { deleteDocument }
+)(File);

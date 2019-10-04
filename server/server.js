@@ -228,7 +228,11 @@ router.delete('/deleteDoc', function(req, res){
 
     console.log(doc);
     updateLatest(doc, true);
-    return res.json({ success: true });
+    return res.json({ 
+      success: true,
+      data: doc,
+      message: "document deleted!"
+    });
   })
 });
 
