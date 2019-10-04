@@ -1,7 +1,8 @@
 import {
   ADD_DOCUMENNT,
   FETCH_DOCUMENT,
-  DELETE_DOCUMENT
+  DELETE_DOCUMENT,
+  FETCH_ALL_DOCUMENTS
 } from "../actions/types";
 
 const initialState = {
