@@ -58,9 +58,14 @@ class File extends Component {
     console.log("in will receive FileView.js");
     console.log(nextProps);
 
+    let vrs = _.filter(nextProps.docs, doc => {
+      return doc.ogName === this.state.selectedFile;
+    });
+
     this.setState({
       loading: false,
-      docs: nextProps.docs
+      docs: nextProps.docs,
+      versions: vrs
     });
 
     this.notify();
