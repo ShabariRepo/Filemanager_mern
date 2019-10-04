@@ -25,8 +25,9 @@ class Upload extends Component {
     this.setState({
       selectedFile: null
     });
-
-    // setTimeout(function(){ this.props.history.goBack() }, 4000);
+    
+    //nextProps.history.goBack();
+    setTimeout(function(){ nextProps.history.goBack() }, 4000);
   }
 
   onChangeHandler = event => {
