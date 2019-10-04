@@ -33,14 +33,21 @@ class File extends Component {
 
   componentDidMount() {
     console.log("in did mount FileView.js");
+
+    let vrs = _.filter(this.state.docs, doc => {
+        return doc.ogName === this.props.location.state.selectedFile;
+      });
+
     this.setState({
       selectedFile: this.props.location.state.selectedFile,
-      latestVersion: this.props.location.state.latestVersion
+      latestVersion: this.props.location.state.latestVersion,
+      versions: vrs,
+      loading: false
     });
 
     console.log(this.props);
 
-    this.displayAllFiles(this.props.location.state.selectedFile);
+    // this.displayAllFiles(this.props.location.state.selectedFile);
   }
 
   
@@ -57,7 +64,7 @@ class File extends Component {
     });
 
     this.notify();
-    setTimeout(function(){ nextProps.history.goBack() }, 3000);
+    // setTimeout(function(){ nextProps.history.goBack() }, 3000);
   }
 
   onChangeHandler = event => {
@@ -211,7 +218,7 @@ const mapStateToProps = ({ documents }) => {
   console.log("in map state to props FileView.js");
   //console.log(documents);
 
-  return { docs: documents };
+  return { docs: _.map(documents.dHash) };
 };
 
 export default connect(

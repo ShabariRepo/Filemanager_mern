@@ -42,7 +42,40 @@ export const deleteDocument = (filename) => async dispatch => {
     });        
 }
 
-export const fetchDocuments = (payload) => async dispatch =>{
+// fetch for specific original name
+export const fetchDocument = (selectedFile) => async dispatch =>{
   
-  return dispatch({type: FETCH_DOCUMENT, payload});
+  console.log("in fetch specific document action");
+
+  axios
+    .post("http://10.228.19.13:49160/api/getDoc", {
+      ogName: selectedFile
+    })
+    .then(response => {
+      console.log(response.data.data);
+
+      return dispatch({ type: FETCH_DOCUMENT, payload: response.data.data });
+    })
+    .catch(error => {
+      console.log(error);
+      return "error";
+    });
+}
+
+// fetch all documents
+export const fetchAllDocuments = () => async dispatch =>{
+  
+  console.log("in fetch all documents action");
+
+  axios
+    .get("http://10.228.19.13:49160/api/getAllDocs")
+    .then(response => {
+      console.log(response.data.data);
+
+      return dispatch({ type: FETCH_ALL_DOCUMENTS, payload: response.data.data });
+    })
+    .catch(error => {
+      console.log(error);
+      return "error";
+    });
 }

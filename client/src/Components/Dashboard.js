@@ -14,7 +14,7 @@ import image from '../static/images/square-image.png'
 import axios from 'axios'
 import Loader from 'react-loader-spinner';
 import { Link } from "react-router-dom";
-import { fetchLatests } from "../actions";
+import { fetchLatests, fetchAllDocuments } from "../actions";
 import _ from "lodash";
 
 class Dashboard extends Component {
@@ -24,7 +24,7 @@ class Dashboard extends Component {
     },
     loading: true,
     latest: this.props.latests,
-    allDocs: [],
+    allDocs: this.props.documents,
     numUnique: 0,
     avgRevPerFile: 0,
     totalNumFiles: 0
@@ -99,6 +99,7 @@ class Dashboard extends Component {
     console.log('component mounted');
     //this.getLatestPosts();
     this.props.fetchLatests();
+    this.props.fetchAllDocuments();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -237,4 +238,4 @@ const mapStateToProps = ({ documents, latests }) => {
   return { documents: docArr, latests: latestArr };
 };
 
-export default connect(mapStateToProps, { fetchLatests })(Dashboard);
+export default connect(mapStateToProps, { fetchLatests, fetchAllDocuments })(Dashboard);
