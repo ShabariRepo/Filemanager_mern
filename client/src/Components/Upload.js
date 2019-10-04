@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+import { addDocument } from "../actions";
+
 import { Container, Header, Button, Icon } from "semantic-ui-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class Upload extends Component {
   constructor(props) {
@@ -11,7 +15,18 @@ class Upload extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+    console.log("did mount upload.js"); //this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("in will receive Upload screen");
+    console.log(nextProps);
+    this.notify();
+    this.setState({
+      selectedFile: null
+    });
+
+    // setTimeout(function(){ this.props.history.goBack() }, 4000);
   }
 
   onChangeHandler = event => {
@@ -21,20 +36,17 @@ class Upload extends Component {
     });
   };
 
+  //toastify message
+  notify = () => toast("Upload Successfull!!");
+
   onClickHandler = () => {
     const data = new FormData();
     data.append("file", this.state.selectedFile);
 
-    console.log(data);
-    console.log(this.state.selectedFile);
-    axios
-      .post("http://10.228.19.13:49160/api/upload", data, {
-        // receive two parameter endpoint url ,form data
-      })
-      .then(res => {
-        // then print response status
-        console.log(res.statusText);
-      });
+    //console.log(data);
+    // console.log(this.state.selectedFile);
+
+    this.props.addDocument(data);
   };
 
   render() {
@@ -56,16 +68,26 @@ class Upload extends Component {
               </form>
             </div>
 
-            <Button animated="vertical"
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnVisibilityChange
+              draggable
+              pauseOnHover
+            />
+            <Button
+              animated="vertical"
               color="blue"
               // content="Like"
-              size='massive'
+              size="massive"
               style={{ marginTop: 20 }}
               onClick={this.onClickHandler}
             >
-              <Button.Content hidden>
-                Upload
-              </Button.Content>
+              <Button.Content hidden>Upload</Button.Content>
               <Button.Content visible>
                 <Icon name="upload" />
               </Button.Content>
@@ -107,4 +129,20 @@ class Upload extends Component {
   }
 }
 
-export default Upload;
+const mapStateToProps = ({ documents }) => {
+  console.log("in map state to props upload.js");
+  //console.log(documents);
+
+  return { docs: documents };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     addDocument: doc => dispatch(addDocument(doc))
+//   }
+// }
+
+export default connect(
+  mapStateToProps,
+  { addDocument }
+)(Upload);

@@ -14,6 +14,8 @@ import image from '../static/images/square-image.png'
 import axios from 'axios'
 import Loader from 'react-loader-spinner';
 import { Link } from "react-router-dom";
+import { fetchLatests } from "../actions";
+import _ from "lodash";
 
 class Dashboard extends Component {
   state = {
@@ -21,7 +23,7 @@ class Dashboard extends Component {
       display: "none"
     },
     loading: true,
-    latest: [],
+    latest: this.props.latests,
     allDocs: [],
     numUnique: 0,
     avgRevPerFile: 0,
@@ -29,6 +31,8 @@ class Dashboard extends Component {
   };
 
   updateLatestInfo = () => {
+    console.log('in updateLatestInfo');
+    // console.log(this.state)
     let numU = this.state.latest.length;
     let tots = 0;
 
@@ -40,31 +44,14 @@ class Dashboard extends Component {
 
     this.setState({
       numUnique: numU,
-      avgRevPerFile: arpf,
+      avgRevPerFile: typeof(arpf) == NaN ? 0 : arpf,
       totalNumFiles: tnf
     });
   }
 
-  //get all latest posts
-  getLatestPosts = async () => {
-    // this.setState({ loading: true });
-    await axios
-      .get("http://10.228.19.13:49160/api/getLatest")
-      .then(response => {
-        console.log(response.data.data);
-        this.setState({ latest: response.data.data, 
-          loading: false 
-        });
-        this.updateLatestInfo();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
   // populate the table with latest files
   populateTable = () => {
-    console.log(this.state.latest)
+    // console.log(this.state.latest)
     // const row = new Table.Row;
     let table = [];
 
@@ -110,7 +97,15 @@ class Dashboard extends Component {
 
   componentDidMount() {
     console.log('component mounted');
-    this.getLatestPosts();
+    //this.getLatestPosts();
+    this.props.fetchLatests();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('in will receive dashboard.js')
+    // console.log(nextProps);
+    this.setState({ latest: nextProps.latests, loading: false });
+    this.updateLatestInfo();
   }
 
   render() {
@@ -232,8 +227,14 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { documents: state.documents };
+const mapStateToProps = ({ documents, latests }) => {
+  console.log('in map state Dashboard.js');
+  let latestArr = _.map(latests.dHash);
+  let docArr = _.map(documents.dHash);
+  
+  // console.log(latests);
+  // console.log(documents);
+  return { documents: docArr, latests: latestArr };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, { fetchLatests })(Dashboard);
