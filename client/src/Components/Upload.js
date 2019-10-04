@@ -27,7 +27,7 @@ class Upload extends Component {
     });
     
     //nextProps.history.goBack();
-    setTimeout(function(){ nextProps.history.goBack() }, 4000);
+    setTimeout(function(){ nextProps.history.goBack() }, 3000);
   }
 
   onChangeHandler = event => {
@@ -38,7 +38,7 @@ class Upload extends Component {
   };
 
   //toastify message
-  notify = () => toast("Upload Successfull!!");
+  notify = () => toast.success("Upload Successfull!!");
 
   onClickHandler = () => {
     const data = new FormData();

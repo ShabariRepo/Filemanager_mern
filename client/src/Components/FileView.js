@@ -57,6 +57,7 @@ class File extends Component {
     });
 
     this.notify();
+    setTimeout(function(){ nextProps.history.goBack() }, 3000);
   }
 
   onChangeHandler = event => {
