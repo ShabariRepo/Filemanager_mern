@@ -1,4 +1,4 @@
-import { ADD_DOCUMENNT, FETCH_DOCUMENT, DELETE_DOCUMENT } from "./types";
+import { ADD_DOCUMENNT, FETCH_DOCUMENT, DELETE_DOCUMENT, FETCH_ALL_DOCUMENTS } from "./types";
 import axios from "axios";
 
 export const addDocument = (payload) => async dispatch => {
