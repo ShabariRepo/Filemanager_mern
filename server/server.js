@@ -187,7 +187,7 @@ router.post('/upload', (req, res) => {
         
         console.log("successful upload");
         console.log(req.file);
-        console.log(req);
+        console.log(req.body);
         //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
         //console.log(exists);
 
@@ -196,7 +196,7 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false, req.distinction);
+            updateLatest(data, false, req.body.distinction);
             return res.status(201).json({
               success: true,
               id: data._id,
