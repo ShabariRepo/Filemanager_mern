@@ -4,6 +4,7 @@ import {
   FETCH_LATESTS
 } from "../actions/types";
 import _ from "lodash";
+import axios from "axios";
 
 const initialState = {
   id: [],
@@ -23,26 +24,32 @@ export default function(state = initialState, action) {
       if (exists !== undefined) {
         exists.revisions = exists.revisions + 1;
 
-        exists.latestName = action.latest.name;
-        exists.fileBsonId = action.latest._id;
-        exists.versions.push(action.latest.name);
+        exists.latestName = action.payload.name;
+        exists.fileBsonId = action.id;
+        exists.versions.push(action.payload.name);
 
-        state.dHash[action.latest._id] = {
-          ...state.dHash[action.latest._id],
-          ...action.latest
+        state.dHash[exists._id] = {
+          ...state.dHash[exists._id],
+          exists
         };
 
         return {
           ...state
         };
       } else {
-        return {
-          id: [...state.id, action.latest._id],
-          dHash: {
-            ...state.dHash,
-            [action.latest._id]: action.latest
-          }
-        };
+        axios.post("http://10.228.19.13:49160/api/getLatest", {
+          ogName: action.payload.ogName
+        }).then( latest => {
+          return {
+            id: [...state.id, latest._id],
+            dHash: {
+              ...state.dHash,
+              [latest._id]: latest
+            }
+          };
+        }).catch( err => {
+          console.log(err);
+        });
         // latest.ogName = action.payload.ogName;
         // latest.latestName = action.payload.name;
         // latest.fileBsonId = action.payload._id;

@@ -89,11 +89,11 @@ async function updateLatest(document, remove){
         latest.revisions = 1;
         latest.save().then(() => {
             console.log(`saved to latest (there was no existing file with this name so created new latest entry id: ${latest._id}`);
-            return latest;
+            // return latest;
         }).catch(error => {
             console.log("latest not loaded someshit happened");
             console.log(error);
-            return error;
+            // return error;
         });
     } else {
         if (remove) {
@@ -161,11 +161,11 @@ async function updateLatest(document, remove){
               console.log(
                 `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
               );
-              return exists;
+              // return exists;
             })
             .catch(err => {
               console.log(err);
-              return err;
+              // return err;
             });
         }
     }
@@ -194,22 +194,13 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false).then( latest => {
-              console.log('back from latest');
-              console.log(latest);
-              return res.status(201).json({
-                success: true,
-                id: data._id,
-                data: data,
-                latest: latest,
-                url: `http://10.228.19.13:3000/files/${data.name}`,
-                message: "Document uploaded!"
-              });
-            }).catch (err => {
-              return res.status(400).json({
-                error,
-                message: "document not uploaded!"
-              });
+            updateLatest(data, false);
+            return res.status(201).json({
+              success: true,
+              id: data._id,
+              data: data,
+              url: `http://10.228.19.13:3000/files/${data.name}`,
+              message: "Document uploaded!"
             });
         })
         .catch(error => {
@@ -293,7 +284,23 @@ getDocsByOg = async (req, res) => {
   });
 }
 
-router.post('/getDoc', getDocsByOg)
+getLatestByOg = async (req, res) => {
+  const { ogName } = req.body;
+
+  await Latest.findOne({"ogName": document.ogName}, (err, data) => {
+    if(err) return res.json({ success: false, error: err });
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  });
+}
+
+// get all documents that have a specific "ogName"
+router.post('/getDoc', getDocsByOg);
+
+// get latest document that has a specific "ogName"
+router.post('/getLatest', getLatestByOg);
 
 /*  sample apis
 

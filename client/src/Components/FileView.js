@@ -79,37 +79,37 @@ class File extends Component {
     });
   };
 
-  displayAllFiles = async selectedFile => {
-    console.log("in display files");
-    console.log(this.state.selectedFile);
-    // var arr = _.map(this.state.docs, doc => {
-    //   return doc.ogName === selectedFile;
-    // });
+  // displayAllFiles = async selectedFile => {
+  //   console.log("in display files");
+  //   console.log(this.state.selectedFile);
+  //   // var arr = _.map(this.state.docs, doc => {
+  //   //   return doc.ogName === selectedFile;
+  //   // });
 
-    // var sid = _.filter(this.state.docs, doc => {
-    //   return doc.ogName === selectedFile;
-    // });
-    //// Remove undefines from the array
-    // johns = _.without(johns, undefined)
+  //   // var sid = _.filter(this.state.docs, doc => {
+  //   //   return doc.ogName === selectedFile;
+  //   // });
+  //   //// Remove undefines from the array
+  //   // johns = _.without(johns, undefined)
 
-    // console.log(arr);
-    // console.log(sid);
+  //   // console.log(arr);
+  //   // console.log(sid);
 
-    try {
-      const res = await axios.post("http://10.228.19.13:49160/api/getDoc", {
-        ogName: selectedFile
-      });
+  //   try {
+  //     const res = await axios.post("http://10.228.19.13:49160/api/getDoc", {
+  //       ogName: selectedFile
+  //     });
 
-      this.setState({
-        versions: res.data.data,
-        loading: false
-      })
+  //     this.setState({
+  //       versions: res.data.data,
+  //       loading: false
+  //     })
 
-      console.log(res.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log(res.data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // delete version
   deleteVersion = versionName => {
