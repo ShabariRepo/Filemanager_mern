@@ -187,6 +187,7 @@ router.post('/upload', (req, res) => {
         
         console.log("successful upload");
         console.log(req.file);
+        console.log(req);
         //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
         //console.log(exists);
 

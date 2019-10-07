@@ -53,6 +53,8 @@ class Upload extends Component {
   onClickHandler = () => {
     const data = new FormData();
     if (this.state.selectedFile !== null && this.state.distinction !== "") {
+      console.log(this.state.distinction);
+
       data.append("file", this.state.selectedFile);
       data.append("distinction", this.state.distinction);
 
