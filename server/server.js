@@ -172,7 +172,7 @@ async function updateLatest(document, remove){
 }
 
 //app.post('/upload', function (req, res) {
-router.post('/upload', async (req, res) => {
+router.post('/upload', (req, res) => {
 
     var data = new Doc();
     
@@ -194,15 +194,21 @@ router.post('/upload', async (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            let latest = await updateLatest(data, false);
-            return res.status(201).json({
+            updateLatest(data, false).then( latest => {
+              return res.status(201).json({
                 success: true,
                 id: data._id,
                 data: data,
                 latest: latest,
                 url: `http://10.228.19.13:3000/files/${data.name}`,
-                message: 'Document uploaded!',
-            })
+                message: "Document uploaded!"
+              });
+            }).catch (err => {
+              return res.status(400).json({
+                error,
+                message: "document not uploaded!"
+              });
+            });
         })
         .catch(error => {
             return res.status(400).json({
