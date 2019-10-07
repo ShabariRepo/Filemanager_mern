@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { addDocument } from "../actions";
 
-import { Container, Header, Button, Icon, TextArea } from "semantic-ui-react";
+import { Container, Header, Button, Icon, TextArea, Input } from "semantic-ui-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -68,20 +68,26 @@ class Upload extends Component {
           <div className="col-md-12">
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="form">
-                <div className="form-group">
-                  <TextArea placeholder="Tell us more" style={{ paddingTop: 20 }} onChange={(e, { value }) => {
+                <div style={{ paddingTop: 60 }}>
+                <div className="form-group" //style={{ paddingTop: 50 }}
+>
+                   <Input
+    icon={{ name: 'folder', circular: true, link: true }}
+    placeholder='Search...' onChange={(e, { value }) => {
                     this.setState({
                       distinction: value
                     })
                   }} />
                 </div>
-                <div className="form-group files" style={{ paddingTop: 99 }}>
+                <div className="form-group files" //style={{ marginTop: 99 }}
+>
                   <label>Upload Your File </label>
                   <input
                     type="file"
                     name="file"
                     onChange={this.onChangeHandler}
                   />
+                </div>
                 </div>
               </form>
             </div>
