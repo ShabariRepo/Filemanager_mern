@@ -109,7 +109,8 @@ class Dashboard extends Component {
     this.updateLatestInfo();
   }
 
-  render() {
+  render() {    
+    console.log('rendering');
     return (
       <Grid padded>
         <Grid.Row>
