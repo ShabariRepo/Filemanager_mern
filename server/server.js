@@ -195,7 +195,7 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false);
+            updateLatest(data, false, req.distinction);
             return res.status(201).json({
               success: true,
               id: data._id,
