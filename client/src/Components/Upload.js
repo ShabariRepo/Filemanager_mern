@@ -25,7 +25,7 @@ class Upload extends Component {
     this.setState({
       selectedFile: null
     });
-    
+
     //nextProps.history.goBack();
     //setTimeout(function(){ nextProps.history.push("/") }, 3000);
   }
@@ -43,13 +43,17 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    data.append("file", this.state.selectedFile);
+    if (this.state.selectedFile !== null) {
+      data.append("file", this.state.selectedFile);
 
-    //console.log(data);
-    // console.log(this.state.selectedFile);
+      //console.log(data);
+      // console.log(this.state.selectedFile);
 
-    this.props.addDocument(data);
-    
+      this.props.addDocument(data);
+    } else {      
+      notify = () => toast.error("No file selected");
+    }
+
     document.getElementById("form").reset();
   };
 
