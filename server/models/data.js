@@ -8,6 +8,7 @@ const Latest = new Schema(
     ogName: { type: String, required: true },
     latestName: { type: String, required: true },
     fileBsonId: { type: String, required: true},
+    distinction: {type: String, required: true},
     revisions: { type: Number, default: 0 },
     versions: { type: [String], required: true },
   },
