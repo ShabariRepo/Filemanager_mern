@@ -89,11 +89,12 @@ async function updateLatest(document, remove){
         latest.revisions = 1;
         latest.save().then(() => {
             console.log(`saved to latest (there was no existing file with this name so created new latest entry id: ${latest._id}`);
+            return latest;
         }).catch(error => {
             console.log("latest not loaded someshit happened");
             console.log(error);
+            return error;
         });
-        return;
     } else {
         if (remove) {
           console.log('inside removing the file');
@@ -160,19 +161,18 @@ async function updateLatest(document, remove){
               console.log(
                 `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
               );
+              return exists;
             })
             .catch(err => {
               console.log(err);
+              return err;
             });
-
-          // //latest.save();
-          return;
         }
     }
 }
 
 //app.post('/upload', function (req, res) {
-router.post('/upload', function (req, res) {
+router.post('/upload', async (req, res) => {
 
     var data = new Doc();
     
@@ -194,11 +194,12 @@ router.post('/upload', function (req, res) {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false);
+            let latest = await updateLatest(data, false);
             return res.status(201).json({
                 success: true,
                 id: data._id,
                 data: data,
+                latest: latest,
                 url: `http://10.228.19.13:3000/files/${data.name}`,
                 message: 'Document uploaded!',
             })
