@@ -13,7 +13,6 @@ import {
 } from "semantic-ui-react";
 
 import image from '../static/images/square-image.png'
-import axios from 'axios'
 import Loader from 'react-loader-spinner';
 import { Link } from "react-router-dom";
 import { fetchLatests, fetchAllDocuments } from "../actions";
