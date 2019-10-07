@@ -31,7 +31,7 @@ class Dashboard extends Component {
   };
 
   updateLatestInfo = () => {
-    console.log('in updateLatestInfo');
+    console.log("in updateLatestInfo");
     // console.log(this.state)
     let numU = this.state.latest.length;
     let tots = 0;
@@ -39,15 +39,22 @@ class Dashboard extends Component {
     this.state.latest.forEach(element => {
       tots += element.revisions;
     });
-    let arpf = Math.round((tots/this.state.latest.length) * 100)/100;
+    let arpf = Math.round((tots / this.state.latest.length) * 100) / 100;
     let tnf = tots;
 
     this.setState({
       numUnique: numU,
-      avgRevPerFile: typeof(arpf) == NaN ? 0 : arpf,
+      avgRevPerFile: typeof arpf == NaN ? 0 : arpf,
       totalNumFiles: tnf
     });
-  }
+  };
+
+  download = (url, name) => {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = url;
+    link.click();
+  };
 
   // populate the table with latest files
   populateTable = () => {
@@ -57,8 +64,7 @@ class Dashboard extends Component {
 
     this.state.latest.forEach(element => {
       let children = [];
-      
-      
+
       children.push(
         <Table.Cell key={1}>
           <Link
@@ -77,12 +83,28 @@ class Dashboard extends Component {
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);
-      children.push(<Table.Cell key={5}>download</Table.Cell>);
-      table.push(<Table.Row key={element._id} children={children} />)     
+      children.push(
+        <Table.Cell key={5}>
+          <Button
+            animated="vertical"
+            color="blue"
+            // content="Like"
+            size="large"
+            style={{ marginTop: 20 }}
+            onClick={() => this.download( `http://10.228.19.13:3000/files/${element.latestName}`, element.latestName)}
+          >
+            <Button.Content hidden>Download</Button.Content>
+            <Button.Content visible>
+              <Icon name="download" />
+            </Button.Content>
+          </Button>
+        </Table.Cell>
+      );
+      table.push(<Table.Row key={element._id} children={children} />);
     });
 
     return table;
-  }
+  };
 
   handleToggleDropdownMenu = () => {
     let newState = Object.assign({}, this.state);
@@ -96,21 +118,21 @@ class Dashboard extends Component {
   };
 
   componentDidMount() {
-    console.log('component mounted');
+    console.log("component mounted");
     //this.getLatestPosts();
     this.props.fetchLatests();
     this.props.fetchAllDocuments();
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('in will receive dashboard.js')
+    console.log("in will receive dashboard.js");
     // console.log(nextProps);
     this.setState({ latest: nextProps.latests, loading: false });
     this.updateLatestInfo();
   }
 
-  render() {    
-    console.log('rendering');
+  render() {
+    console.log("rendering");
     return (
       <Grid padded>
         <Grid.Row>
@@ -131,7 +153,9 @@ class Dashboard extends Component {
                 <i className="far fa-file-pdf fa-10x"></i>
               </div>
               <div className="item">
-                <a className="ui teal circular massive label">{this.state.totalNumFiles}</a>
+                <a className="ui teal circular massive label">
+                  {this.state.totalNumFiles}
+                </a>
               </div>
               <div className="item">
                 <p>Total number of files</p>
@@ -158,10 +182,12 @@ class Dashboard extends Component {
             <p>Something else</p> */}
             <div>
               <div style={{ marginBottom: 15 }} className="ui image">
-              <i className="fas fa-code-branch fa-10x"></i>
+                <i className="fas fa-code-branch fa-10x"></i>
               </div>
               <div className="item">
-                <a className="ui teal circular massive label">{this.state.avgRevPerFile}</a>
+                <a className="ui teal circular massive label">
+                  {this.state.avgRevPerFile}
+                </a>
               </div>
               <div className="item">
                 <p>Average Revisions Per file</p>
@@ -184,7 +210,9 @@ class Dashboard extends Component {
                 <i className="far fa-star fa-10x"></i>
               </div>
               <div className="item">
-                <a className="ui teal circular massive label">{this.state.numUnique}</a>
+                <a className="ui teal circular massive label">
+                  {this.state.numUnique}
+                </a>
               </div>
               <div className="item">
                 <p>Number of unique files</p>
