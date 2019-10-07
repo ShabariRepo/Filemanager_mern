@@ -7,6 +7,7 @@ import {
   Header,
   Image,
   Button,
+  Icon,
   Label,
   Table
 } from "semantic-ui-react";
