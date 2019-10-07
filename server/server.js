@@ -176,7 +176,12 @@ async function updateLatest(document, remove, distinct){
 router.post('/upload', (req, res) => {
 
     var data = new Doc();
-    
+    if(req.body.distinction === "" || reqbody  === undefined){
+      return res.status(400).json({
+        error,
+        message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
+      });
+    }
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             console.log("error 500")
