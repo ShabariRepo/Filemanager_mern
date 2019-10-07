@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { addDocument } from "../actions";
 
-import { Container, Header, Button, Icon } from "semantic-ui-react";
+import { Container, Header, Button, Icon, TextArea } from "semantic-ui-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,7 +10,8 @@ class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFile: null
+      selectedFile: null,
+      distinction: ""
     };
   }
 
@@ -23,7 +24,8 @@ class Upload extends Component {
     console.log(nextProps);
     this.notify();
     this.setState({
-      selectedFile: null
+      selectedFile: null,
+      distinction: ""
     });
 
     //nextProps.history.goBack();
@@ -43,15 +45,16 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null) {
+    if (this.state.selectedFile !== null && this.state.distinction !== "") {
       data.append("file", this.state.selectedFile);
+      data.append("distinction", this.state.distinction);
 
       //console.log(data);
       // console.log(this.state.selectedFile);
 
       this.props.addDocument(data);
-    } else {      
-      toast.error("No file selected");
+    } else {
+      toast.error("Please select a file and add a topic/folder distinction");
     }
 
     document.getElementById("form").reset();
@@ -65,6 +68,13 @@ class Upload extends Component {
           <div className="col-md-12">
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="form">
+                <div className="form-group">
+                  <TextArea placeholder="Tell us more" style={{ paddingTop: 20 }} onChange={(e, { value }) => {
+                    this.setState({
+                      distinction: value
+                    })
+                  }} />
+                </div>
                 <div className="form-group files" style={{ paddingTop: 99 }}>
                   <label>Upload Your File </label>
                   <input

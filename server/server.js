@@ -72,7 +72,7 @@ const deleteFile = (file) => {
 }
 
 /// put for update without incomming https
-async function updateLatest(document, remove){
+async function updateLatest(document, remove, distinct){
 
     let exists = await Latest.findOne({"ogName": document.ogName});
 
@@ -84,6 +84,7 @@ async function updateLatest(document, remove){
         latest.ogName = document.ogName;
         latest.latestName = document.name;
         latest.fileBsonId = document._id;
+        latest.distinction = distinct;
         latest.versions.push(document.name);
         
         latest.revisions = 1;
@@ -227,7 +228,7 @@ router.delete('/deleteDoc', function(req, res){
     if(err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true);
+    updateLatest(doc, true, "");
     return res.json({ 
       success: true,
       data: doc,
