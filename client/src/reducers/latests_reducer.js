@@ -35,6 +35,7 @@ export default function(state = initialState, action) {
           ...state
         };
       } else {
+        console.log(action);
         return {
           id: [...state.id, action.latest._id],
           dHash: {

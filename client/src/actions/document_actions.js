@@ -12,7 +12,7 @@ export const addDocument = (payload) => async dispatch => {
         console.log(res.statusText);
         //console.log(res);
         
-        return dispatch({ type: ADD_DOCUMENNT, payload: res.data.data, id: res.data.id });
+        return dispatch({ type: ADD_DOCUMENNT, payload: res.data.data, latest: res.data.latest, id: res.data.id });
       }).catch(err => {
           
         console.log(err);
