@@ -91,7 +91,7 @@ class Upload extends Component {
               animated="vertical"
               color="blue"
               // content="Like"
-              disabled={this.state.selectedFile !== null}
+              disabled={this.state.selectedFile === null}
               size="massive"
               style={{ marginTop: 20 }}
               onClick={this.onClickHandler}
