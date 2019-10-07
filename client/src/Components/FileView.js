@@ -111,6 +111,14 @@ class File extends Component {
   //   }
   // };
 
+  // download file
+  download = (url, name) => {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = url;
+    link.click();
+  };
+
   // delete version
   deleteVersion = versionName => {
     console.log("deleting version" + versionName);
@@ -147,7 +155,28 @@ class File extends Component {
           <TimeAgo date={element.createdAt} />
         </Table.Cell>
       );
-      children.push(<Table.Cell key={5}>download</Table.Cell>);
+      children.push(
+        <Table.Cell key={5}>
+          <Button
+            animated="vertical"
+            color="blue"
+            // content="Like"
+            size="large"
+            style={{ marginTop: 20 }}
+            onClick={() =>
+              this.download(
+                `http://10.228.19.13:3000/files/${element.name}`,
+                element.name
+              )
+            }
+          >
+            <Button.Content hidden>Download</Button.Content>
+            <Button.Content visible>
+              <Icon name="download" />
+            </Button.Content>
+          </Button>
+        </Table.Cell>
+      );
       children.push(
         <Table.Cell key={5}>
           <Button
