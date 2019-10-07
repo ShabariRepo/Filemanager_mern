@@ -27,10 +27,11 @@ class Upload extends Component {
     });
     
     //nextProps.history.goBack();
-    setTimeout(function(){ nextProps.history.push("/") }, 3000);
+    //setTimeout(function(){ nextProps.history.push("/") }, 3000);
   }
 
   onChangeHandler = event => {
+    event.preventDefault();
     this.setState({
       selectedFile: event.target.files[0],
       loaded: 0
@@ -48,6 +49,8 @@ class Upload extends Component {
     // console.log(this.state.selectedFile);
 
     this.props.addDocument(data);
+    
+    document.getElementById("form").reset();
   };
 
   render() {
@@ -57,7 +60,7 @@ class Upload extends Component {
         <div className="row" style={{ textAlign: "center" }}>
           <div className="col-md-12">
             <div style={{ borderStyle: "inset", height: 250 }}>
-              <form method="post" action="#" id="#">
+              <form method="post" action="#" id="form">
                 <div className="form-group files" style={{ paddingTop: 99 }}>
                   <label>Upload Your File </label>
                   <input

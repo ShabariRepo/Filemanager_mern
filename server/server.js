@@ -287,7 +287,7 @@ getDocsByOg = async (req, res) => {
 getLatestByOg = async (req, res) => {
   const { ogName } = req.body;
 
-  await Latest.findOne({"ogName": document.ogName}, (err, data) => {
+  await Latest.findOne({"ogName": ogName}, (err, data) => {
     if(err) return res.json({ success: false, error: err });
     return res.status(200).json({
       success: true,
