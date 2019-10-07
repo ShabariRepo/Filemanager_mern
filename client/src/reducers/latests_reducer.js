@@ -14,6 +14,7 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case ADD_DOCUMENNT:
       console.log("in add document latest reducer");
+      console.log(action);
       // check if there is a latest entry with ogName same as added
       
       var latarr = _.map(state.dHash);
@@ -35,7 +36,6 @@ export default function(state = initialState, action) {
           ...state
         };
       } else {
-        console.log(action);
         return {
           id: [...state.id, action.latest._id],
           dHash: {
