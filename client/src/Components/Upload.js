@@ -51,7 +51,7 @@ class Upload extends Component {
 
       this.props.addDocument(data);
     } else {      
-      notify = () => toast.error("No file selected");
+      toast.error("No file selected");
     }
 
     document.getElementById("form").reset();
