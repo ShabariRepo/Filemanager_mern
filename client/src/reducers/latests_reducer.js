@@ -19,7 +19,7 @@ export default function(state = initialState, action) {
       var latarr = _.map(state.dHash);
       var exists = latarr.find(el => el.ogName === action.payload.ogName);
 
-      if (exists !== "undefined") {
+      if (exists !== undefined) {
         exists.revisions = exists.revisions + 1;
 
         exists.latestName = action.latest.name;

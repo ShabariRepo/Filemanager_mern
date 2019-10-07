@@ -27,7 +27,7 @@ class Upload extends Component {
     });
     
     //nextProps.history.goBack();
-    setTimeout(function(){ nextProps.history.goBack() }, 3000);
+    setTimeout(function(){ nextProps.history.push("/") }, 3000);
   }
 
   onChangeHandler = event => {
