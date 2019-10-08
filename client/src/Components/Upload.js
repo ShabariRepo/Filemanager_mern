@@ -29,7 +29,9 @@ class Upload extends Component {
   componentWillReceiveProps(nextProps) {
     console.log("in will receive Upload screen");
     console.log(nextProps);
-    this.notify();
+    if(nextProps.docs.length > this.props.docs.length)
+      this.notify();
+    
     this.setState({
       selectedFile: null,
       distinction: ""
