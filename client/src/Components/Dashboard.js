@@ -81,6 +81,7 @@ class Dashboard extends Component {
           </Link>
         </Table.Cell>
       );
+      children.push(<Table.Cell key={2}>{element.distinction}</Table.Cell>);
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);
@@ -244,6 +245,7 @@ class Dashboard extends Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>File Name</Table.HeaderCell>
+                <Table.HeaderCell>Folder/Distinction</Table.HeaderCell>
                 <Table.HeaderCell>Current Version</Table.HeaderCell>
                 <Table.HeaderCell>Updated At</Table.HeaderCell>
                 <Table.HeaderCell># Revisions</Table.HeaderCell>
