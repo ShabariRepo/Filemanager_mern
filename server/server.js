@@ -303,7 +303,7 @@ router.post('/upload', (req, res) => {
 
 // second upload with urlEncode true
 
-router.post('/v2/upload', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/uploadext', (req, res) => {
 
   var data = new Doc();
   if(req.body.distinction === "" || reqbody  === undefined){
