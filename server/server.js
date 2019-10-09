@@ -301,6 +301,62 @@ router.post('/upload', (req, res) => {
 
 });
 
+// second upload with urlEncode true
+
+router.post('/v2/upload', express.urlencoded({ extended: true }), (req, res) => {
+
+  var data = new Doc();
+  if(req.body.distinction === "" || reqbody  === undefined){
+    return res.status(400).json({
+      error,
+      message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
+    });
+  }
+  upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+          console.log("error 500")
+          return res.status(500).json(err)
+      } else if (err) {
+          return res.status(500).json(err)
+      }
+      
+      console.log("successful upload");
+      console.log(req.file);
+      console.log(req.body);
+      //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
+      //console.log(exists);
+
+      data.name = req.file.filename;
+      data.ogName = req.file.originalname;
+      data.required = ['1', '2', '3'];
+      data.save()
+      .then(() => {
+          updateLatest(data, false, req.body.distinction);
+          return res.status(201).json({
+            success: true,
+            id: data._id,
+            data: data,
+            url: `http://10.228.19.13:3000/files/${data.name}`,
+            message: "Document uploaded!"
+          });
+      })
+      .catch(error => {
+          return res.status(400).json({
+              error,
+              message: 'document not uploaded!',
+          })
+      });
+      //     (err) => {
+      // if (err) console.log(`db error @@@@ ${err}`);
+      // console.log('successfully added to db')
+      // });
+
+      //return res.status(200).send(req.file)
+
+  })
+
+});
+
 router.delete('/deleteDoc', function(req, res){
   console.log(req.body)
   const { source } = req.body;
