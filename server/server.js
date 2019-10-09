@@ -42,7 +42,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 /* LOGGING SECTION (Morgan) */
 // (optional) only made for logging and
 // bodyParser, parses the request body to be a readable json format
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
@@ -250,7 +250,7 @@ getDistinctHashMap = async (req, res) => {
 router.post('/upload', (req, res) => {
 
     var data = new Doc();
-    if(req.body.distinction === "" || reqbody  === undefined){
+    if(req.body.distinction === "" || req.body  === undefined){
       return res.status(400).json({
         error,
         message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
