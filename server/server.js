@@ -46,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+/// FUNCTIONS TO BE USED BY APIs
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FILE STORAGE SECTION (MULTER) */
 
 var storage = multer.diskStorage({
@@ -172,6 +173,79 @@ async function updateLatest(document, remove, distinct){
     }
 }
 
+/// get individual from latest and files collections
+
+// get all files named that original name
+getDocsByOg = async (req, res) => {
+  //let exists = await Latest.findOne({"ogName": document.ogName});
+  const { ogName } = req.body;
+  // console.log(req);
+  await Doc.find( {"ogName": ogName}, (err, data) => {
+    if(err) return res.json({ success: false, error: err});
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  });
+}
+
+getLatestByOg = async (req, res) => {
+  const { ogName } = req.body;
+
+  await Latest.findOne({"ogName": ogName}, (err, data) => {
+    if(err) return res.json({ success: false, error: err });
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  });
+}
+
+getDistinctFromLatest = async (req, res) => {
+  Latest.find().distinct('distinction', function(err, data) {
+    data.sort();
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+}
+
+getDistinctHashMap = async (req, res) => {
+  Latest.find().sort({ distinction: 1 }, (err, data) => {
+    distincts = [];
+    latest = {};
+
+    if (err) return res.json({ success: false, error: err });
+
+    let prevDist = "";
+    var objarr = [];
+    // data.forEach(element => {
+    //   let newFlag = false;
+    //   if(!distincts.includes(element.distinction)){
+    //     distincts.push(element.distinction);
+    //     prevDist = element.distinction;
+    //   }
+
+    //   if(element.distinction === prevDist){
+    //     objarr.push(element);
+    //   } else {
+
+
+    //     objarr = [];
+    //     prevDist = element.distinction;
+    //     objarr.push(element);
+    //   }
+    // });
+
+    return res.json({ success: true, data: data });
+  });
+}
+
+/**
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * API API API API API API API API API
+ * ~~~~~~~~~ ENDPOINTS ~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
 //app.post('/upload', function (req, res) {
 router.post('/upload', (req, res) => {
 
@@ -277,37 +351,14 @@ router.get('/getAllDocs', (req, res) => {
   });
 });
 
-// get all files named that original name
-getDocsByOg = async (req, res) => {
-  //let exists = await Latest.findOne({"ogName": document.ogName});
-  const { ogName } = req.body;
-  // console.log(req);
-  await Doc.find( {"ogName": ogName}, (err, data) => {
-    if(err) return res.json({ success: false, error: err});
-    return res.status(200).json({
-      success: true,
-      data: data
-    });
-  });
-}
-
-getLatestByOg = async (req, res) => {
-  const { ogName } = req.body;
-
-  await Latest.findOne({"ogName": ogName}, (err, data) => {
-    if(err) return res.json({ success: false, error: err });
-    return res.status(200).json({
-      success: true,
-      data: data
-    });
-  });
-}
-
 // get all documents that have a specific "ogName"
 router.post('/getDoc', getDocsByOg);
 
 // get latest document that has a specific "ogName"
-router.post('/getLatest', getLatestByOg);
+router.post('/getLatestByOg', getLatestByOg);
+
+// get distinct values from document (distinct folders)
+router.get('/getAllDistinct', getDistinctFromLatest);
 
 /*  sample apis
 
