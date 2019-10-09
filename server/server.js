@@ -250,7 +250,7 @@ getDistinctHashMap = async (req, res) => {
 router.post('/upload', (req, res) => {
 
     var data = new Doc();
-    if(req.body.distinction === "" || req.body  === undefined){
+    if(req.body.distinction === "" || req.body  === undefined || req.file.filename === "" || req.file.filename === undefiled){
       return res.status(400).json({
         error,
         message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
