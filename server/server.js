@@ -223,7 +223,7 @@ getDistinctFromLatest = async (req, res) => {
 }
 
 getDistinctHashMap = async (req, res) => {
-  Latest.find().sort({ dkey: 1 }, (err, data) => {
+  Latest.find((err, data) => {
     dkeys = [];
     latest = {};
 
@@ -247,7 +247,7 @@ getDistinctHashMap = async (req, res) => {
     };
 
     return res.json({ success: true, data: dhash });
-  });
+  }).sort({ dkey: 1 }).th;
 }
 
 /**
