@@ -81,7 +81,7 @@ class Dashboard extends Component {
           </Link>
         </Table.Cell>
       );
-      children.push(<Table.Cell key={2}>{element.distinction}</Table.Cell>);
+      children.push(<Table.Cell key={2}>{element.dkey}</Table.Cell>);
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);

@@ -85,7 +85,7 @@ async function updateLatest(document, remove, distinct){
         latest.ogName = document.ogName;
         latest.latestName = document.name;
         latest.fileBsonId = document._id;
-        latest.distinction = distinct;
+        latest.dkey = distinct;
         latest.versions.push(document.name);
         
         latest.revisions = 1;
@@ -202,7 +202,7 @@ getLatestByOg = async (req, res) => {
 }
 
 getDistinctFromLatest = async (req, res) => {
-  Latest.find().distinct('distinction', function(err, data) {
+  Latest.find().distinct('dkey', function(err, data) {
     data.sort();
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
@@ -210,8 +210,8 @@ getDistinctFromLatest = async (req, res) => {
 }
 
 getDistinctHashMap = async (req, res) => {
-  Latest.find().sort({ distinction: 1 }, (err, data) => {
-    distincts = [];
+  Latest.find().sort({ dkey: 1 }, (err, data) => {
+    dkeys = [];
     latest = {};
 
     if (err) return res.json({ success: false, error: err });
@@ -220,18 +220,18 @@ getDistinctHashMap = async (req, res) => {
     var objarr = [];
     // data.forEach(element => {
     //   let newFlag = false;
-    //   if(!distincts.includes(element.distinction)){
-    //     distincts.push(element.distinction);
-    //     prevDist = element.distinction;
+    //   if(!distincts.includes(element.dkey)){
+    //     distincts.push(element.dkey);
+    //     prevDist = element.dkey;
     //   }
 
-    //   if(element.distinction === prevDist){
+    //   if(element.dkey === prevDist){
     //     objarr.push(element);
     //   } else {
 
 
     //     objarr = [];
-    //     prevDist = element.distinction;
+    //     prevDist = element.dkey;
     //     objarr.push(element);
     //   }
     // });
@@ -251,7 +251,7 @@ router.post('/upload', (req, res) => {
 
     var data = new Doc();
     //console.log(req);
-    if(req.body.distinction === "" || req.body  === undefined){
+    if(req.body.dkey === "" || req.body  === undefined){
       return res.status(400).json({
         error,
         message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
@@ -276,7 +276,7 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false, req.body.distinction);
+            updateLatest(data, false, req.body.dkey);
             return res.status(201).json({
               success: true,
               id: data._id,

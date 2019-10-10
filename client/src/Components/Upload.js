@@ -18,7 +18,7 @@ class Upload extends Component {
     super(props);
     this.state = {
       selectedFile: null,
-      distinction: ""
+      dkey: ""
     };
   }
 
@@ -34,7 +34,7 @@ class Upload extends Component {
     
     this.setState({
       selectedFile: null,
-      distinction: ""
+      dkey: ""
     });
 
     //nextProps.history.goBack();
@@ -54,18 +54,18 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null && this.state.distinction !== "") {
-      console.log(this.state.distinction);
+    if (this.state.selectedFile !== null && this.state.dkey !== "") {
+      console.log(this.state.dkey);
 
       data.append("file", this.state.selectedFile);
-      data.append("distinction", this.state.distinction);
+      data.append("dkey", this.state.dkey);
 
       //console.log(data);
       // console.log(this.state.selectedFile);
 
       this.props.addDocument(data);
     } else {
-      toast.error("Please select a file and add a topic/folder distinction");
+      toast.error("Please select a file and add a topic/folder dkey");
     }
 
     document.getElementById("form").reset();
@@ -88,7 +88,7 @@ class Upload extends Component {
                       placeholder="Search..."
                       onChange={(e, { value }) => {
                         this.setState({
-                          distinction: value
+                          dkey: value
                         });
                       }}
                     />
