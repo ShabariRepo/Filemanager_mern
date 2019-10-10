@@ -374,6 +374,9 @@ router.post('/getLatestByDkey', getLatestByDkey);
 // get distinct values from document (distinct folders)
 router.get('/getAllDistinct', getDistinctFromLatest);
 
+// get distinct hash values return all sorted into hash
+router.get('/getAllDkeyHash', getDistinctHashMap);
+
 /*  sample apis
 
 // this method fetches all available data in our database
