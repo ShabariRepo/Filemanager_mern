@@ -75,7 +75,7 @@ const deleteFile = (file) => {
 /// put for update without incomming https
 async function updateLatest(document, remove, distinct){
 
-    let exists = await Latest.findOne({"ogName": document.ogName});
+    let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct});
 
     console.log(exists);
 
@@ -192,7 +192,20 @@ getDocsByOg = async (req, res) => {
 getLatestByOg = async (req, res) => {
   const { ogName } = req.body;
 
-  await Latest.findOne({"ogName": ogName}, (err, data) => {
+  await Latest.find({"ogName": ogName}, (err, data) => {
+    if(err) return res.json({ success: false, error: err });
+    return res.status(200).json({
+      success: true,
+      data: data
+    });
+  });
+}
+
+
+getLatestByDkey = async (req, res) => {
+  const { dkey } = req.body;
+
+  await Latest.find({"dkey": dkey}, (err, data) => {
     if(err) return res.json({ success: false, error: err });
     return res.status(200).json({
       success: true,
@@ -216,27 +229,24 @@ getDistinctHashMap = async (req, res) => {
 
     if (err) return res.json({ success: false, error: err });
 
-    let prevDist = "";
+    // let prevDist = "";
     var objarr = [];
-    // data.forEach(element => {
-    //   let newFlag = false;
-    //   if(!distincts.includes(element.dkey)){
-    //     distincts.push(element.dkey);
-    //     prevDist = element.dkey;
-    //   }
+    data.forEach(element => {
+      prevDist = element.dkey;
+      if(!dkeys.includes(element.dkey)){
+        dkeys.push(element.dkey);
+        objarr.push(element);
+        latest[element.dkey] = objarr;
+      } else{
+        latest[element.dkey].push(element);
+      }
+    });
+    dhash = {
+      dkeys: dkeys,
+      fhash: latest
+    };
 
-    //   if(element.dkey === prevDist){
-    //     objarr.push(element);
-    //   } else {
-
-
-    //     objarr = [];
-    //     prevDist = element.dkey;
-    //     objarr.push(element);
-    //   }
-    // });
-
-    return res.json({ success: true, data: data });
+    return res.json({ success: true, data: dhash });
   });
 }
 
@@ -357,6 +367,9 @@ router.post('/getDoc', getDocsByOg);
 
 // get latest document that has a specific "ogName"
 router.post('/getLatestByOg', getLatestByOg);
+
+// get latest document that has a specific "ogName"
+router.post('/getLatestByDkey', getLatestByDkey);
 
 // get distinct values from document (distinct folders)
 router.get('/getAllDistinct', getDistinctFromLatest);
