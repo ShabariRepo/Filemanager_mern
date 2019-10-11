@@ -230,10 +230,10 @@ getDistinctHashMap = async (req, res) => {
     if (err) return res.json({ success: false, error: err });
 
     // let prevDist = "";
-    var objarr = [];
     data.forEach(element => {
       prevDist = element.dkey;
       if(!dkeys.includes(element.dkey)){
+        let objarr = [];
         dkeys.push(element.dkey);
         objarr.push(element);
         latest[element.dkey] = objarr;
