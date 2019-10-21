@@ -7,6 +7,7 @@ const logger = require('morgan');
 const Latest = require('./models/data');
 const Doc = require('./models/document');
 const fs = require('fs');
+const sql = require('./mysqldb');
 
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,13 +73,61 @@ const deleteFile = (file) => {
   })
 }
 
+
+/**
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * helper helper helper helper helper
+ * ~~~~~~~~~ CMS CRUD TASKS ~~~~~~~~~~~
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+// update documents sql for CMS
+addToCms = async (doc) => {
+  console.log('CREATE in CMS DB');
+  var cmsdoc = {
+    title: doc.ogName,
+    file: `http://10.228.19.13:3000/files/${doc.latestName}`,
+    collection_id: 1,
+    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
+  }
+
+  sql.query("INSERT INTO wagtail.wagtaildocs_document SET ?", cmsdoc, function(err, res){
+    if(err){
+      console.log("mysql error: ", err);
+    } else {
+      console.log(res)
+    }
+  })
+}
+
+// update the document in cms db
+UpdateCms = async (doc, prev) => {
+  console.log('UPDATE in CMS DB');
+  var cmsdoc = {
+    title: doc.ogName,
+    file: `http://10.228.19.13:3000/files/${doc.latestName}`,
+    collection_id: 1,
+    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
+  }
+  
+  sql.query("UPDATE wagtail.wagtaildocs_document SET document = ? WHERE file = ?", [cmsdoc, prev], function(err, res){
+    if(err){
+      console.log("mysql error: ", err);
+    } else {
+      console.log(res)
+    }
+  })
+}
+
 /// put for update without incomming https
 async function updateLatest(document, remove, distinct){
 
+    // var distinct = body.dkey;
+    // var cms = body.cms;
     let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct});
 
     console.log(exists);
 
+    // create new
     if(exists === null){
         let latest = new Latest();
 
@@ -91,6 +140,7 @@ async function updateLatest(document, remove, distinct){
         latest.revisions = 1;
         latest.save().then(() => {
             console.log(`saved to latest (there was no existing file with this name so created new latest entry id: ${latest._id}`);
+            addToCms(latest);
             // return latest;
         }).catch(error => {
             console.log("latest not loaded someshit happened");
@@ -98,6 +148,7 @@ async function updateLatest(document, remove, distinct){
             // return error;
         });
     } else {
+      // removing document record
         if (remove) {
           console.log('inside removing the file');
           var latestFlag = false;
@@ -151,6 +202,7 @@ async function updateLatest(document, remove, distinct){
           // //latest.save();
           return;
         } else {
+          // increment and add to array
           exists.revisions = exists.revisions + 1;
 
           exists.latestName = document.name;
@@ -232,7 +284,7 @@ getDistinctHashMap = async (req, res) => {
     // let prevDist = "";
     var objarr = [];
     data.forEach(element => {
-      prevDist = element.dkey;
+      // prevDist = element.dkey;
       if(!dkeys.includes(element.dkey)){
         dkeys.push(element.dkey);
         objarr.push(element);

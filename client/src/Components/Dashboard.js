@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import "semantic-ui-css/semantic.min.css";
 import {
   Divider,
@@ -12,8 +12,7 @@ import {
   Table
 } from "semantic-ui-react";
 
-import image from '../static/images/square-image.png'
-import Loader from 'react-loader-spinner';
+import Loader from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import { fetchLatests, fetchAllDocuments } from "../actions";
 import _ from "lodash";
@@ -27,6 +26,7 @@ class Dashboard extends Component {
     latest: this.props.latests,
     allDocs: this.props.documents,
     numUnique: 0,
+    numBuckets: 0,
     avgRevPerFile: 0,
     totalNumFiles: 0
   };
@@ -46,7 +46,8 @@ class Dashboard extends Component {
     this.setState({
       numUnique: numU,
       avgRevPerFile: typeof arpf == NaN ? 0 : arpf,
-      totalNumFiles: tnf
+      totalNumFiles: tnf,
+      numBuckets: numU
     });
   };
 
@@ -93,7 +94,12 @@ class Dashboard extends Component {
             // content="Like"
             size="large"
             style={{ marginTop: 20 }}
-            onClick={() => this.download( `http://10.228.19.13:3000/files/${element.latestName}`, element.latestName)}
+            onClick={() =>
+              this.download(
+                `http://10.228.19.13:3000/files/${element.latestName}`,
+                element.latestName
+              )
+            }
           >
             <Button.Content hidden>Download</Button.Content>
             <Button.Content visible>
@@ -222,11 +228,29 @@ class Dashboard extends Component {
             </div>
           </Grid.Column>
           <Grid.Column mobile={8} tablet={4} computer={4}>
-            <Image centered circular size="small" src={image} />
+            {/* <Image
+              centered
+              circular
+              size="small"
+              src={window.location.origin + "/images/square-image.png"}
+            />
             <Label basic size="large">
               Label
             </Label>
-            <p>Something else</p>
+            <p>Something else</p> */}
+            <div>
+              <div style={{ marginBottom: 15 }} className="ui image">
+                <i className="far fa-ring fa-10x"></i>
+              </div>
+              <div className="item">
+                <a className="ui teal circular massive label">
+                  {this.state.numBuckets}
+                </a>
+              </div>
+              <div className="item">
+                <p>Number of unique buckets</p>
+              </div>
+            </div>
           </Grid.Column>
         </Grid.Row>
         <Divider section hidden />
@@ -261,13 +285,16 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = ({ documents, latests }) => {
-  console.log('in map state Dashboard.js');
+  console.log("in map state Dashboard.js");
   let latestArr = _.map(latests.dHash);
   let docArr = _.map(documents.dHash);
-  
+
   // console.log(latests);
   // console.log(documents);
   return { documents: docArr, latests: latestArr };
 };
 
-export default connect(mapStateToProps, { fetchLatests, fetchAllDocuments })(Dashboard);
+export default connect(
+  mapStateToProps,
+  { fetchLatests, fetchAllDocuments }
+)(Dashboard);
