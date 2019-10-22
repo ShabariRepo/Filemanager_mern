@@ -7,6 +7,7 @@ const logger = require('morgan');
 const Latest = require('./models/data');
 const Doc = require('./models/document');
 const fs = require('fs');
+const path = require('path');
 const sql = require('./mysqldb');
 
 /**
@@ -21,7 +22,11 @@ app.use(cors());
 // make the folder static & momunt
 app.use(express.static('./public')) 
 const router = express.Router();
-
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerDocument = require('./swagger.json');
+ 
+// router.use('/api-docs', swaggerUi.serve);
+// router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
 // this is our MongoDb database
 const dbRoute = 'mongodb://10.228.19.13:27017/documents'
@@ -71,6 +76,20 @@ const deleteFile = (file) => {
   fs.unlink("public/files/"+file, (err) => {
     if (err) console.log(err);
   })
+}
+
+// delete all files in the file system here
+const deleteAllFiles = (directory) => {
+  fs.readdir("public/files/", (err, files) => {
+    if (err) throw err;
+  
+    for (const file of files) {
+      // fs.unlink(path.join(directory, file), err => {
+      fs.unlink("public/files/"+file, err => {
+        if (err) console.log(err);
+      });
+    }
+  });
 }
 
 
@@ -377,6 +396,21 @@ router.delete('/deleteDoc', function(req, res){
       data: doc,
       message: "document deleted!"
     });
+  })
+});
+
+router.delete('/deleteAllData', (req, res) => {
+  Doc.deleteMany({}, err => {
+    if (err) return res.send(err);
+    deleteAllFiles("public/files/");
+    return res.json({ success: true, message: "All files removed from db" });
+  })
+});
+
+router.delete('/deleteAllLatest', (req, res) => {
+  Latest.deleteMany({}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true, message: "All files removed from db" });
   })
 });
 
