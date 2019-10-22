@@ -4,7 +4,7 @@ import axios from "axios";
 export const addDocument = (payload) => async dispatch => {
     console.log('inside add document action');
     axios
-      .post("http://10.228.19.13:49160/api/upload", payload, {
+      .post("http://10.228.19.14:49160/api/upload", payload, {
         // receive two parameter endpoint url ,form data
       })
       .then(res => {
@@ -23,7 +23,7 @@ export const addDocument = (payload) => async dispatch => {
 export const deleteDocument = (filename) => async dispatch => {
     console.log('inside delete document action');
     axios.delete(
-        "http://10.228.19.13:49160/api/deleteDoc",
+        "http://10.228.19.14:49160/api/deleteDoc",
         {headers: {
           Authorization: "authorizationToken"
         },
@@ -48,7 +48,7 @@ export const fetchDocument = (selectedFile) => async dispatch =>{
   console.log("in fetch specific document action");
 
   axios
-    .post("http://10.228.19.13:49160/api/getDoc", {
+    .post("http://10.228.19.14:49160/api/getDoc", {
       ogName: selectedFile
     })
     .then(response => {
@@ -68,7 +68,7 @@ export const fetchAllDocuments = () => async dispatch =>{
   console.log("in fetch all documents action");
 
   axios
-    .get("http://10.228.19.13:49160/api/getAllDocs")
+    .get("http://10.228.19.14:49160/api/getAllDocs")
     .then(response => {
       console.log(response.data.data);
 

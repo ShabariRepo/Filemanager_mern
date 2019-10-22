@@ -96,7 +96,7 @@ class Dashboard extends Component {
             style={{ marginTop: 20 }}
             onClick={() =>
               this.download(
-                `http://10.228.19.13:3000/files/${element.latestName}`,
+                `http://10.228.19.14:3000/files/${element.latestName}`,
                 element.latestName
               )
             }
