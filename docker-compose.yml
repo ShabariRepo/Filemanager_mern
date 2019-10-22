@@ -15,7 +15,7 @@ services:
       - filemanager-data:/server/app/public/files
       # - ./client/public/files:/client/public/files
       - /server/app/node_modules
-      # - .:/server/app
+      - .:/server/app
     command: nodemon server.js
 
 #  set up client container
