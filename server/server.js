@@ -83,21 +83,11 @@ const deleteFile = (file) => {
 // update documents sql for CMS
 addToCms = async (doc) => {
   console.log('CREATE in CMS DB');
-
-  var date = new Date();
-  date = date.getUTCFullYear()        + '-' +
-          pad(date.getUTCMonth() + 1) + '-' +
-          pad(date.getUTCDate())       + ' ' +
-          pad(date.getUTCHours())      + ':' +
-          pad(date.getUTCMinutes())    + ':' +
-          pad(date.getUTCSeconds());     
-
   var cmsdoc = {
     title: doc.ogName,
     file: `http://10.228.19.13:3000/files/${doc.latestName}`,
     collection_id: 1,
-    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01',
-    created_at: doc.createdAt.slice(0, 19).replace('T', ' ')
+    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
   }
 
   sql.query("INSERT INTO wagtail.wagtaildocs_document SET ?", cmsdoc, function(err, res){
@@ -376,12 +366,12 @@ router.post('/upload', (req, res) => {
 
 router.delete('/deleteDoc', function(req, res){
   console.log(req.body)
-  const { source } = req.body;
+  const { source, dkey } = req.body;
   Doc.findOneAndRemove({ "name": source }, (err, doc, result) => {
     if(err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true, "");
+    updateLatest(doc, true, dkey);
     return res.json({ 
       success: true,
       data: doc,

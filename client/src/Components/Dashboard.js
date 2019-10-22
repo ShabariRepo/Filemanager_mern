@@ -74,7 +74,8 @@ class Dashboard extends Component {
               pathname: "/file",
               state: {
                 selectedFile: element.ogName,
-                latestVersion: element.latestName
+                latestVersion: element.latestName,
+                distinction: element.dkey,
               }
             }}
           >
