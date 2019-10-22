@@ -29,7 +29,7 @@ const router = express.Router();
 // router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
 // this is our MongoDb database
-const dbRoute = 'mongodb://10.228.19.13:27017/documents'
+const dbRoute = 'mongodb://10.228.19.14:27017/documents'
 //'mongodb://docuser:admin@127.0.0.1:27017/documents?ssl=false'
   
 
@@ -104,7 +104,7 @@ addToCms = async (doc) => {
   console.log('CREATE in CMS DB');
   var cmsdoc = {
     title: doc.ogName,
-    file: `http://10.228.19.13:3000/files/${doc.latestName}`,
+    file: `http://10.228.19.14:3000/files/${doc.latestName}`,
     collection_id: 1,
     file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
   }
@@ -123,7 +123,7 @@ UpdateCms = async (doc, prev) => {
   console.log('UPDATE in CMS DB');
   var cmsdoc = {
     title: doc.ogName,
-    file: `http://10.228.19.13:3000/files/${doc.latestName}`,
+    file: `http://10.228.19.14:3000/files/${doc.latestName}`,
     collection_id: 1,
     file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
   }
@@ -362,7 +362,7 @@ router.post('/upload', (req, res) => {
               success: true,
               id: data._id,
               data: data,
-              url: `http://10.228.19.13:3000/files/${data.name}`,
+              url: `http://10.228.19.14:3000/files/${data.name}`,
               message: "Document uploaded!"
             });
         })

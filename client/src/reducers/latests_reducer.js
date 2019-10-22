@@ -37,7 +37,7 @@ export default function(state = initialState, action) {
           ...state
         };
       } else {
-        axios.post("http://10.228.19.13:49160/api/getLatest", {
+        axios.post("http://10.228.19.14:49160/api/getLatest", {
           ogName: action.payload.ogName
         }).then( latest => {
           return {

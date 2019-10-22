@@ -97,7 +97,7 @@ class File extends Component {
   //   // console.log(sid);
 
   //   try {
-  //     const res = await axios.post("http://10.228.19.13:49160/api/getDoc", {
+  //     const res = await axios.post("http://10.228.19.14:49160/api/getDoc", {
   //       ogName: selectedFile
   //     });
 
@@ -166,7 +166,7 @@ class File extends Component {
             style={{ marginTop: 20 }}
             onClick={() =>
               this.download(
-                `http://10.228.19.13:3000/files/${element.name}`,
+                `http://10.228.19.14:3000/files/${element.name}`,
                 element.name
               )
             }
