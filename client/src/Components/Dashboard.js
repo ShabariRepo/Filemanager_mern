@@ -75,7 +75,7 @@ class Dashboard extends Component {
               state: {
                 selectedFile: element.ogName,
                 latestVersion: element.latestName,
-                distinction: element.dkey,
+                dkey: element.dkey,
               }
             }}
           >
