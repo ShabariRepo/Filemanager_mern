@@ -7,8 +7,10 @@ ENV https_proxy http://10.228.12.41:8888
 
 WORKDIR '/server/app'
 COPY package.json .
-RUN npm install
 COPY . .
+RUN npm install --save mysql
+RUN npm install
+
 RUN npm install -g nodemon
 # CMD [ "nodemon", "server.js" ]
 # nodemon ./server.js

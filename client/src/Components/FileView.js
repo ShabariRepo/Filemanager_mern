@@ -41,6 +41,7 @@ class File extends Component {
     this.setState({
       selectedFile: this.props.location.state.selectedFile,
       latestVersion: this.props.location.state.latestVersion,
+      distinction: this.props.location.state.dkey,
       versions: vrs,
       loading: false
     });
@@ -131,7 +132,7 @@ class File extends Component {
       loading: true
     });
 
-    this.props.deleteDocument(versionName);
+    this.props.deleteDocument(versionName, this.state.distinction);
   };
 
   populateTable = () => {
