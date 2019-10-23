@@ -105,7 +105,7 @@ addToCms = async (doc) => {
   var dt = new Date().toISOString().slice(0, 19).replace('T', ' ');
   var cmsdoc = {
     title: doc.ogName,
-    file: `http://10.228.19.14:3000/files/${doc.latestName}`,
+    file: `http://10.228.19.13:3000/files/${doc.latestName}`,
     collection_id: 1,
     file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01',
     created_at: dt
@@ -173,6 +173,7 @@ async function updateLatest(document, remove, distinct){
         if (remove) {
           console.log('inside removing the file');
           var latestFlag = false;
+          var oldExists = {};
           // shouldn't be able to delete latest
           if(exists.latestName === document.name){
             console.log(`Cannot Delete latest version please override if you want to delete latest`);
@@ -188,6 +189,7 @@ async function updateLatest(document, remove, distinct){
               console.log(`removed file from latest cuz it was the only one and was deleted ${exists._id}`)
             });
             deleteFile(document.name);
+            // delete from CMS
             return;
           }
           
@@ -195,7 +197,9 @@ async function updateLatest(document, remove, distinct){
           if(exists.versions.includes(document.name)){
             var idx = exists.versions.lastIndexOf(document.name);
             console.log(idx);
-            
+            // create copy of var
+            oldExists = Object.assign({}, exists);
+
             exists.versions.splice(idx, 1);
             if(latestFlag){
               let prior = idx - 1;
@@ -215,6 +219,7 @@ async function updateLatest(document, remove, distinct){
               console.log(
                 `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
               );
+              UpdateCms(exists, `http://10.228.19.13:3000/files/${oldExists.latsetName}`);
             })
             .catch(err => {
               console.log(err);
@@ -223,6 +228,9 @@ async function updateLatest(document, remove, distinct){
           // //latest.save();
           return;
         } else {
+          // update sql for cms so make copy of exists
+          var oldExists = Object.assign({}, exists);
+          
           // increment and add to array
           exists.revisions = exists.revisions + 1;
 
@@ -236,7 +244,7 @@ async function updateLatest(document, remove, distinct){
               console.log(
                 `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
               );
-              // return exists;
+              UpdateCms(exists, `http://10.228.19.13:3000/files/${oldExists.latsetName}`);
             })
             .catch(err => {
               console.log(err);
