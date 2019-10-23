@@ -1,0 +1,12 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "File manager & versioning system, API bank",
+        "description": "This application takes in files and versions them accordingly, it also arranges them based on the bucket specifications and makes all files avaiable for download.  FYI not a full object storage but as 2x redundancy to compensate for loss",
+        "license": {
+            "name": "CLOSED",
+            "url": "<server-ip>/license/closed"
+        }
+    }
+}
