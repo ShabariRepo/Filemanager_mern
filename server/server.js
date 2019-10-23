@@ -102,11 +102,13 @@ const deleteAllFiles = (directory) => {
 // update documents sql for CMS
 addToCms = async (doc) => {
   console.log('CREATE in CMS DB');
+  var dt = new Date().toISOString().slice(0, 19).replace('T', ' ');
   var cmsdoc = {
     title: doc.ogName,
     file: `http://10.228.19.14:3000/files/${doc.latestName}`,
     collection_id: 1,
-    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01'
+    file_hash: 'ccbd55c2102e4a3d10919ee387b7cef823459e01',
+    created_at: dt
   }
 
   sql.query("INSERT INTO wagtail.wagtaildocs_document SET ?", cmsdoc, function(err, res){
