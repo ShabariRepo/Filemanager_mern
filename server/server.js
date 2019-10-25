@@ -170,79 +170,87 @@ async function updateLatest(document, remove, distinct){
         });
     } else {
       // removing document record
-        if (remove) {
-          console.log('inside removing the file');
-          var latestFlag = false;
-          // shouldn't be able to delete latest
-          if(exists.latestName === document.name){
-            console.log(`Cannot Delete latest version please override if you want to delete latest`);
-            latestFlag = true;
-          }
-
-          exists.revisions = (exists.revisions > 0) ? exists.revisions - 1 : exists.revisions;
-
-          
-          // if the last one is removed then remove the latest document
-          if(exists.revisions < 1){
-            exists.remove().then(() => {
-              console.log(`removed file from latest cuz it was the only one and was deleted ${exists._id}`)
-            });
-            deleteFile(document.name);
-            return;
-          }
-          
-          // if array contains the given name then remove it at the index
-          if(exists.versions.includes(document.name)){
-            var idx = exists.versions.lastIndexOf(document.name);
-            console.log(idx);
-            
-            exists.versions.splice(idx, 1);
-            if(latestFlag){
-              let prior = idx - 1;
-              exists.latestName = exists.versions[prior];
-              console.log(`Deleting latest version ${document.name} and moving previous up ${exists.versions[prior]}`);
-            }
-          } else{
-            console.log(`this file did not exist in the versions array ${document.name}`);
-            return;
-          }
-
-          // else save the document with 1 version less and check if the latest was removed
-          deleteFile(document.name);
-          exists
-            .save()
-            .then(() => {
-              console.log(
-                `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
-              );
-            })
-            .catch(err => {
-              console.log(err);
-            });
-
-          // //latest.save();
-          return;
-        } else {
-          // increment and add to array
-          exists.revisions = exists.revisions + 1;
-
-          exists.latestName = document.name;
-          exists.fileBsonId = document._id;
-          exists.versions.push(document.name);
-
-          exists
-            .save()
-            .then(() => {
-              console.log(
-                `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
-              );
-              // return exists;
-            })
-            .catch(err => {
-              console.log(err);
-              // return err;
-            });
+      if (remove) {
+        console.log('inside removing the file');
+        var latestFlag = false;
+        var oldExists = {};
+        // shouldn't be able to delete latest
+        if(exists.latestName === document.name){
+          console.log(`Cannot Delete latest version please override if you want to delete latest`);
+          latestFlag = true;
         }
+
+        exists.revisions = (exists.revisions > 0) ? exists.revisions - 1 : exists.revisions;
+
+        
+        // if the last one is removed then remove the latest document
+        if(exists.revisions < 1){
+          exists.remove().then(() => {
+            console.log(`removed file from latest cuz it was the only one and was deleted ${exists._id}`)
+          });
+          deleteFile(document.name);
+          // delete from CMS
+          return;
+        }
+        
+        // if array contains the given name then remove it at the index
+        if(exists.versions.includes(document.name)){
+          var idx = exists.versions.lastIndexOf(document.name);
+          console.log(idx);
+          // create copy of var
+          oldExists = Object.assign({}, exists);
+
+          exists.versions.splice(idx, 1);
+          if(latestFlag){
+            let prior = idx - 1;
+            exists.latestName = exists.versions[prior];
+            console.log(`Deleting latest version ${document.name} and moving previous up ${exists.versions[prior]}`);
+          }
+        } else{
+          console.log(`this file did not exist in the versions array ${document.name}`);
+          return;
+        }
+
+        // else save the document with 1 version less and check if the latest was removed
+        deleteFile(document.name);
+        exists
+          .save()
+          .then(() => {
+            console.log(
+              `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
+            );
+            UpdateCms(exists, `http://10.228.19.14:3000/files/${oldExists.latsetName}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
+        // //latest.save();
+        return;
+      } else {
+        // update sql for cms so make copy of exists
+        var oldExists = Object.assign({}, exists);
+        
+        // increment and add to array
+        exists.revisions = exists.revisions + 1;
+
+        exists.latestName = document.name;
+        exists.fileBsonId = document._id;
+        exists.versions.push(document.name);
+
+        exists
+          .save()
+          .then(() => {
+            console.log(
+              `saved to latest (existing latest was there so OVERRIDE) id: ${exists._id}`
+            );
+            UpdateCms(exists, `http://10.228.19.14:3000/files/${oldExists.latsetName}`);
+          })
+          .catch(err => {
+            console.log(err);
+            // return err;
+          });
+      }
     }
 }
 
