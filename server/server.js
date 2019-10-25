@@ -140,11 +140,11 @@ UpdateCms = async (doc, prev) => {
 }
 
 /// put for update without incomming https
-async function updateLatest(document, remove, distinct){
+async function updateLatest(document, remove, distinct, opid, quoteid){
 
     // var distinct = body.dkey;
     // var cms = body.cms;
-    let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct});
+    let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct, "opid": opid, "quoteid": quoteid});
 
     console.log(exists);
 
@@ -342,10 +342,10 @@ router.post('/upload', (req, res) => {
 
     var data = new Doc();
     //console.log(req);
-    if(req.body.dkey === "" || req.body  === undefined){
+    if(req.body.dkey === ""|| req.body.opid === "" || req.body.quoteid === "" || req.body  === undefined){
       return res.status(400).json({
         error,
-        message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
+        message: "document not uploaded! Please pass a new distinct folder, quote id and opportunity id classificaiton/topic or an existing one to update"
       });
     }
     upload(req, res, function (err) {
@@ -367,7 +367,7 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false, req.body.dkey);
+            updateLatest(data, false, req.body.dkey, req.body.opid, req.body.quoteid);
             return res.status(201).json({
               success: true,
               id: data._id,
@@ -395,12 +395,12 @@ router.post('/upload', (req, res) => {
 
 router.delete('/deleteDoc', function(req, res){
   console.log(req.body)
-  const { source, dkey } = req.body;
+  const { source, dkey, opid, quoteid } = req.body;
   Doc.findOneAndRemove({ "name": source }, (err, doc, result) => {
     if(err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true, dkey);
+    updateLatest(doc, true, dkey, opid, quoteid);
     return res.json({ 
       success: true,
       data: doc,

@@ -54,11 +54,15 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null && this.state.dkey !== "") {
+    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "")) {
       console.log(this.state.dkey);
+      console.log(this.state.opid);
+      console.log(this.state.quoteid);
 
       data.append("file", this.state.selectedFile);
       data.append("dkey", this.state.dkey);
+      data.append("opid", this.state.opid);
+      data.append("quoteid", this.state.quoteid);
 
       //console.log(data);
       // console.log(this.state.selectedFile);
@@ -85,10 +89,36 @@ class Upload extends Component {
                   >
                     <Input
                       icon={{ name: "folder", circular: true, link: true }}
-                      placeholder="Search..."
+                      placeholder="label..."
                       onChange={(e, { value }) => {
                         this.setState({
                           dkey: value
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="opportunity id..."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          opid: value
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="quote id..."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          quoteid: value
                         });
                       }}
                     />

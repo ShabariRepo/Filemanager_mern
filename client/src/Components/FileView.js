@@ -42,6 +42,8 @@ class File extends Component {
       selectedFile: this.props.location.state.selectedFile,
       latestVersion: this.props.location.state.latestVersion,
       distinction: this.props.location.state.dkey,
+      opid: this.props.location.state.opid,
+      quoteid: this.props.location.state.quoteid,
       versions: vrs,
       loading: false
     });
@@ -132,7 +134,7 @@ class File extends Component {
       loading: true
     });
 
-    this.props.deleteDocument(versionName, this.state.distinction);
+    this.props.deleteDocument(versionName, this.state.distinction, this.state.opid, this.state.quoteid);
   };
 
   populateTable = () => {

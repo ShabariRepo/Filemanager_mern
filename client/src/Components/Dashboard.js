@@ -76,6 +76,8 @@ class Dashboard extends Component {
                 selectedFile: element.ogName,
                 latestVersion: element.latestName,
                 dkey: element.dkey,
+                opid: element.opid,
+                quoteid: element.quoteid
               }
             }}
           >
