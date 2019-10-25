@@ -331,6 +331,63 @@ getDistinctHashMap = async (req, res) => {
   }).sort({ dkey: 1 }).th;
 }
 
+// get by opportunity id
+getOpIdHashMap = async (req, res) => {
+  Latest.find((err, data) => {
+    okeys = [];
+    latest = {};
+
+    if (err) return res.json({ success: false, error: err });
+
+    // let prevDist = "";
+    data.forEach(element => {
+      // prevDist = element.opid;
+      if(!okeys.includes(element.opid)){
+        let objarr = [];
+        okeys.push(element.opid);
+        objarr.push(element);
+        latest[element.opid] = objarr;
+      } else{
+        latest[element.opid].push(element);
+      }
+    });
+    dhash = {
+      okeys: okeys,
+      fhash: latest
+    };
+
+    return res.json({ success: true, data: dhash });
+  }).sort({ opid: 1 }).th;
+}
+
+// get by quote id
+getQuoteIdHashMap = async (req, res) => {
+  Latest.find((err, data) => {
+    qkeys = [];
+    latest = {};
+
+    if (err) return res.json({ success: false, error: err });
+
+    // let prevDist = "";
+    data.forEach(element => {
+      // prevDist = element.quoteid;
+      if(!qkeys.includes(element.quoteid)){
+        let objarr = [];
+        qkeys.push(element.quoteid);
+        objarr.push(element);
+        latest[element.quoteid] = objarr;
+      } else{
+        latest[element.quoteid].push(element);
+      }
+    });
+    dhash = {
+      qkeys: qkeys,
+      fhash: latest
+    };
+
+    return res.json({ success: true, data: dhash });
+  }).sort({ quoteid: 1 }).th;
+}
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * API API API API API API API API API
@@ -472,6 +529,12 @@ router.get('/getAllDistinct', getDistinctFromLatest);
 
 // get distinct hash values return all sorted into hash
 router.get('/getAllDkeyHash', getDistinctHashMap);
+
+// get opid hash values return all sorted into hash
+router.get('/getAllByOpHash', getOpIdHashMap);
+
+// get quoteid hash values return all sorted into hash
+router.get('/getAllByQuoteHash', getQuoteIdHashMap);
 
 /*  sample apis
 
