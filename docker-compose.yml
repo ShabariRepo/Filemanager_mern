@@ -13,6 +13,7 @@ services:
     volumes: 
       - ./server:/server/app
       - filemanager-data:/server/app/public/files
+      - /content/filemanager_data/:/server/app/public/files
       # - ./client/public/files:/client/public/files
       - /server/app/node_modules
       - .:/server/app
