@@ -14,6 +14,7 @@ import {
 
 import Loader from "react-loader-spinner";
 import { Link } from "react-router-dom";
+import queryString from 'query-string';
 import { fetchLatests, fetchAllDocuments } from "../actions";
 import _ from "lodash";
 
@@ -131,6 +132,9 @@ class Dashboard extends Component {
   componentDidMount() {
     console.log("component mounted");
     //this.getLatestPosts();
+    let search = queryString.parse(this.props.location.search);
+    console.log(search);
+
     this.props.fetchLatests();
     this.props.fetchAllDocuments();
   }
