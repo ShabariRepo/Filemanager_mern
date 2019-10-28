@@ -13,6 +13,7 @@ import "./App.css";
 import UploadForm from './Components/Upload';
 import Dashboard from './Components/Dashboard';
 import File from './Components/FileView';
+import CherwellUpload from './Components/ChUpload';
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
               <Menu.Item as={Link} to="/">Overview</Menu.Item>
               {/* <NavLink to="/upload">Upload</NavLink> */}
               <Menu.Item as={Link} to="/upload">Upload</Menu.Item>
+              <Menu.Item disabled={true} style={{ display: 'none' }} as={Link} to="/cherwell">Upload Cherwell</Menu.Item>
               <Divider hidden />
               <Menu.Item as="a">Reports (coming soon..)</Menu.Item>
               <Menu.Item as="a">Analytics (coming soon..)</Menu.Item>
@@ -72,6 +74,7 @@ function App() {
             {/* <Dashboard /> */}
             <Route exact path="/" component={Dashboard} />
             <Route path="/upload" component={UploadForm} />
+            <Route path="/cherwell" component={CherwellUpload} />
             <Route path="/file" component={File} />
           </Switch>
           </Grid.Column>
