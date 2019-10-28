@@ -12,7 +12,7 @@ services:
       - "49160:8000"
     volumes: 
       - ./server:/server/app
-      - filemanager-data:/server/app/public/files
+      #- filemanager-data:/server/app/public/files
       - /content/filemanager_data/:/server/app/public/files
       # - ./client/public/files:/client/public/files
       - /server/app/node_modules
@@ -31,7 +31,8 @@ services:
     volumes:
       - ./client/src:/app/client/src
       - ./client/public:/app/client/public
-      - filemanager-data:/usr/share/nginx/html/files
+      #- filemanager-data:/usr/share/nginx/html/files
+      - /content/filemanager_data/:/usr/share/nginx/html/files
       - /app/node_modules
       - .:/app
     links:
