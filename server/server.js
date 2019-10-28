@@ -344,7 +344,7 @@ router.post('/upload', (req, res) => {
 
     var data = new Doc();
     //console.log(req);
-    if(req.body.dkey === "" || req.body  === undefined){
+    if(req.body.dkey === "" || req.body.opid === "" || req.body.quoteid === "" || req.body  === undefined){
       return res.status(400).json({
         error,
         message: "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
@@ -369,7 +369,7 @@ router.post('/upload', (req, res) => {
         data.required = ['1', '2', '3'];
         data.save()
         .then(() => {
-            updateLatest(data, false, req.body.dkey);
+            updateLatest(data, false, req.body.dkey, req.body.opid, req.body.quoteid);
             return res.status(201).json({
               success: true,
               id: data._id,
