@@ -156,6 +156,8 @@ async function updateLatest(document, remove, distinct, opid, quoteid){
         latest.latestName = document.name;
         latest.fileBsonId = document._id;
         latest.dkey = distinct;
+        latest.opid = opid;
+        latest.quoteid = quoteid;
         latest.versions.push(document.name);
         
         latest.revisions = 1;
