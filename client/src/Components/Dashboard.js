@@ -13,7 +13,7 @@ import {
 } from "semantic-ui-react";
 
 import Loader from "react-loader-spinner";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import queryString from 'query-string';
 import { fetchLatests, fetchAllDocuments } from "../actions";
 import _ from "lodash";
@@ -24,6 +24,7 @@ class Dashboard extends Component {
       display: "none"
     },
     loading: true,
+    toCherwell: false,
     latest: this.props.latests,
     allDocs: this.props.documents,
     numUnique: 0,
@@ -132,9 +133,14 @@ class Dashboard extends Component {
   componentDidMount() {
     console.log("component mounted");
     //this.getLatestPosts();
-    let search = queryString.parse(this.props.location.search);
+    var search = queryString.parse(this.props.location.search);
     console.log(search);
-
+ 
+    //var history = useHistory(); 
+    if (search.src === 'cherwell') {
+      this.setState({ toCherwell: true });
+	//history.push("/cherwell");
+    }
     this.props.fetchLatests();
     this.props.fetchAllDocuments();
   }
@@ -148,6 +154,9 @@ class Dashboard extends Component {
 
   render() {
     console.log("rendering");
+    if(this.state.toCherwell){
+        return <Redirect to='/cherwell' />
+    } else{
     return (
       <Grid padded>
         <Grid.Row>
@@ -289,6 +298,7 @@ class Dashboard extends Component {
       </Grid>
     );
   }
+}
 }
 
 const mapStateToProps = ({ documents, latests }) => {
