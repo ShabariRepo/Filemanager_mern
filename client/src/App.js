@@ -46,7 +46,7 @@ function App() {
               <Menu.Item as={Link} to="/">Overview</Menu.Item>
               {/* <NavLink to="/upload">Upload</NavLink> */}
               <Menu.Item as={Link} to="/upload">Upload</Menu.Item>
-              <Menu.Item disabled={true} as={Link} to="/cherwell">Upload Cherwell</Menu.Item>
+              <Menu.Item disabled={true} style={{ display: 'none' }} as={Link} to="/cherwell">Upload Cherwell</Menu.Item>
               <Divider hidden />
               <Menu.Item as="a">Reports (coming soon..)</Menu.Item>
               <Menu.Item as="a">Analytics (coming soon..)</Menu.Item>
