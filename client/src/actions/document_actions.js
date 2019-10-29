@@ -16,7 +16,7 @@ export const addDocument = (payload) => async dispatch => {
         toast.success("Upload Successfull!!");
         return dispatch({ type: ADD_DOCUMENNT, payload: res.data.data, id: res.data.id });
       }).catch(err => {
-          
+        toast.error("something went wrong with the dev server");
         console.log(err);
         return ("error");
       });

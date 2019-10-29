@@ -253,7 +253,7 @@ class Dashboard extends Component {
             <p>Something else</p> */}
               <div>
                 <div style={{ marginBottom: 15 }} className="ui image">
-                  <i className="far fa-ring fa-10x"></i>
+                  <i className="fas fa-ring fa-10x"></i>
                 </div>
                 <div className="item">
                   <a className="ui teal circular massive label">
