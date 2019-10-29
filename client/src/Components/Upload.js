@@ -80,15 +80,41 @@ class Upload extends Component {
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="form">
                 <div style={{ paddingTop: 70 }}>
+                <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="label..."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          dkey: value
+                        });
+                      }}
+                    />
+                  </div>
                   <div
                     className="form-group" //style={{ paddingTop: 50 }}
                   >
                     <Input
                       icon={{ name: "folder", circular: true, link: true }}
-                      placeholder="Search..."
+                      placeholder="opportunity id..."
                       onChange={(e, { value }) => {
                         this.setState({
-                          dkey: value
+                          opid: value
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="quote id..."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          quoteid: value
                         });
                       }}
                     />
