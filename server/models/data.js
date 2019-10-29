@@ -9,6 +9,8 @@ const Latest = new Schema(
     latestName: { type: String, required: true },
     fileBsonId: { type: String, required: true},
     dkey: {type: String, required: true},
+    opid: {type: String, required: true},
+    quoteid: {type: String, required: true},
     revisions: { type: Number, default: 0 },
     versions: { type: [String], required: true },
   },
