@@ -18,7 +18,9 @@ class Upload extends Component {
     super(props);
     this.state = {
       selectedFile: null,
-      dkey: ""
+      dkey: "",
+      opid: "",
+      quoteid: ""
     };
   }
 
