@@ -140,25 +140,25 @@ UpdateCms = async (doc, prev) => {
 }
 
 /// put for update without incomming https
-async function updateLatest(document, remove, distinct){
+async function updateLatest(document, remove, distinct, opid, quoteid){
 
-    // var distinct = body.dkey;
-    // var cms = body.cms;
-    let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct});
+  // var distinct = body.dkey;
+  // var cms = body.cms;
+  let exists = await Latest.findOne({"ogName": document.ogName, "dkey": distinct, "opid": opid, "quoteid": quoteid});
 
-    console.log(exists);
+  console.log(exists);
 
-    // create new
-    if(exists === null){
-        let latest = new Latest();
+  // create new
+  if(exists === null){
+      let latest = new Latest();
 
-        latest.ogName = document.ogName;
-        latest.latestName = document.name;
-        latest.fileBsonId = document._id;
-        latest.dkey = distinct;
-        latest.opid = opid;
-        latest.quoteid = quoteid;
-        latest.versions.push(document.name);
+      latest.ogName = document.ogName;
+      latest.latestName = document.name;
+      latest.fileBsonId = document._id;
+      latest.dkey = distinct;
+      latest.opid = opid;
+      latest.quoteid = quoteid;
+      latest.versions.push(document.name);
         
         latest.revisions = 1;
         latest.save().then(() => {

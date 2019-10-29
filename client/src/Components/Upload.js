@@ -54,11 +54,15 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null && this.state.dkey !== "") {
+    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "")) {
       console.log(this.state.dkey);
+      console.log(this.state.opid);
+      console.log(this.state.quoteid);
 
       data.append("file", this.state.selectedFile);
       data.append("dkey", this.state.dkey);
+      data.append("opid", this.state.opid);
+      data.append("quoteid", this.state.quoteid);
 
       //console.log(data);
       // console.log(this.state.selectedFile);
