@@ -3,6 +3,7 @@ services:
   # setup node server container
   server:
     build: ./server
+    restart: always
     expose:
       - 8000
     environment: 
