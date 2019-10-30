@@ -378,11 +378,46 @@ var cherwellToken = "";
 postToCherwell = async (link, busObId, busObPubicId) => {
   // need to get token first
   if (cherwellToken === "") {
-    await getCherwellToken();
-    console.log("await token needed if displayed before request comes back");
-  }
+    // getCherwellToken();
+    // console.log("await token needed if displayed before request comes back");
+    const requestBody = {
+      client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+      grant_type: "password",
+      username: "Cherwell\\esbtester",
+      password: "Testtest1"
+    };
 
-  // then post to cherwell with new json
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+
+    axios
+      .post(cTokenUrl, qs.stringify(requestBody), config)
+      .then(result => {
+        // save token in var
+        console.log(
+          `success requesting token from cherwell: ${result.access_token}`
+        );
+        cherwellToken = result.access_token;
+
+        pushToDestC(link, busObId, busObPubicId);
+      })
+      .catch(err => {
+        // Do somthing
+        console.log("There was an issue with getting cherwell token");
+        console.log(err);
+      });
+  } else {
+    // then post to cherwell with new json
+    pushToDestC(link, busObId, busObPubicId);
+  }
+};
+
+// push to cherwel
+pushToDestC = (link, busObId, busObPubicId) => {
+
   var config = {
     headers: { Authorization: "bearer " + cherwellToken }
   };
@@ -396,7 +431,7 @@ postToCherwell = async (link, busObId, busObPubicId) => {
     url: link
   };
 
-  Axios.post(cPushUrl, bodyParameters, config)
+  axios.post(cPushUrl, bodyParameters, config)
     .then(response => {
       console.log("successfully pushed to cherwell");
       console.log(response);
@@ -405,7 +440,7 @@ postToCherwell = async (link, busObId, busObPubicId) => {
       console.log("some shit happened");
       console.log(error);
     });
-};
+}
 
 // axios x-www-form-urlencoded post request
 getCherwellToken = () => {
