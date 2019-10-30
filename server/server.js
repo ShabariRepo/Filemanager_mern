@@ -431,7 +431,7 @@ pushToDestC = (link, busObId, busObPubicId) => {
     url: link
   };
 
-  axios.post(cPushUrl, bodyParameters, config)
+  axios.put(cPushUrl, bodyParameters, config)
     .then(response => {
       console.log("successfully pushed to cherwell");
       console.log(response);
