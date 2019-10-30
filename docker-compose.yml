@@ -10,6 +10,7 @@ services:
       APP_SERVER_PORT: 8000
     ports: 
       - "49160:8000"
+    restart: always
     volumes: 
       - ./server:/server/app
       #- filemanager-data:/server/app/public/files
