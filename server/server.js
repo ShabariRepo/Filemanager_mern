@@ -378,7 +378,7 @@ var cherwellToken = "";
 postToCherwell = async (link, busObId, busObPubicId) => {
   // need to get token first
   if (cherwellToken === "") {
-    await this.getCherwellToken();
+    await getCherwellToken();
     console.log("await token needed if displayed before request comes back");
   }
 
@@ -500,7 +500,7 @@ router.post("/upload", (req, res) => {
           updateLatest(
             data,
             false,
-            req.body.dkey,
+            "cherwell",
             req.body.busObId,
             req.body.AccountId
           );
