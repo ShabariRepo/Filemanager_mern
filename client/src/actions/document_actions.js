@@ -1,5 +1,7 @@
 import { ADD_DOCUMENNT, FETCH_DOCUMENT, DELETE_DOCUMENT, FETCH_ALL_DOCUMENTS } from "./types";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const addDocument = (payload) => async dispatch => {
     console.log('inside add document action');
@@ -11,10 +13,10 @@ export const addDocument = (payload) => async dispatch => {
         // then print response status
         console.log(res.statusText);
         //console.log(res);
-        
+        toast.success("Upload Successfull!!");
         return dispatch({ type: ADD_DOCUMENNT, payload: res.data.data, id: res.data.id });
       }).catch(err => {
-          
+        toast.error("Something went wrong");
         console.log(err);
         return ("error");
       });

@@ -18,7 +18,9 @@ class Upload extends Component {
     super(props);
     this.state = {
       selectedFile: null,
-      dkey: ""
+      dkey: "",
+      opid: "",
+      quoteid: ""
     };
   }
 
@@ -29,15 +31,15 @@ class Upload extends Component {
   componentWillReceiveProps(nextProps) {
     console.log("in will receive Upload screen");
     console.log(nextProps);
-    if(nextProps.docs.length > this.props.docs.length)
-      this.notify();
+    // if(nextProps.docs.length > this.props.docs.length)
+    //   this.notify();
     
     this.setState({
       selectedFile: null,
       dkey: ""
     });
 
-    //nextProps.history.goBack();
+    //nextProps.hisdtory.goBack();
     //setTimeout(function(){ nextProps.history.push("/") }, 3000);
   }
 
