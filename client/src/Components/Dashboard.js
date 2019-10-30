@@ -25,6 +25,9 @@ class Dashboard extends Component {
     },
     loading: true,
     toCherwell: false,
+    busObId: '',
+    busObPublicId: '',
+    AccountId: '',
     latest: this.props.latests,
     allDocs: this.props.documents,
     numUnique: 0,
@@ -135,7 +138,13 @@ class Dashboard extends Component {
     console.log(search);
 
     if (search.src === "cherwell") {
-      this.setState({ toCherwell: true });
+      this.setState({ 
+        toCherwell: true,
+        busObId: search.busObId,
+        busObPublicId: search.busObPublicId,
+        AccountId: search.AccountId,
+
+      });
       //history.push("/cherwell");
     }
     this.props.fetchLatests();
@@ -152,7 +161,14 @@ class Dashboard extends Component {
   render() {
     console.log("rendering");
     if (this.state.toCherwell) {
-      return <Redirect to="/cherwell" />;
+      return <Redirect to={{
+        pathname: "/cherwell",
+        state: {
+          busObId: this.state.busObId,
+          busObPublicId: this.state.busObPublicId,
+          AccountId: this.state.AccountId
+        }
+      }} />;
     } else {
       return (
         <Grid padded>

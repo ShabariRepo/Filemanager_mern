@@ -6,26 +6,38 @@ import {
   Container,
   Header,
   Button,
-  Icon,
-  TextArea,
-  Input
+  Icon
 } from "semantic-ui-react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import "react-toastify/dist/ReactToastify.css";
 
+import Loader from "react-loader-spinner";
+
 class ChUpload extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       selectedFile: null,
-      dkey: ""
+      dkey: "",
+      busObId: '',
+      busObPublicId: '',
+      AccountId: '',
     };
   }
 
   componentDidMount() {
     console.log("did mount upload.js"); //this.props);
     this.cherwellHello();
+
+    this.setState({
+      selectedFile: null,
+      dkey: "cherwell",
+      busObId: this.props.location.state.busObId,
+      busObPublicId: this.props.location.state.busObPublicId,
+      AccountId: this.props.location.state.AccountId,
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +48,7 @@ class ChUpload extends Component {
     
     this.setState({
       selectedFile: null,
-      dkey: ""
+      dkey: "",
     });
 
     //nextProps.history.goBack();
@@ -56,16 +68,22 @@ class ChUpload extends Component {
   cherwellHello = () => toast.info("Hello Cherwell User, welcome!!");
 
   onClickHandler = () => {
+    this.setState({
+      loading: true
+    });
     const data = new FormData();
-    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "")) {
+    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.busObId !== "" || this.state.AccountId !== "" || this.state.busObPublicId !== "")) {
       console.log(this.state.dkey);
-      console.log(this.state.opid);
-      console.log(this.state.quoteid);
+      console.log(this.state.busObPublicId);
+      console.log(this.state.busObId);
 
       data.append("file", this.state.selectedFile);
       data.append("dkey", this.state.dkey);
-      data.append("opid", this.state.opid);
-      data.append("quoteid", this.state.quoteid);
+      data.append("busObId", this.state.busObId);
+      data.append("AccountId", this.state.AccountId);
+      data.append("busObPublicId", this.state.busObPublicId);
+      data.append("cherwell", true);
+      
       //console.log(data);
       // console.log(this.state.selectedFile);
 
@@ -88,12 +106,18 @@ class ChUpload extends Component {
       })
       .catch(err => {
         console.log(err);
+        this.setState({
+          loading: false
+        });
         return "error";
       });
     } else {
       toast.error("Please select a file and add a topic/folder dkey");
     }
 
+    this.setState({
+      loading: false
+    });
     document.getElementById("form").reset();
   };
 
@@ -101,50 +125,17 @@ class ChUpload extends Component {
     return (
       <Container fluid>
         <Header as="h2">Upload a file</Header>
+
+        {this.state.loading ? (
+          <Loader type="Puff" color="#2BAD60" height={100} width={100} />
+        ) : (
+          <div></div>
+        )}
         <div className="row" style={{ textAlign: "center" }}>
           <div className="col-md-12">
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="form">
                 <div style={{ paddingTop: 70 }}>
-                  <div
-                    className="form-group" //style={{ paddingTop: 50 }}
-                  >
-                    <Input
-                      icon={{ name: "folder", circular: true, link: true }}
-                      placeholder="label..."
-                      onChange={(e, { value }) => {
-                        this.setState({
-                          dkey: value
-                        });
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="form-group" //style={{ paddingTop: 50 }}
-                  >
-                    <Input
-                      icon={{ name: "folder", circular: true, link: true }}
-                      placeholder="opportunity id..."
-                      onChange={(e, { value }) => {
-                        this.setState({
-                          opid: value
-                        });
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="form-group" //style={{ paddingTop: 50 }}
-                  >
-                    <Input
-                      icon={{ name: "folder", circular: true, link: true }}
-                      placeholder="quote id..."
-                      onChange={(e, { value }) => {
-                        this.setState({
-                          quoteid: value
-                        });
-                      }}
-                    />
-                  </div>
                   <div
                     className="form-group files" //style={{ marginTop: 99 }}
                   >
