@@ -66,7 +66,7 @@ class ChUpload extends Component {
   };
 
   //toastify message
-  notify = () => toast.success("Upload Successfull!!");
+  notify = () => toast.success("Upload Successfull! Going back to Cherwell");
   cherwellHello = () => toast.info("Hello Cherwell User, welcome!!");
 
   onClickHandler = () => {
@@ -81,7 +81,7 @@ class ChUpload extends Component {
       console.log(this.state.chObj);
 
       data.append("file", this.state.selectedFile);
-      data.append("dkey", `${this.state.dkey}|${this.state.chObj}`);
+      data.append("dkey", `cherwell|${this.state.chObj}`);
       data.append("busObId", this.state.busObId);
       data.append("AccountId", this.state.AccountId);
       data.append("busObPublicId", this.state.busObPublicId);
@@ -100,7 +100,11 @@ class ChUpload extends Component {
         console.log(res.statusText);
         this.notify();
         //console.log(res);
-        window.open(res.data.url, '_blank');
+        // window.open(res.data.url, '_blank');
+        
+        // try closing current window
+        setTimeout(function(){ window.close('','_parent',''); }, 4000);
+        
         // return dispatch({
         //   type: ADD_DOCUMENNT,
         //   payload: res.data.data,

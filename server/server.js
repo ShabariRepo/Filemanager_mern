@@ -1,14 +1,20 @@
-const mongoose = require('mongoose');
-var express = require('express');
-var multer = require('multer')
-var cors = require('cors');
-const bodyParser = require('body-parser');
-const logger = require('morgan');
-const Latest = require('./models/data');
-const Doc = require('./models/document');
-const fs = require('fs');
-const path = require('path');
-const sql = require('./mysqldb');
+const mongoose = require("mongoose");
+var express = require("express");
+
+var multer = require("multer");
+var cors = require("cors");
+const bodyParser = require("body-parser");
+const logger = require("morgan");
+
+const Latest = require("./models/data");
+const Doc = require("./models/document");
+const fs = require("fs");
+
+const path = require("path");
+const sql = require("./mysqldb");
+const axios = require("axios");
+const qs = require("qs");
+
 
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -390,6 +396,120 @@ getQuoteIdHashMap = async (req, res) => {
     return res.json({ success: true, data: dhash });
   }).sort({ quoteid: 1 }).th;
 }
+
+// Cherwell token & integration section
+const cTokenUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/token";
+const cPushUrl =
+  "https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/savebusinessobjectattachmenturl";
+var cherwellToken = "";
+var cherwellRefToken = "";
+var tokenDateTime = "";
+
+// post new url to CHERWELL with bearer token
+postToCherwell = async (ogName, link, busObId, busObPubicId) => {
+  // need to get token first
+  // check if time has elapsed
+  let now = new Date();
+  var exp = Math.floor(((now - tokenDateTime)/1000)/60);
+  // if (cherwellToken === "") {
+  if(exp > 10){
+    // getCherwellToken();
+    // console.log("await token needed if displayed before request comes back");
+    const requestBody = {
+      client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+      grant_type: "password",
+      username: "Cherwell\\esbtester",
+      password: "Testtest1"
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+
+    axios
+      .post(cTokenUrl, qs.stringify(requestBody), config)
+      .then(result => {
+        // save token in var
+        console.log(
+          `success requesting token from cherwell: ${result.data.access_token}`
+        );
+        cherwellToken = result.data.access_token;
+        cherwellRefToken = result.data.refresh_token;
+        tokenDateTime = new Date();
+	console.log(result.data);
+        pushToDestC(ogName, link, busObId, busObPubicId);
+      })
+      .catch(err => {
+        // Do somthing
+        console.log("There was an issue with getting cherwell token");
+        console.log(err);
+      });
+  } else {
+    // then post to cherwell with new json
+    pushToDestC(ogName, link, busObId, busObPubicId);
+  }
+};
+
+// push to cherwel
+pushToDestC = (ogName, link, busObId, busObPubicId) => {
+
+  var config = {
+    headers: { Authorization: "bearer " + cherwellToken }
+  };
+
+  var bodyParameters = {
+    busObId: busObId,
+    busObPublicId: busObPubicId,
+    comment: "Successfully uploaded file! Sending download url of file from file manager",
+    displayText: ogName,
+    includeLinks: true,
+    url: link
+  };
+
+  axios.put(cPushUrl, bodyParameters, config)
+    .then(response => {
+      console.log("successfully pushed to cherwell");
+      console.log(response);
+    })
+    .catch(error => {
+      console.log("some shit happened while posting to cherwell :| ");
+      console.log(error);
+    });
+}
+
+// axios x-www-form-urlencoded post request
+getCherwellToken = () => {
+  const requestBody = {
+    client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+    grant_type: "password",
+    username: "Cherwell\\esbtester",
+    password: "Testtest1"
+  };
+
+  const config = {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  };
+
+  axios
+    .post(cTokenUrl, qs.stringify(requestBody), config)
+    .then(result => {
+      // save token in var
+      console.log(
+        `success requesting token from cherwell: ${result.access_token}`
+      );
+      cherwellToken = result.access_token;
+    })
+    .catch(err => {
+      // Do somthing
+      console.log("There was an issue with getting cherwell token");
+      console.log(err);
+    });
+};
+
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * API API API API API API API API API
@@ -397,75 +517,117 @@ getQuoteIdHashMap = async (req, res) => {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 //app.post('/upload', function (req, res) {
-router.post('/upload', (req, res) => {
-
-    var data = new Doc();
-    //console.log(req);
-    if(req.body.dkey === ""|| req.body.opid === "" || req.body.quoteid === "" || req.body  === undefined){
+router.post("/upload", (req, res) => {
+  var data = new Doc();
+  //console.log(req);
+  if (req.body.cherwell) {
+    if (
+      req.body.dkey === "" ||
+      req.body.busObId === "" ||
+      req.body.AccountId === "" ||
+      req.body.busObPublicId === "" ||
+      req.body === undefined
+    ) {
       return res.status(400).json({
         error,
-        message: "document not uploaded! Please pass a new distinct folder, quote id and opportunity id classificaiton/topic or an existing one to update"
+        message:
+          "document not uploaded! Please provide all of busObId, AccountId and busObPubicId. One or many of these are empty."
       });
     }
-    upload(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-            console.log("error 500")
-            return res.status(500).json(err)
-        } else if (err) {
-            return res.status(500).json(err)
+  } else {
+    if (
+      req.body.dkey === "" ||
+      req.body.opid === "" ||
+      req.body.quoteid === "" ||
+      req.body === undefined
+    ) {
+      return res.status(400).json({
+        error,
+        message:
+          "document not uploaded! Please pass a new distinct folder classificaiton/topic or an existing one"
+      });
+    }
+  }
+  upload(req, res, function(err) {
+    if (err instanceof multer.MulterError) {
+      console.log("error 500");
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+
+    console.log("successful upload");
+    console.log(req.file);
+    console.log(req.body);
+    //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
+    //console.log(exists);
+
+    data.name = req.file.filename;
+    data.ogName = req.file.originalname;
+    data.required = ["1", "2", "3"];
+    data
+      .save()
+      .then(() => {
+        if (req.body.cherwell) {
+          updateLatest(
+            data,
+            false,
+            "cherwell",
+            req.body.busObId,
+            req.body.AccountId
+          );
+          postToCherwell(
+            data.ogName,
+            `http://10.228.19.13:3000/files/${data.name}`,
+            req.body.busObId,
+            req.body.busObPublicId
+          );
+        } else {
+          updateLatest(
+            data,
+            false,
+            req.body.dkey,
+            req.body.opid,
+            req.body.quoteid
+          );
         }
-        
-        console.log("successful upload");
-        console.log(req.file);
-        console.log(req.body);
-        //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
-        //console.log(exists);
-
-        data.name = req.file.filename;
-        data.ogName = req.file.originalname;
-        data.required = ['1', '2', '3'];
-        data.save()
-        .then(() => {
-            updateLatest(data, false, req.body.dkey, req.body.opid, req.body.quoteid);
-            return res.status(201).json({
-              success: true,
-              id: data._id,
-              data: data,
-              url: `http://10.228.19.13:3000/files/${data.name}`,
-              message: "Document uploaded!"
-            });
-        })
-        .catch(error => {
-            return res.status(400).json({
-                error,
-                message: 'document not uploaded!',
-            })
+        return res.status(201).json({
+          success: true,
+          id: data._id,
+          data: data,
+          url: `http://10.228.19.13:3000/files/${data.name}`,
+          message: "Document uploaded!"
         });
-        //     (err) => {
-        // if (err) console.log(`db error @@@@ ${err}`);
-        // console.log('successfully added to db')
-        // });
+      })
+      .catch(error => {
+        return res.status(400).json({
+          error,
+          message: "document not uploaded!"
+        });
+      });
+    //     (err) => {
+    // if (err) console.log(`db error @@@@ ${err}`);
+    // console.log('successfully added to db')
+    // });
 
-        //return res.status(200).send(req.file)
-
-    })
-
+    //return res.status(200).send(req.file)
+  });
 });
 
-router.delete('/deleteDoc', function(req, res){
-  console.log(req.body)
+router.delete("/deleteDoc", function(req, res) {
+  console.log(req.body);
   const { source, dkey, opid, quoteid } = req.body;
-  Doc.findOneAndRemove({ "name": source }, (err, doc, result) => {
-    if(err) return res.send(err);
+  Doc.findOneAndRemove({ name: source }, (err, doc, result) => {
+    if (err) return res.send(err);
 
     console.log(doc);
     updateLatest(doc, true, dkey, opid, quoteid);
-    return res.json({ 
+    return res.json({
       success: true,
       data: doc,
       message: "document deleted!"
     });
-  })
+  });
 });
 
 router.delete('/deleteAllData', (req, res) => {
