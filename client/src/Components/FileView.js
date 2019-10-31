@@ -134,7 +134,7 @@ class File extends Component {
       loading: true
     });
 
-    this.props.deleteDocument(versionName, this.state.distinction);
+    this.props.deleteDocument(versionName, this.state.distinction, this.state.opid, this.state.quoteid);
   };
 
   populateTable = () => {
