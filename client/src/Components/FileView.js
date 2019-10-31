@@ -41,7 +41,9 @@ class File extends Component {
     this.setState({
       selectedFile: this.props.location.state.selectedFile,
       latestVersion: this.props.location.state.latestVersion,
-      distinction: this.props.location.state.dkey,
+      distinction: this.props.location.state.dkey,      
+      opid: this.props.location.state.opid,
+      quoteid: this.props.location.state.quoteid,
       versions: vrs,
       loading: false
     });

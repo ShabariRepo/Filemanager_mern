@@ -5,10 +5,8 @@ import {
   Divider,
   Grid,
   Header,
-  Image,
   Button,
   Icon,
-  Label,
   Table
 } from "semantic-ui-react";
 
@@ -80,7 +78,9 @@ class Dashboard extends Component {
               state: {
                 selectedFile: element.ogName,
                 latestVersion: element.latestName,
-                dkey: element.dkey
+                dkey: element.dkey,
+                opid: element.opid,
+                quoteid: element.quoteid
               }
             }}
           >
