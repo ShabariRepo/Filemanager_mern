@@ -80,7 +80,7 @@ class ChUpload extends Component {
       console.log(this.state.busObId);
 
       data.append("file", this.state.selectedFile);
-      data.append("dkey", `${this.state.dkey}|${this.state.chObj}`);
+      data.append("dkey", `cherwell|${this.state.chObj}`);
       data.append("busObId", this.state.busObId);
       data.append("AccountId", this.state.AccountId);
       data.append("busObPublicId", this.state.busObPublicId);
