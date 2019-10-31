@@ -22,7 +22,7 @@ export const addDocument = (payload) => async dispatch => {
       });
 }
 
-export const deleteDocument = (filename, distinction) => async dispatch => {
+export const deleteDocument = (filename, distinction, opid, quoteid) => async dispatch => {
     console.log('inside delete document action');
     axios.delete(
         "http://10.228.19.14:49160/api/deleteDoc",
@@ -31,7 +31,9 @@ export const deleteDocument = (filename, distinction) => async dispatch => {
         },
         data:{
           source:filename,
-          dkey: distinction
+          dkey: distinction,
+          opid: opid,
+          quoteid: quoteid
         }}
       )
       .then( res => {

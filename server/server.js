@@ -587,12 +587,12 @@ router.post("/upload", (req, res) => {
 
 router.delete("/deleteDoc", function(req, res) {
   console.log(req.body);
-  const { source, dkey } = req.body;
+  const { source, dkey, opid, quoteid } = req.body;
   Doc.findOneAndRemove({ name: source }, (err, doc, result) => {
     if (err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true, dkey);
+    updateLatest(doc, true, dkey, opid, quoteid);
     return res.json({
       success: true,
       data: doc,
