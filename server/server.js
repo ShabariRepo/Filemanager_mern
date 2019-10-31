@@ -373,11 +373,17 @@ const cTokenUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/token";
 const cPushUrl =
   "https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/savebusinessobjectattachmenturl";
 var cherwellToken = "";
+var cherwellRefToken = "";
+var tokenDateTime = "";
 
 // post new url to CHERWELL with bearer token
-postToCherwell = async (link, busObId, busObPubicId) => {
+postToCherwell = async (ogName, link, busObId, busObPubicId) => {
   // need to get token first
-  if (cherwellToken === "") {
+  // check if time has elapsed
+  let now = new Date();
+  var exp = Math.floor(((now - tokenDateTime)/1000)/60);
+  // if (cherwellToken === "") {
+  if(exp > 10){
     // getCherwellToken();
     // console.log("await token needed if displayed before request comes back");
     const requestBody = {
@@ -401,8 +407,10 @@ postToCherwell = async (link, busObId, busObPubicId) => {
           `success requesting token from cherwell: ${result.data.access_token}`
         );
         cherwellToken = result.data.access_token;
+        cherwellRefToken = result.data.refresh_token;
+        tokenDateTime = new Date();
 	console.log(result.data);
-        pushToDestC(link, busObId, busObPubicId);
+        pushToDestC(ogName, link, busObId, busObPubicId);
       })
       .catch(err => {
         // Do somthing
@@ -411,12 +419,12 @@ postToCherwell = async (link, busObId, busObPubicId) => {
       });
   } else {
     // then post to cherwell with new json
-    pushToDestC(link, busObId, busObPubicId);
+    pushToDestC(ogName, link, busObId, busObPubicId);
   }
 };
 
 // push to cherwel
-pushToDestC = (link, busObId, busObPubicId) => {
+pushToDestC = (ogName, link, busObId, busObPubicId) => {
 
   var config = {
     headers: { Authorization: "bearer " + cherwellToken }
@@ -425,8 +433,8 @@ pushToDestC = (link, busObId, busObPubicId) => {
   var bodyParameters = {
     busObId: busObId,
     busObPublicId: busObPubicId,
-    comment: "Sending download url of file from file manager",
-    displayText: "Successfully uploaded file",
+    comment: "Successfully uploaded file! Sending download url of file from file manager",
+    displayText: ogName,
     includeLinks: true,
     url: link
   };
@@ -540,6 +548,7 @@ router.post("/upload", (req, res) => {
             req.body.AccountId
           );
           postToCherwell(
+            data.ogName,
             `http://10.228.19.14:3000/files/${data.name}`,
             req.body.busObId,
             req.body.busObPublicId

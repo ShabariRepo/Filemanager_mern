@@ -24,6 +24,7 @@ class Dashboard extends Component {
     loading: true,
     toCherwell: false,
     busObId: '',
+    chObj: '',
     busObPublicId: '',
     AccountId: '',
     latest: this.props.latests,
@@ -141,6 +142,7 @@ class Dashboard extends Component {
       this.setState({ 
         toCherwell: true,
         busObId: search.busObId,
+        chObj: search.Obj,
         busObPublicId: search.busObPublicId,
         AccountId: search.AccountId,
 
@@ -165,6 +167,7 @@ class Dashboard extends Component {
         pathname: "/cherwell",
         state: {
           busObId: this.state.busObId,
+          chObj: this.state.chObj,
           busObPublicId: this.state.busObPublicId,
           AccountId: this.state.AccountId
         }
