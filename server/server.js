@@ -398,10 +398,10 @@ postToCherwell = async (link, busObId, busObPubicId) => {
       .then(result => {
         // save token in var
         console.log(
-          `success requesting token from cherwell: ${result.access_token}`
+          `success requesting token from cherwell: ${result.data.access_token}`
         );
-        cherwellToken = result.access_token;
-
+        cherwellToken = result.data.access_token;
+	console.log(result.data);
         pushToDestC(link, busObId, busObPubicId);
       })
       .catch(err => {
@@ -431,13 +431,13 @@ pushToDestC = (link, busObId, busObPubicId) => {
     url: link
   };
 
-  axios.post(cPushUrl, bodyParameters, config)
+  axios.put(cPushUrl, bodyParameters, config)
     .then(response => {
       console.log("successfully pushed to cherwell");
       console.log(response);
     })
     .catch(error => {
-      console.log("some shit happened");
+      console.log("some shit happened while posting to cherwell :| ");
       console.log(error);
     });
 }
