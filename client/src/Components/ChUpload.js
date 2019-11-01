@@ -34,7 +34,7 @@ class ChUpload extends Component {
 
     this.setState({
       selectedFile: null,
-      dkey: "cherwell",
+      dkey: `cherwell/${this.props.location.state.chObj}`,
       busObId: this.props.location.state.busObId,
       chObj: this.props.location.state.chObj,
       busObPublicId: this.props.location.state.busObPublicId,
