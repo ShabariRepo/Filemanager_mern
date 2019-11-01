@@ -27,11 +27,11 @@ app.use(cors());
 // make the folder static & momunt
 app.use(express.static("./public"));
 const router = express.Router();
-// const swaggerUi = require('swagger-ui-express');
-// const swaggerDocument = require('./swagger.json');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
-// router.use('/api-docs', swaggerUi.serve);
-// router.get('/api-docs', swaggerUi.setup(swaggerDocument));
+router.use('/api-docs', swaggerUi.serve);
+router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
 // this is our MongoDb database
 const dbRoute = "mongodb://10.228.19.13:27018/documents";
