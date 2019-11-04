@@ -297,6 +297,7 @@ class Dashboard extends Component {
             )}
           </Grid.Row>
           <Grid.Row>
+            <div style={{ maxHeight: 400, overflowX: 'scroll' }}>
             <Table singleLine striped selectable unstackable>
               <Table.Header>
                 <Table.Row>
@@ -310,6 +311,7 @@ class Dashboard extends Component {
               </Table.Header>
               <Table.Body>{this.populateTable()}</Table.Body>
             </Table>
+            </div>
           </Grid.Row>
         </Grid>
       );
