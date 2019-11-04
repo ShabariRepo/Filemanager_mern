@@ -639,7 +639,7 @@ router.get("/getLatest", (req, res) => {
   Latest.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
-  });
+  }).sort({'updatedAt':1});
 });
 
 // get all individual docs
@@ -647,7 +647,7 @@ router.get("/getAllDocs", (req, res) => {
   Doc.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
-  });
+  }).sort({'updatedAt': 1});
 });
 
 // get all documents that have a specific "ogName"
