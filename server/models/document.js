@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const mongoosastic = require("mongoosastic");
 const Schema = mongoose.Schema
 
 const Document = new Schema(
@@ -11,4 +12,10 @@ const Document = new Schema(
     { timestamps: true },
 )
 
-module.exports = mongoose.model('files', Document)
+
+Document.plugin(mongoosastic, {
+    "host": "localhost",
+    "port": 8200
+  });
+
+module.exports = mongoose.model('files', Document);

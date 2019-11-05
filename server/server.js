@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 var express = require("express");
+const mongoosastic = require("mongoosastic");
 
 var multer = require("multer");
 var cors = require("cors");
@@ -9,6 +10,17 @@ const logger = require("morgan");
 const Latest = require("./models/data");
 const Doc = require("./models/document");
 const fs = require("fs");
+
+/* elastic part */
+Latest.createMapping((err, mapping) => {
+  console.log("mapping created for latest")
+});
+
+Doc.createMapping((err, mapping) => {
+  console.log("mapping created for document")
+});
+/* end elastic part */
+
 
 const path = require("path");
 const sql = require("./mysqldb");

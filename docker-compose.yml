@@ -38,7 +38,13 @@ services:
       - .:/app
     links:
       - server
+      - elasticDoc
     # command: npm run start #or start
+  elasticDoc:
+    image: elasticsearch:2.3
+    restart: always
+    expose:
+      - "8200"
 volumes:
   filemanager-data:
     external: false
