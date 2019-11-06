@@ -38,15 +38,8 @@ services:
       - .:/app
     links:
       - server
-      - elasticDoc
+      #- elasticDoc
     # command: npm run start #or start
-  elasticDoc:
-    image: elasticsearch:2.3 #elasticsearch:7.4.2
-    restart: always
-    expose:
-      - "8200"
-    ports:
-      - "8200:9200"
 volumes:
   filemanager-data:
     external: false

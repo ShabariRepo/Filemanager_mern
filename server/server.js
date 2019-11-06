@@ -59,25 +59,25 @@ Latest.createMapping({
           },
           "properties": {
               "ogName": {
-                  "type": "string",
+                  "type": "text",
               },
               // "movieYear": {
               //     "type": "double"
               // },
               "latestName": {
-                  "type": "string"
+                  "type": "text"
               },
               "fileBsonId": {
-                  "type": "string"
+                  "type": "text"
               },
               "dkey": {
-                  "type": "string"
+                  "type": "text"
               },
               "opid": {
-                  "type": "string"
+                  "type": "text"
               },
               "quoteid": {
-                  "type": "String"
+                  "type": "text"
               }
           }
       }
@@ -134,10 +134,10 @@ Doc.createMapping({
           },
           "properties": {
               "ogName": {
-                  "type": "string",
+                  "type": "text",
               },
               "name": {
-                  "type": "String"
+                  "type": "text"
               }
           }
       }
