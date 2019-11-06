@@ -19,7 +19,7 @@ const Latest = new Schema(
 );
 
 Latest.plugin(mongoosastic, {
-  "host": "localhost",
+  "host": "10.228.19.14",
   "port": 8200
 });
 // export the new Schema so we could modify it using Node.js

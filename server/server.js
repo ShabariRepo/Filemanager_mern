@@ -19,6 +19,9 @@ Latest.createMapping((err, mapping) => {
 Doc.createMapping((err, mapping) => {
   console.log("mapping created for document")
 });
+
+Latest.synchronize();
+Doc.synchronize();
 /* end elastic part */
 
 

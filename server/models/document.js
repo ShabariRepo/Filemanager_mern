@@ -14,7 +14,7 @@ const Document = new Schema(
 
 
 Document.plugin(mongoosastic, {
-    "host": "localhost",
+    "host": "10.228.19.14",
     "port": 8200
   });
 
