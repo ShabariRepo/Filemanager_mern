@@ -12,12 +12,139 @@ const Doc = require("./models/document");
 const fs = require("fs");
 
 /* elastic part */
-Latest.createMapping((err, mapping) => {
+Latest.createMapping({
+  "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "analysis": {
+          "filter": {
+              "nGram_filter": {
+                  "type": "nGram",
+                  "min_gram": 2,
+                  "max_gram": 20,
+                  "token_chars": [
+                      "letter",
+                      "digit",
+                      "punctuation",
+                      "symbol"
+                  ]
+              }
+          },
+          "analyzer": {
+              "nGram_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "whitespace",
+                  "filter": [
+                      "lowercase",
+                      "asciifolding",
+                      "nGram_filter"
+                  ]
+              },
+              "whitespace_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "whitespace",
+                  "filter": [
+                      "lowercase",
+                      "asciifolding"
+                  ]
+              }
+          }
+      }
+  },
+  "mappings": {
+      "latest": {
+          "_all": {
+              "analyzer": "nGram_analyzer",
+              "search_analyzer": "whitespace_analyzer"
+          },
+          "properties": {
+              "ogName": {
+                  "type": "string",
+              },
+              // "movieYear": {
+              //     "type": "double"
+              // },
+              "latestName": {
+                  "type": "string"
+              },
+              "fileBsonId": {
+                  "type": "string"
+              },
+              "dkey": {
+                  "type": "string"
+              },
+              "opid": {
+                  "type": "string"
+              },
+              "quoteid": {
+                  "type": "String"
+              }
+          }
+      }
+  }
+},(err, mapping) => {
   console.log("mapping created for latest")
+  if(err) console.log(err);
 });
 
-Doc.createMapping((err, mapping) => {
+Doc.createMapping({
+  "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "analysis": {
+          "filter": {
+              "nGram_filter": {
+                  "type": "nGram",
+                  "min_gram": 2,
+                  "max_gram": 20,
+                  "token_chars": [
+                      "letter",
+                      "digit",
+                      "punctuation",
+                      "symbol"
+                  ]
+              }
+          },
+          "analyzer": {
+              "nGram_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "whitespace",
+                  "filter": [
+                      "lowercase",
+                      "asciifolding",
+                      "nGram_filter"
+                  ]
+              },
+              "whitespace_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "whitespace",
+                  "filter": [
+                      "lowercase",
+                      "asciifolding"
+                  ]
+              }
+          }
+      }
+  },
+  "mappings": {
+      "files": {
+          "_all": {
+              "analyzer": "nGram_analyzer",
+              "search_analyzer": "whitespace_analyzer"
+          },
+          "properties": {
+              "ogName": {
+                  "type": "string",
+              },
+              "name": {
+                  "type": "String"
+              }
+          }
+      }
+  }
+},(err, mapping) => {
   console.log("mapping created for document")
+  if(err) console.log(err);
 });
 
 Latest.synchronize();
