@@ -297,20 +297,20 @@ class Dashboard extends Component {
             )}
           </Grid.Row>
           <Grid.Row>
-            <div style={{ maxHeight: 400, overflowX: 'scroll' }}>
-            <Table singleLine striped selectable unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>File Name</Table.HeaderCell>
-                  <Table.HeaderCell>Folder/Distinction</Table.HeaderCell>
-                  <Table.HeaderCell>Current Version</Table.HeaderCell>
-                  <Table.HeaderCell>Updated At</Table.HeaderCell>
-                  <Table.HeaderCell># Revisions</Table.HeaderCell>
-                  <Table.HeaderCell>Download Latest</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>{this.populateTable()}</Table.Body>
-            </Table>
+            <div style={{ maxHeight: 400, overflowX: "scroll" }}>
+              <Table singleLine striped selectable unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>File Name</Table.HeaderCell>
+                    <Table.HeaderCell>Folder/Distinction</Table.HeaderCell>
+                    <Table.HeaderCell>Current Version</Table.HeaderCell>
+                    <Table.HeaderCell>Updated At</Table.HeaderCell>
+                    <Table.HeaderCell># Revisions</Table.HeaderCell>
+                    <Table.HeaderCell>Download Latest</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>{this.populateTable()}</Table.Body>
+              </Table>
             </div>
           </Grid.Row>
         </Grid>

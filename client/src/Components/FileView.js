@@ -231,18 +231,20 @@ class File extends Component {
               )}
             </Grid.Row>
             <Grid.Row>
-              <Table singleLine striped selectable unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Original Name</Table.HeaderCell>
-                    <Table.HeaderCell>Version Name</Table.HeaderCell>
-                    <Table.HeaderCell>Updated At</Table.HeaderCell>
-                    <Table.HeaderCell>Download Version</Table.HeaderCell>
-                    <Table.HeaderCell>Delete Version</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>{this.populateTable()}</Table.Body>
-              </Table>
+              <div style={{ maxHeight: 400, overflowX: "scroll" }}>
+                <Table singleLine striped selectable unstackable>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Original Name</Table.HeaderCell>
+                      <Table.HeaderCell>Version Name</Table.HeaderCell>
+                      <Table.HeaderCell>Updated At</Table.HeaderCell>
+                      <Table.HeaderCell>Download Version</Table.HeaderCell>
+                      <Table.HeaderCell>Delete Version</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>{this.populateTable()}</Table.Body>
+                </Table>
+              </div>
             </Grid.Row>
           </div>
         </Grid>
