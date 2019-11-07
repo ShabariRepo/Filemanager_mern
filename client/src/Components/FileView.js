@@ -231,7 +231,7 @@ class File extends Component {
               )}
             </Grid.Row>
             <Grid.Row>
-              <div style={{ maxHeight: 400, overflowX: "scroll" }}>
+              <div style={{ maxHeight: 600, maxWidth: 875, overflowX: "scroll" }}>
                 <Table singleLine striped selectable unstackable>
                   <Table.Header>
                     <Table.Row>
