@@ -78,7 +78,11 @@ Latest.createMapping({
               },
               "quoteid": {
                   "type": "text"
+              },
+              "customer": {
+                  "type": "text"
               }
+
           }
       }
   }
@@ -295,14 +299,15 @@ UpdateCms = async (doc, prev) => {
 };
 
 /// put for update without incomming https
-async function updateLatest(document, remove, distinct, opid, quoteid) {
+async function updateLatest(document, remove, distinct, opid, quoteid, customer) {
   // var distinct = body.dkey;
   // var cms = body.cms;
   let exists = await Latest.findOne({
     ogName: document.ogName,
     dkey: distinct,
     opid: opid,
-    quoteid: quoteid
+    quoteid: quoteid,
+    customer: customer,
   });
 
   console.log(exists);
@@ -317,6 +322,7 @@ async function updateLatest(document, remove, distinct, opid, quoteid) {
     latest.dkey = distinct;
     latest.opid = opid;
     latest.quoteid = quoteid;
+    latest.customer = customer;
     latest.versions.push(document.name);
 
     latest.revisions = 1;
@@ -652,6 +658,7 @@ router.post("/upload", (req, res) => {
       req.body.dkey === "" ||
       req.body.opid === "" ||
       req.body.quoteid === "" ||
+      req.body.customer === "" ||
       req.body === undefined
     ) {
       return res.status(400).json({
@@ -687,7 +694,8 @@ router.post("/upload", (req, res) => {
             false,
             req.body.dkey,
             req.body.busObId,
-            req.body.AccountId
+            req.body.AccountId,
+            "cherwell_cust"
           );
           postToCherwell(
             data.ogName,
@@ -701,7 +709,8 @@ router.post("/upload", (req, res) => {
             false,
             req.body.dkey,
             req.body.opid,
-            req.body.quoteid
+            req.body.quoteid,
+            req.body.customer,
           );
         }
         return res.status(201).json({
@@ -729,12 +738,12 @@ router.post("/upload", (req, res) => {
 
 router.delete("/deleteDoc", function(req, res) {
   console.log(req.body);
-  const { source, dkey, opid, quoteid } = req.body;
+  const { source, dkey, opid, quoteid, customer } = req.body;
   Doc.findOneAndRemove({ name: source }, (err, doc, result) => {
     if (err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true, dkey, opid, quoteid);
+    updateLatest(doc, true, dkey, opid, quoteid, customer);
     return res.json({
       success: true,
       data: doc,

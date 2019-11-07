@@ -12,6 +12,7 @@ const Latest = new Schema(
     dkey: {type: String, required: true},
     opid: {type: String, required: true},
     quoteid: {type: String, required: true},
+    customer: {type: String, required: false},
     revisions: { type: Number, default: 0 },
     versions: { type: [String], required: true },
   },

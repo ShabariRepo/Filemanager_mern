@@ -20,7 +20,8 @@ class Upload extends Component {
       selectedFile: null,
       dkey: "",
       opid: "",
-      quoteid: ""
+      quoteid: "",
+      customer: ""
     };
   }
 
@@ -56,15 +57,17 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "")) {
+    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "" || this.state.customer !== "")) {
       console.log(this.state.dkey);
       console.log(this.state.opid);
       console.log(this.state.quoteid);
+      console.log(this.state.customer);
 
       data.append("file", this.state.selectedFile);
       data.append("dkey", this.state.dkey);
       data.append("opid", this.state.opid);
       data.append("quoteid", this.state.quoteid);
+      data.append("customer", this.state.customer);
 
       //console.log(data);
       // console.log(this.state.selectedFile);
@@ -86,7 +89,20 @@ class Upload extends Component {
             <div style={{ borderStyle: "inset", height: 250 }}>
               <form method="post" action="#" id="form">
                 <div style={{ paddingTop: 70 }}>
-                <div
+                  <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="Customer name.."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          customer: value
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
                     className="form-group" //style={{ paddingTop: 50 }}
                   >
                     <Input
