@@ -144,7 +144,7 @@ class Dashboard extends Component {
         busObId: search.busObId,
         chObj: search.Obj,
         busObPublicId: search.busObPublicId,
-        AccountId: search.AccountId,
+        AccountId: search.AcctId,
 
       });
       //history.push("/cherwell");
