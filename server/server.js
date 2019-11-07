@@ -516,6 +516,36 @@ getDistinctHashMap = async (req, res) => {
   }).sort({ dkey: 1 }).th;
 };
 
+// search elastic
+searchByQuery = async (req, res) => {
+  //let exists = await Latest.findOne({"ogName": document.ogName});
+  console.log("inside search query");
+  const { ogName } = req.body;
+  // console.log(req);
+  await Latest.search(
+    {
+      // index: "latests",
+      // type: "latest",
+      // body: {
+        // query: {
+          "multi_match": {
+            "query": ogName,
+            "fields": ["ogName","dkey","quoteid","opid","latestName"],
+            "fuzziness": "AUTO"
+          }
+        // }
+      // }
+    },
+    (err, data) => {
+      if (err) return res.json({ success: false, error: err });
+      return res.status(200).json({
+        success: true,
+        data: data
+      });
+    }
+  );
+};
+
 // Cherwell token & integration section
 const cTokenUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/token";
 const cPushUrl =
@@ -816,6 +846,8 @@ router.get("/getAllDistinct", getDistinctFromLatest);
 // get distinct hash values return all sorted into hash
 router.get("/getAllDkeyHash", getDistinctHashMap);
 
+// search elastic
+router.post("/search", searchByQuery);
 /*  sample apis
 
 // this method fetches all available data in our database
