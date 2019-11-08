@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { addDocument } from "../actions";
+import { addDocument, fetchLatests } from "../actions";
 
 import {
   Container,
@@ -40,6 +40,7 @@ class Upload extends Component {
       dkey: ""
     });
 
+    this.props.fetchLatests();
     //nextProps.history.goBack();
     //setTimeout(function(){ nextProps.history.push("/") }, 3000);
   }
@@ -232,5 +233,5 @@ const mapStateToProps = ({ documents }) => {
 
 export default connect(
   mapStateToProps,
-  { addDocument }
+  { addDocument, fetchLatests }
 )(Upload);

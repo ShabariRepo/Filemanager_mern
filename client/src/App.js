@@ -25,9 +25,9 @@ function App() {
               CL File Repository
             </Menu.Item>
             <Menu.Menu position="right">
-              <Menu.Item>
+              {/* <Menu.Item>
                 <Input placeholder="Search..." size="small" />
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item as={Link} to="/">Dashboard</Menu.Item>
               <Menu.Item as="a">Settings</Menu.Item>
               <Menu.Item as="a">Profile</Menu.Item>
@@ -37,8 +37,8 @@ function App() {
         </Grid>
         <Grid padded>
           <Grid.Column
-            tablet={3}
-            computer={3}
+            tablet={2}
+            computer={2}
             only="tablet computer"
             id="sidebar"
           >
@@ -65,8 +65,8 @@ function App() {
           </Grid.Column>
           <Grid.Column
             mobile={16}
-            tablet={13}
-            computer={13}
+            tablet={14}
+            computer={14}
             floated="right"
             id="content"
           >

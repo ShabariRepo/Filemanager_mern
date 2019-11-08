@@ -193,7 +193,7 @@ class Dashboard extends Component {
                   <i className="far fa-file-pdf fa-10x"></i>
                 </div>
                 <div className="item">
-                  <a className="ui teal circular massive label">
+                  <a style={{ boxShadow: "1px 2px 1px #9E9E9E", elevation: 1 }} className="ui teal circular massive label">
                     {this.state.totalNumFiles}
                   </a>
                 </div>
@@ -225,7 +225,7 @@ class Dashboard extends Component {
                   <i className="fas fa-code-branch fa-10x"></i>
                 </div>
                 <div className="item">
-                  <a className="ui teal circular massive label">
+                  <a style={{ boxShadow: "1px 2px 1px #9E9E9E", elevation: 1 }} className="ui teal circular massive label">
                     {this.state.avgRevPerFile}
                   </a>
                 </div>
@@ -250,7 +250,7 @@ class Dashboard extends Component {
                   <i className="far fa-star fa-10x"></i>
                 </div>
                 <div className="item">
-                  <a className="ui teal circular massive label">
+                  <a style={{ boxShadow: "1px 2px 1px #9E9E9E", elevation: 1 }} className="ui teal circular massive label">
                     {this.state.numUnique}
                   </a>
                 </div>
@@ -275,7 +275,7 @@ class Dashboard extends Component {
                   <i className="fas fa-ring fa-10x"></i>
                 </div>
                 <div className="item">
-                  <a className="ui teal circular massive label">
+                  <a style={{ boxShadow: "1px 2px 1px #9E9E9E", elevation: 1 }} className="ui teal circular massive label">
                     {this.state.numBuckets}
                   </a>
                 </div>
@@ -286,6 +286,31 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
           <Divider section hidden />
+          <Grid.Row
+            style={{
+              backgroundColor: "rgba(0, 128, 128, 0.3)",
+              borderRadius: "7px",
+              boxShadow: "1px 3px 1px #9E9E9E",
+              elevation: 1
+            }}
+          >
+            <div class="ui container">
+              <div class="ui search">
+                <div
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.6)",
+                    borderRadius: "5px",
+                    padding: "10px",
+                    paddingHorizontal: "15px"
+                  }}
+                  class="ui massive fluid transparent icon input"
+                >
+                  <input class="prompt" type="text" placeholder="Search" />
+                  <i class="search icon"></i>
+                </div>
+              </div>
+            </div>
+          </Grid.Row>
           <Grid.Row>
             <Header dividing size="huge" as="h1">
               All Latest Versions
