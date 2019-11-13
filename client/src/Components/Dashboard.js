@@ -15,6 +15,7 @@ import { Link, Redirect } from "react-router-dom";
 import queryString from "query-string";
 import { fetchLatests, fetchAllDocuments } from "../actions";
 import _ from "lodash";
+import axios from "axios";
 
 class Dashboard extends Component {
   state = {
@@ -27,6 +28,9 @@ class Dashboard extends Component {
     chObj: '',
     busObPublicId: '',
     AccountId: '',
+    srcResults: [],
+    srcCount: 0,
+    searchTerm: '',
     latest: this.props.latests,
     allDocs: this.props.documents,
     numUnique: 0,
@@ -62,13 +66,61 @@ class Dashboard extends Component {
     link.click();
   };
 
+  // handle change of text in search input
+  handleSearch = (e) => {
+    this.setState({
+      searchTerm: e.target.value
+    });
+    console.log(this.state.searchTerm);
+    console.log(e.target.value);
+
+    if(e.target.value.length > 3){
+      axios
+      .post("http://10.228.19.14:49160/api/search", {
+        ogName: e.target.value
+      })
+      .then(latest => {
+        let { data } = latest;
+        var tmpDataArr = [];
+        _.forEach(data.data.hits.hits, result => {
+          tmpDataArr.push(result._source);
+        });
+        console.log(tmpDataArr);
+
+        this.setState({
+          srcCount: data.data.hits.total,
+          srcResults: tmpDataArr
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    } else {
+      this.setState({
+        srcResults: []
+      });
+    }
+  }
+
+  // load table data whether its a search result or base page load
+  loadTableData = () => {
+    console.log('inside load table data');
+    if(this.state.srcResults.length > 0){
+      return this.populateTable(true);
+    } else {
+      return this.populateTable(false);
+    }
+  }
+
   // populate the table with latest files
-  populateTable = () => {
+  populateTable = (search) => {
     // console.log(this.state.latest)
     // const row = new Table.Row;
     let table = [];
+    let ds = (!search) ? this.state.latest : this.state.srcResults
+    console.log(`Search results listing: ${search}`);
 
-    this.state.latest.forEach(element => {
+    ds.forEach(element => {
       let children = [];
 
       children.push(
@@ -90,6 +142,8 @@ class Dashboard extends Component {
         </Table.Cell>
       );
       children.push(<Table.Cell key={2}>{element.dkey}</Table.Cell>);
+      children.push(<Table.Cell key={2}>{element.opid}</Table.Cell>);
+      children.push(<Table.Cell key={2}>{element.quoteid}</Table.Cell>);
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);
@@ -117,7 +171,7 @@ class Dashboard extends Component {
       );
       table.push(<Table.Row key={element._id} children={children} />);
     });
-
+    
     return table;
   };
 
@@ -136,7 +190,7 @@ class Dashboard extends Component {
     console.log("component mounted");
     //this.getLatestPosts();
     var search = queryString.parse(this.props.location.search);
-    console.log(search);
+    // console.log(search);
 
     if (search.src === "cherwell") {
       this.setState({ 
@@ -288,24 +342,26 @@ class Dashboard extends Component {
           <Divider section hidden />
           <Grid.Row
             style={{
-              backgroundColor: "rgba(0, 128, 128, 0.3)",
+              backgroundColor: "rgba(0, 0, 0, 0.2)",
               borderRadius: "7px",
-              boxShadow: "1px 3px 1px #9E9E9E",
-              elevation: 1
+              // boxShadow: "1px 3px 1px #9E9E9E",
+              // elevation: 1
             }}
           >
             <div class="ui container">
               <div class="ui search">
                 <div
                   style={{
-                    backgroundColor: "rgba(255,255,255,0.6)",
+                    backgroundColor: "rgba(255,255,255,0.7)",
                     borderRadius: "5px",
                     padding: "10px",
-                    paddingHorizontal: "15px"
+                    paddingHorizontal: "15px",
+                    boxShadow: "1px 6px 1px #9E9E9E",
+                    elevation: 1
                   }}
                   class="ui massive fluid transparent icon input"
                 >
-                  <input class="prompt" type="text" placeholder="Search" />
+                  <input class="prompt" type="text" style={{ color: 'rgba(0, 128, 128, 0.8)'}} onChange={(e) => this.handleSearch(e)} placeholder="Search" value={this.state.searchTerm} />
                   <i class="search icon"></i>
                 </div>
               </div>
@@ -328,13 +384,18 @@ class Dashboard extends Component {
                   <Table.Row>
                     <Table.HeaderCell>File Name</Table.HeaderCell>
                     <Table.HeaderCell>Folder/Distinction</Table.HeaderCell>
+                    <Table.HeaderCell>Object Id/Opportunity Id</Table.HeaderCell>
+                    <Table.HeaderCell>Account Id/Quote Id</Table.HeaderCell>
                     <Table.HeaderCell>Current Version</Table.HeaderCell>
                     <Table.HeaderCell>Updated At</Table.HeaderCell>
                     <Table.HeaderCell># Revisions</Table.HeaderCell>
                     <Table.HeaderCell>Download Latest</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
-                <Table.Body>{this.populateTable()}</Table.Body>
+                <Table.Body>
+                  {/* {this.populateTable()} */}
+                  {this.loadTableData()}
+                </Table.Body>
               </Table>
             </div>
           </Grid.Row>
@@ -349,8 +410,6 @@ const mapStateToProps = ({ documents, latests }) => {
   let latestArr = _.map(latests.dHash);
   let docArr = _.map(documents.dHash);
 
-  // console.log(latests);
-  // console.log(documents);
   return { documents: docArr, latests: latestArr };
 };
 
