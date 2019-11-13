@@ -74,7 +74,7 @@ class Dashboard extends Component {
     console.log(this.state.searchTerm);
     console.log(e.target.value);
 
-    if(e.target.value.length > 3){
+    if(e.target.value.length > 4){
       axios
       .post("http://10.228.19.14:49160/api/search", {
         ogName: e.target.value
@@ -97,6 +97,7 @@ class Dashboard extends Component {
       });
     } else {
       this.setState({
+        srcCount: 0,
         srcResults: []
       });
     }
@@ -369,7 +370,7 @@ class Dashboard extends Component {
           </Grid.Row>
           <Grid.Row>
             <Header dividing size="huge" as="h1">
-              All Latest Versions
+              {(this.state.srcCount > 0) ? `Search Results: ${this.state.srcCount} results..`: 'All Latest Versions'}
             </Header>
             {this.state.loading ? (
               <Loader type="Puff" color="#2BAD60" height={100} width={100} />
