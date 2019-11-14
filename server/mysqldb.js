@@ -3,7 +3,14 @@
 var mysql = require('mysql');
 
 // remote mysql db connection area
-var connection = mysql.createConnection({
+// var connection = mysql.createConnection({
+//     host: '10.228.19.14',
+//     port: 3806,
+//     user: 'mysqladmin',
+//     password: 'cladmin',
+//     database: 'wagtail'
+// });
+var connection = mysql.createPool({
     host: '10.228.19.14',
     port: 3806,
     user: 'mysqladmin',
