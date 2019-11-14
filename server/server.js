@@ -278,16 +278,17 @@ addToCms = async doc => {
 // update the document in cms db
 UpdateCms = async (doc, prev) => {
   console.log("UPDATE in CMS DB");
-  var cmsdoc = {
-    title: doc.ogName,
-    file: `http://10.228.19.14:3000/files/${doc.latestName}`,
-    collection_id: 1,
-    file_hash: "ccbd55c2102e4a3d10919ee387b7cef823459e01"
-  };
+  // var cmsdoc = {
+  //   title: doc.ogName,
+  //   file: `http://10.228.19.14:3000/files/${doc.latestName}`,
+  //   collection_id: 1,
+  //   file_hash: "ccbd55c2102e4a3d10919ee387b7cef823459e01"
+  // };
 
+  var docFile = `http://10.228.19.14:3000/files/${doc.latestName}`;
   sql.query(
-    "UPDATE wagtail.wagtaildocs_document SET document = ? WHERE file = ?",
-    [cmsdoc, prev],
+    "UPDATE wagtail.wagtaildocs_document SET file = ? WHERE file = ?",
+    [docFile, prev],
     function(err, res) {
       if (err) {
         console.log("mysql error: ", err);
