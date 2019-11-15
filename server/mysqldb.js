@@ -10,6 +10,8 @@ var mysql = require('mysql');
 //     password: 'cladmin',
 //     database: 'wagtail'
 // });
+
+// solve the timeout issues
 var connection = mysql.createPool({
     host: '10.228.19.14',
     port: 3806,
