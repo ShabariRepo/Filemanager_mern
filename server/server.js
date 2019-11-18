@@ -686,16 +686,28 @@ router.post("/upload", (req, res) => {
     }
   } else {
     if (
-      (req.body.dkey === "") || //req.body.dkey === undefined) ||
-      (req.body.opid === "") || //req.body.opid === undefined) ||
-      (req.body.quoteid === "") || //req.body.quoteid === undefined) ||
-      (req.body.customer === "") || //req.body.customer === undefined) ||
+      req.body.dkey === "" || //req.body.dkey === undefined) ||
+      req.body.opid === "" || //req.body.opid === undefined) ||
+      req.body.quoteid === "" || //req.body.quoteid === undefined) ||
+      req.body.customer === "" || //req.body.customer === undefined) ||
       req.body === undefined
     ) {
       return res.status(400).json({
         error,
         message:
-          "document not uploaded! One of the required fields were empty or undefined"
+          "document not uploaded! One of the required fields were empty"
+      });
+    } else if(
+      req.body.dkey === undefined || //req.body.dkey === undefined) ||
+      req.body.opid === undefined || //req.body.opid === undefined) ||
+      req.body.quoteid === undefined || //req.body.quoteid === undefined) ||
+      req.body.customer === undefined || //req.body.customer === undefined) ||
+      req.body === undefined
+    ){
+      return res.status(400).json({
+        error,
+        message:
+          "document not uploaded! One of the required fields were undefined"
       });
     }
   }
