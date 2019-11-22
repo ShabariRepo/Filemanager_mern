@@ -74,7 +74,7 @@ class Dashboard extends Component {
     console.log(this.state.searchTerm);
     console.log(e.target.value);
 
-    if(e.target.value.length > 4){
+    if(e.target.value.length > 3){
       axios
       .post("http://10.228.19.14:49160/api/search", {
         ogName: e.target.value
