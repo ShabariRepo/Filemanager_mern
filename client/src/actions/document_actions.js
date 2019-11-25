@@ -22,7 +22,7 @@ export const addDocument = (payload) => async dispatch => {
       });
 }
 
-export const deleteDocument = (filename, distinction, opid, quoteid) => async dispatch => {
+export const deleteDocument = (filename, distinction, opid, quoteid, customer, accountId) => async dispatch => {
     console.log('inside delete document action');
     axios.delete(
         "http://10.228.19.14:49160/api/deleteDoc",
@@ -30,10 +30,12 @@ export const deleteDocument = (filename, distinction, opid, quoteid) => async di
           Authorization: "authorizationToken"
         },
         data:{
-          source:filename,
+          source: filename,
           dkey: distinction,
           opid: opid,
-          quoteid: quoteid
+          quoteid: quoteid,
+          customer: customer,
+          accountId: accountId
         }}
       )
       .then( res => {

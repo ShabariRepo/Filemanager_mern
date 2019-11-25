@@ -300,7 +300,7 @@ UpdateCms = async (doc, prev) => {
 };
 
 /// put for update without incomming https
-async function updateLatest(document, remove, distinct, opid, quoteid, customer) {
+async function updateLatest(document, remove, distinct, opid, quoteid, customer, accountId) {
   // var distinct = body.dkey;
   // var cms = body.cms;
   let exists = await Latest.findOne({
@@ -309,6 +309,7 @@ async function updateLatest(document, remove, distinct, opid, quoteid, customer)
     opid: opid,
     quoteid: quoteid,
     customer: customer,
+    accountId: accountId
   });
 
   console.log(exists);
@@ -324,6 +325,7 @@ async function updateLatest(document, remove, distinct, opid, quoteid, customer)
     latest.opid = opid;
     latest.quoteid = quoteid;
     latest.customer = customer;
+    latest.accountId = accountId;
     latest.versions.push(document.name);
 
     latest.revisions = 1;
@@ -676,6 +678,8 @@ router.post("/upload", (req, res) => {
       req.body.busObId === "" ||
       req.body.AccountId === "" ||
       req.body.busObPublicId === "" ||
+      // req.body.customer === "" ||
+      // req.body.orderId === "" ||
       req.body === undefined
     ) {
       return res.status(400).json({
@@ -690,6 +694,7 @@ router.post("/upload", (req, res) => {
       req.body.opid === "" || //req.body.opid === undefined) ||
       req.body.quoteid === "" || //req.body.quoteid === undefined) ||
       req.body.customer === "" || //req.body.customer === undefined) ||
+      req.body.accountId === "" ||
       req.body === undefined
     ) {
       return res.status(400).json({
@@ -737,9 +742,10 @@ router.post("/upload", (req, res) => {
             data,
             false,
             req.body.dkey,
-            req.body.busObId,
-            req.body.AccountId,
-            "cherwell_cust"
+            "Cherwell Order", //req.body.orderId,
+            "Cherwell",
+            "cherwell_cust", //req.body.customer
+            req.body.AccountId
           );
           postToCherwell(
             data.ogName,
@@ -755,6 +761,7 @@ router.post("/upload", (req, res) => {
             req.body.opid,
             req.body.quoteid,
             req.body.customer,
+            req.body.accountId
           );
         }
         return res.status(201).json({
@@ -782,12 +789,12 @@ router.post("/upload", (req, res) => {
 
 router.delete("/deleteDoc", function(req, res) {
   console.log(req.body);
-  const { source, dkey, opid, quoteid, customer } = req.body;
+  const { source, dkey, opid, quoteid, customer, accountId } = req.body;
   Doc.findOneAndRemove({ name: source }, (err, doc, result) => {
     if (err) return res.send(err);
 
     console.log(doc);
-    updateLatest(doc, true, dkey, opid, quoteid, customer);
+    updateLatest(doc, true, dkey, opid, quoteid, customer, accountId);
     return res.json({
       success: true,
       data: doc,

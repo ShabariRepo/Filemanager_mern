@@ -44,6 +44,8 @@ class File extends Component {
       distinction: this.props.location.state.dkey,      
       opid: this.props.location.state.opid,
       quoteid: this.props.location.state.quoteid,
+      customer: this.props.location.state.customer,
+      accountId: this.props.location.state.accountId,
       versions: vrs,
       loading: false
     });
@@ -134,7 +136,7 @@ class File extends Component {
       loading: true
     });
 
-    this.props.deleteDocument(versionName, this.state.distinction, this.state.opid, this.state.quoteid);
+    this.props.deleteDocument(versionName, this.state.distinction, this.state.opid, this.state.quoteid, this.state.customer, this.state.accountId);
   };
 
   populateTable = () => {

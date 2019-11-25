@@ -134,7 +134,9 @@ class Dashboard extends Component {
                 latestVersion: element.latestName,
                 dkey: element.dkey,
                 opid: element.opid,
-                quoteid: element.quoteid
+                quoteid: element.quoteid,
+                customer: element.customer,
+                accountId: element.accountId
               }
             }}
           >
@@ -144,7 +146,8 @@ class Dashboard extends Component {
       );
       children.push(<Table.Cell key={2}>{element.dkey}</Table.Cell>);
       children.push(<Table.Cell key={2}>{element.opid}</Table.Cell>);
-      children.push(<Table.Cell key={2}>{element.quoteid}</Table.Cell>);
+      children.push(<Table.Cell key={2}>{element.accountId}</Table.Cell>);
+      children.push(<Table.Cell key={2}>{element.customer}</Table.Cell>);
       children.push(<Table.Cell key={2}>{element.latestName}</Table.Cell>);
       children.push(<Table.Cell key={3}>{element.updatedAt}</Table.Cell>);
       children.push(<Table.Cell key={4}>{element.revisions}</Table.Cell>);
@@ -385,8 +388,9 @@ class Dashboard extends Component {
                   <Table.Row>
                     <Table.HeaderCell>File Name</Table.HeaderCell>
                     <Table.HeaderCell>Folder/Distinction</Table.HeaderCell>
-                    <Table.HeaderCell>Object Id/Opportunity Id</Table.HeaderCell>
-                    <Table.HeaderCell>Account Id/Quote Id</Table.HeaderCell>
+                    <Table.HeaderCell>Opportunity Id / Type</Table.HeaderCell>
+                    <Table.HeaderCell>Account Id</Table.HeaderCell>
+                    <Table.HeaderCell>Customer Name</Table.HeaderCell>
                     <Table.HeaderCell>Current Version</Table.HeaderCell>
                     <Table.HeaderCell>Updated At</Table.HeaderCell>
                     <Table.HeaderCell># Revisions</Table.HeaderCell>

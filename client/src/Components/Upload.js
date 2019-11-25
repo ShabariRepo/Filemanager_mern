@@ -21,7 +21,8 @@ class Upload extends Component {
       dkey: "",
       opid: "",
       quoteid: "",
-      customer: ""
+      customer: "",
+      accountid: ""
     };
   }
 
@@ -58,7 +59,7 @@ class Upload extends Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "" || this.state.customer !== "")) {
+    if (this.state.selectedFile !== null && (this.state.dkey !== "" || this.state.opid !== "" || this.state.quoteid !== "" || this.state.customer !== "" || this.state.accountid !== "")) {
       console.log(this.state.dkey);
       console.log(this.state.opid);
       console.log(this.state.quoteid);
@@ -68,6 +69,7 @@ class Upload extends Component {
       data.append("dkey", this.state.dkey);
       data.append("opid", this.state.opid);
       data.append("quoteid", this.state.quoteid);
+      data.append("accountId", this.state.accountid);
       data.append("customer", this.state.customer);
 
       //console.log(data);
@@ -87,7 +89,7 @@ class Upload extends Component {
         <Header as="h2">Upload a file</Header>
         <div className="row" style={{ textAlign: "center" }}>
           <div className="col-md-12">
-            <div style={{ borderStyle: "inset", height: 250 }}>
+            <div style={{ borderStyle: "inset", height: 450 }}>
               <form method="post" action="#" id="form">
                 <div style={{ paddingTop: 70 }}>
                   <div
@@ -99,6 +101,19 @@ class Upload extends Component {
                       onChange={(e, { value }) => {
                         this.setState({
                           customer: value
+                        });
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="form-group" //style={{ paddingTop: 50 }}
+                  >
+                    <Input
+                      icon={{ name: "folder", circular: true, link: true }}
+                      placeholder="Account Id.."
+                      onChange={(e, { value }) => {
+                        this.setState({
+                          accountid: value
                         });
                       }}
                     />
