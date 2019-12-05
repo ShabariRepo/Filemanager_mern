@@ -554,7 +554,6 @@ const cTokenUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/token";
 const cPushUrl =
   "https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/savebusinessobjectattachmenturl";
 var cherwellToken = "";
-var cherwellRefToken = "";
 var tokenDateTime = "";
 
 // post new url to CHERWELL with bearer token
@@ -601,6 +600,78 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
   } else {
     // then post to cherwell with new json
     pushToDestC(ogName, link, busObId, busObPubicId);
+  }
+};
+
+// pull doc from cherwell
+pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
+  // need to get token first
+  // check if time has elapsed
+  let now = new Date();
+  var exp = Math.floor(((now - tokenDateTime)/1000)/60);
+  // if (cherwellToken === "") {
+  if(exp > 10){
+    // getCherwellToken();
+    // console.log("await token needed if displayed before request comes back");
+    const requestBody = {
+      client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+      grant_type: "password",
+      username: "Cherwell\\esbtester",
+      password: "Testtest1"
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+
+    axios
+      .post(cTokenUrl, qs.stringify(requestBody), config)
+      .then(result => {
+        // save token in var
+        console.log(
+          `success requesting token from cherwell: ${result.data.access_token}`
+        );
+        cherwellToken = result.data.access_token;
+        cherwellRefToken = result.data.refresh_token;
+        tokenDateTime = new Date();
+	      console.log(result.data);
+        // pushToDestC(ogName, link, busObId, busObPubicId);
+        return axios.get(`https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`, { headers: { Authorization: "bearer " + cherwellToken, 'Content-Type' : 'application/octet-stream' } })
+        .then( response => {
+          console.log("success getting the file");
+          console.log(response);
+          return response.data;
+        });
+      })
+      .catch(err => {
+        // Do somthing
+        console.log("There was an issue with getting cherwell token");
+        console.log(err);
+        return 0;
+      });
+  } else {
+    // then post to cherwell with new json
+    return axios
+      .get(
+        `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
+        {
+          headers: {
+            Authorization: "bearer " + cherwellToken,
+            "Content-Type": "application/octet-stream"
+          }
+        }
+      )
+      .then(response => {
+        console.log("success getting the file");
+        console.log(response);
+        return response.data;
+      })
+      .catch(err => {
+        console.log(err);
+        return 0;
+      });
   }
 };
 
@@ -669,6 +740,44 @@ getCherwellToken = () => {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 //app.post('/upload', function (req, res) {
+router.post("/cherwelldoc", async (req, res) => {
+  var data = new Doc();
+
+  if (
+    req.body.ID === "" ||
+    req.body.FileName === "" ||
+    req.body.Type === "" ||
+    req.body.AttachmentID === "" ||
+    req.body.busobid === "" ||
+    req.body.busobrecid === "" ||
+    req.body.AcctId === "" ||
+    req.body.AcctName === "" ||
+    // req.body.customer === "" ||
+    // req.body.orderId === "" ||
+    req.body === undefined
+  ) {
+    return res.status(400).json({
+      error,
+      message:
+        "document not uploaded! Please provide all of busObId, AccountId and busObPubicId. One or many of these are empty."
+    });
+  } else{
+    // get the file from cherwell
+    var file = pullDocFromCherwell(req.body.AttachmentID, req.body.busobid, req.body.busobrecid);
+    await file;
+
+    console.log(file);
+    res.status(201).json({
+      success: true,
+      // id: data._id,
+      // data: data,
+      // url: `http://10.228.19.14:3000/files/${data.name}`,
+      message: "Document found from cherwell"
+    });
+  }
+})
+
+
 router.post("/upload", (req, res) => {
   var data = new Doc();
   //console.log(req);
