@@ -740,7 +740,7 @@ getCherwellToken = () => {
 //app.post('/upload', function (req, res) {
 router.post("/cherwelldoc", async (req, res) => {
   var data = new Doc();
-
+  console.log(req.body);
   if (
     req.body.ID === "" ||
     req.body.FileName === "" ||
@@ -760,6 +760,8 @@ router.post("/cherwelldoc", async (req, res) => {
         "document not uploaded! Please provide all of busObId, AccountId and busObPubicId. One or many of these are empty."
     });
   } else {
+
+    console.log('no blank data will try to get file and upload');
     // get the file from cherwell
     var file = await pullDocFromCherwell(
       req.body.AttachmentID,
