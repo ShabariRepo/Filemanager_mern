@@ -763,87 +763,93 @@ router.post("/cherwelldoc", async (req, res) => {
 
     console.log('no blank data will try to get file and upload');
     // get the file from cherwell
-    const file = await pullDocFromCherwell(
+    await pullDocFromCherwell(
       req.body.AttachmentID,
       req.body.busobid,
       req.body.busobrecid
-    );
-    //await file;
+    )
+      .then((file) => {
+        var requ = {
+          file: file
+        };
 
-    var requ = {
-      file: file
-    };
+        console.log("inside then pull doc outputting file details now");
+        console.log(file);
+        upload(requ, res, function(err) {
+          if (err instanceof multer.MulterError) {
+            console.log("error 500");
+            return res.status(500).json(err);
+          } else if (err) {
+            return res.status(500).json(err);
+          }
 
+          console.log("successful upload");
+          console.log(requ.file);
+          //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
+          //console.log(exists);
 
-    console.log('outputting file details now');
-    console.log(file);
-    upload(requ, res, function(err) {
-      if (err instanceof multer.MulterError) {
-        console.log("error 500");
-        return res.status(500).json(err);
-      } else if (err) {
-        return res.status(500).json(err);
-      }
+          data.name = requ.file.filename;
+          data.ogName = requ.file.originalname;
+          data.required = ["1", "2", "3"];
+          data
+            .save()
+            .then(() => {
+              //if (req.body.cherwell) {
+              updateLatest(
+                data,
+                false,
+                "cherwell",
+                req.body.Type, //req.body.orderId,
+                req.body.ID,
+                req.body.AcctName, //req.body.customer
+                req.body.AcctId
+              );
+              // postToCherwell(
+              //   data.ogName,
+              //   `http://10.228.19.14:3000/files/${data.name}`,
+              //   req.body.busObId,
+              //   req.body.busObPublicId
+              // );
+              // } else {
+              //   updateLatest(
+              //     data,
+              //     false,
+              //     req.body.dkey,
+              //     req.body.opid,
+              //     req.body.quoteid,
+              //     req.body.customer,
+              //     req.body.accountId
+              //   );
+              // }
+              res.status(201).json({
+                success: true,
+                // id: data._id,
+                // data: data,
+                // url: `http://10.228.19.14:3000/files/${data.name}`,
+                message: "Document found from cherwell"
+              });
+            })
+            .catch(error => {
+              return res.status(400).json({
+                error,
+                message: "document not uploaded!"
+              });
+            });
+          //     (err) => {
+          // if (err) console.log(`db error @@@@ ${err}`);
+          // console.log('successfully added to db')
+          // });
 
-      console.log("successful upload");
-      console.log(requ.file);
-      //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
-      //console.log(exists);
-
-      data.name = requ.file.filename;
-      data.ogName = requ.file.originalname;
-      data.required = ["1", "2", "3"];
-      data
-        .save()
-        .then(() => {
-          //if (req.body.cherwell) {
-          updateLatest(
-            data,
-            false,
-            "cherwell",
-            req.body.Type, //req.body.orderId,
-            req.body.ID,
-            req.body.AcctName, //req.body.customer
-            req.body.AcctId
-          );
-          // postToCherwell(
-          //   data.ogName,
-          //   `http://10.228.19.14:3000/files/${data.name}`,
-          //   req.body.busObId,
-          //   req.body.busObPublicId
-          // );
-          // } else {
-          //   updateLatest(
-          //     data,
-          //     false,
-          //     req.body.dkey,
-          //     req.body.opid,
-          //     req.body.quoteid,
-          //     req.body.customer,
-          //     req.body.accountId
-          //   );
-          // }
-          res.status(201).json({
-            success: true,
-            // id: data._id,
-            // data: data,
-            // url: `http://10.228.19.14:3000/files/${data.name}`,
-            message: "Document found from cherwell"
-          });
-        })
-        .catch(error => {
-          return res.status(400).json({
-            error,
-            message: "document not uploaded!"
-          });
+          // return res.status(200).send("ok");
         });
-      //     (err) => {
-      // if (err) console.log(`db error @@@@ ${err}`);
-      // console.log('successfully added to db')
-      // });
-
-      return res.status(200).send("ok");
-    });
+      })
+      .catch(error => {
+        return res.status(400).json({
+          error,
+          message: "document not found!"
+        });
+      });
+    //await file;
   }
 });
 
