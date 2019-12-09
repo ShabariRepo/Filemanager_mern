@@ -12,149 +12,129 @@ const Doc = require("./models/document");
 const fs = require("fs");
 
 /* elastic part */
-Latest.createMapping({
-  "settings": {
-      "number_of_shards": 1,
-      "number_of_replicas": 0,
-      "analysis": {
-          "filter": {
-              "nGram_filter": {
-                  "type": "nGram",
-                  "min_gram": 2,
-                  "max_gram": 20,
-                  "token_chars": [
-                      "letter",
-                      "digit",
-                      "punctuation",
-                      "symbol"
-                  ]
-              }
-          },
-          "analyzer": {
-              "nGram_analyzer": {
-                  "type": "custom",
-                  "tokenizer": "whitespace",
-                  "filter": [
-                      "lowercase",
-                      "asciifolding",
-                      "nGram_filter"
-                  ]
-              },
-              "whitespace_analyzer": {
-                  "type": "custom",
-                  "tokenizer": "whitespace",
-                  "filter": [
-                      "lowercase",
-                      "asciifolding"
-                  ]
-              }
+Latest.createMapping(
+  {
+    settings: {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      analysis: {
+        filter: {
+          nGram_filter: {
+            type: "nGram",
+            min_gram: 2,
+            max_gram: 20,
+            token_chars: ["letter", "digit", "punctuation", "symbol"]
           }
+        },
+        analyzer: {
+          nGram_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding", "nGram_filter"]
+          },
+          whitespace_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding"]
+          }
+        }
       }
+    },
+    mappings: {
+      latest: {
+        _all: {
+          analyzer: "nGram_analyzer",
+          search_analyzer: "whitespace_analyzer"
+        },
+        properties: {
+          ogName: {
+            type: "text"
+          },
+          // "movieYear": {
+          //     "type": "double"
+          // },
+          latestName: {
+            type: "text"
+          },
+          fileBsonId: {
+            type: "text"
+          },
+          dkey: {
+            type: "text"
+          },
+          opid: {
+            type: "text"
+          },
+          quoteid: {
+            type: "text"
+          },
+          customer: {
+            type: "text"
+          }
+        }
+      }
+    }
   },
-  "mappings": {
-      "latest": {
-          "_all": {
-              "analyzer": "nGram_analyzer",
-              "search_analyzer": "whitespace_analyzer"
-          },
-          "properties": {
-              "ogName": {
-                  "type": "text",
-              },
-              // "movieYear": {
-              //     "type": "double"
-              // },
-              "latestName": {
-                  "type": "text"
-              },
-              "fileBsonId": {
-                  "type": "text"
-              },
-              "dkey": {
-                  "type": "text"
-              },
-              "opid": {
-                  "type": "text"
-              },
-              "quoteid": {
-                  "type": "text"
-              },
-              "customer": {
-                  "type": "text"
-              }
-
-          }
-      }
+  (err, mapping) => {
+    console.log("mapping created for latest");
+    if (err) console.log(err);
   }
-},(err, mapping) => {
-  console.log("mapping created for latest")
-  if(err) console.log(err);
-});
+);
 
-Doc.createMapping({
-  "settings": {
-      "number_of_shards": 1,
-      "number_of_replicas": 0,
-      "analysis": {
-          "filter": {
-              "nGram_filter": {
-                  "type": "nGram",
-                  "min_gram": 2,
-                  "max_gram": 20,
-                  "token_chars": [
-                      "letter",
-                      "digit",
-                      "punctuation",
-                      "symbol"
-                  ]
-              }
-          },
-          "analyzer": {
-              "nGram_analyzer": {
-                  "type": "custom",
-                  "tokenizer": "whitespace",
-                  "filter": [
-                      "lowercase",
-                      "asciifolding",
-                      "nGram_filter"
-                  ]
-              },
-              "whitespace_analyzer": {
-                  "type": "custom",
-                  "tokenizer": "whitespace",
-                  "filter": [
-                      "lowercase",
-                      "asciifolding"
-                  ]
-              }
+Doc.createMapping(
+  {
+    settings: {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      analysis: {
+        filter: {
+          nGram_filter: {
+            type: "nGram",
+            min_gram: 2,
+            max_gram: 20,
+            token_chars: ["letter", "digit", "punctuation", "symbol"]
           }
+        },
+        analyzer: {
+          nGram_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding", "nGram_filter"]
+          },
+          whitespace_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding"]
+          }
+        }
       }
+    },
+    mappings: {
+      files: {
+        _all: {
+          analyzer: "nGram_analyzer",
+          search_analyzer: "whitespace_analyzer"
+        },
+        properties: {
+          ogName: {
+            type: "text"
+          },
+          name: {
+            type: "text"
+          }
+        }
+      }
+    }
   },
-  "mappings": {
-      "files": {
-          "_all": {
-              "analyzer": "nGram_analyzer",
-              "search_analyzer": "whitespace_analyzer"
-          },
-          "properties": {
-              "ogName": {
-                  "type": "text",
-              },
-              "name": {
-                  "type": "text"
-              }
-          }
-      }
+  (err, mapping) => {
+    console.log("mapping created for document");
+    if (err) console.log(err);
   }
-},(err, mapping) => {
-  console.log("mapping created for document")
-  if(err) console.log(err);
-});
+);
 
 Latest.synchronize();
 Doc.synchronize();
 /* end elastic part */
-
 
 const path = require("path");
 const sql = require("./mysqldb");
@@ -173,11 +153,11 @@ app.use(cors());
 // make the folder static & momunt
 app.use(express.static("./public"));
 const router = express.Router();
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
-router.use('/api-docs', swaggerUi.serve);
-router.get('/api-docs', swaggerUi.setup(swaggerDocument));
+router.use("/api-docs", swaggerUi.serve);
+router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
 // this is our MongoDb database
 const dbRoute = "mongodb://10.228.19.13:27018/documents";
@@ -300,7 +280,15 @@ UpdateCms = async (doc, prev) => {
 };
 
 /// put for update without incomming https
-async function updateLatest(document, remove, distinct, opid, quoteid, customer, accountId) {
+async function updateLatest(
+  document,
+  remove,
+  distinct,
+  opid,
+  quoteid,
+  customer,
+  accountId
+) {
   // var distinct = body.dkey;
   // var cms = body.cms;
   let exists = await Latest.findOne({
@@ -530,13 +518,13 @@ searchByQuery = async (req, res) => {
       // index: "latests",
       // type: "latest",
       // body: {
-        // query: {
-          "multi_match": {
-            "query": ogName,
-            "fields": ["ogName","dkey","quoteid","opid","latestName"],
-            "fuzziness": "AUTO"
-          }
-        // }
+      // query: {
+      multi_match: {
+        query: ogName,
+        fields: ["ogName", "dkey", "quoteid", "opid", "latestName"],
+        fuzziness: "AUTO"
+      }
+      // }
       // }
     },
     (err, data) => {
@@ -561,9 +549,9 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
   // need to get token first
   // check if time has elapsed
   let now = new Date();
-  var exp = Math.floor(((now - tokenDateTime)/1000)/60);
+  var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
   // if (cherwellToken === "") {
-  if(exp > 10){
+  if (exp > 10) {
     // getCherwellToken();
     // console.log("await token needed if displayed before request comes back");
     const requestBody = {
@@ -589,7 +577,7 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
         cherwellToken = result.data.access_token;
         cherwellRefToken = result.data.refresh_token;
         tokenDateTime = new Date();
-	console.log(result.data);
+        console.log(result.data);
         pushToDestC(ogName, link, busObId, busObPubicId);
       })
       .catch(err => {
@@ -608,9 +596,9 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
   // need to get token first
   // check if time has elapsed
   let now = new Date();
-  var exp = Math.floor(((now - tokenDateTime)/1000)/60);
+  var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
   // if (cherwellToken === "") {
-  if(exp > 10){
+  if (exp > 10) {
     // getCherwellToken();
     // console.log("await token needed if displayed before request comes back");
     const requestBody = {
@@ -636,14 +624,23 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
         cherwellToken = result.data.access_token;
         cherwellRefToken = result.data.refresh_token;
         tokenDateTime = new Date();
-	      console.log(result.data);
+        console.log(result.data);
         // pushToDestC(ogName, link, busObId, busObPubicId);
-        return axios.get(`https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`, { headers: { Authorization: "bearer " + cherwellToken, 'Content-Type' : 'application/octet-stream' } })
-        .then( response => {
-          console.log("success getting the file");
-          console.log(response);
-          return response.data;
-        });
+        return axios
+          .get(
+            `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
+            {
+              headers: {
+                Authorization: "bearer " + cherwellToken,
+                "Content-Type": "application/octet-stream"
+              }
+            }
+          )
+          .then(response => {
+            console.log("success getting the file");
+            console.log(response);
+            return response.data;
+          });
       })
       .catch(err => {
         // Do somthing
@@ -677,7 +674,6 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
 
 // push to cherwel
 pushToDestC = (ogName, link, busObId, busObPubicId) => {
-
   var config = {
     headers: { Authorization: "bearer " + cherwellToken }
   };
@@ -685,13 +681,15 @@ pushToDestC = (ogName, link, busObId, busObPubicId) => {
   var bodyParameters = {
     busObId: busObId,
     busObPublicId: busObPubicId,
-    comment: "Successfully uploaded file! Sending download url of file from file manager",
+    comment:
+      "Successfully uploaded file! Sending download url of file from file manager",
     displayText: ogName,
     includeLinks: true,
     url: link
   };
 
-  axios.put(cPushUrl, bodyParameters, config)
+  axios
+    .put(cPushUrl, bodyParameters, config)
     .then(response => {
       console.log("successfully pushed to cherwell");
       console.log(response);
@@ -700,7 +698,7 @@ pushToDestC = (ogName, link, busObId, busObPubicId) => {
       console.log("some shit happened while posting to cherwell :| ");
       console.log(error);
     });
-}
+};
 
 // axios x-www-form-urlencoded post request
 getCherwellToken = () => {
@@ -761,22 +759,91 @@ router.post("/cherwelldoc", async (req, res) => {
       message:
         "document not uploaded! Please provide all of busObId, AccountId and busObPubicId. One or many of these are empty."
     });
-  } else{
+  } else {
     // get the file from cherwell
-    var file = pullDocFromCherwell(req.body.AttachmentID, req.body.busobid, req.body.busobrecid);
+    var file = await pullDocFromCherwell(
+      req.body.AttachmentID,
+      req.body.busobid,
+      req.body.busobrecid
+    );
     await file;
 
+    var requ = {
+      file: file
+    };
+
+
+    console.log('outputting file details now');
     console.log(file);
-    res.status(201).json({
-      success: true,
-      // id: data._id,
-      // data: data,
-      // url: `http://10.228.19.14:3000/files/${data.name}`,
-      message: "Document found from cherwell"
+    upload(requ, res, function(err) {
+      if (err instanceof multer.MulterError) {
+        console.log("error 500");
+        return res.status(500).json(err);
+      } else if (err) {
+        return res.status(500).json(err);
+      }
+
+      console.log("successful upload");
+      console.log(requ.file);
+      //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
+      //console.log(exists);
+
+      data.name = requ.file.filename;
+      data.ogName = requ.file.originalname;
+      data.required = ["1", "2", "3"];
+      data
+        .save()
+        .then(() => {
+          //if (req.body.cherwell) {
+          updateLatest(
+            data,
+            false,
+            "cherwell",
+            req.body.Type, //req.body.orderId,
+            req.body.ID,
+            req.body.AcctName, //req.body.customer
+            req.body.AcctId
+          );
+          // postToCherwell(
+          //   data.ogName,
+          //   `http://10.228.19.14:3000/files/${data.name}`,
+          //   req.body.busObId,
+          //   req.body.busObPublicId
+          // );
+          // } else {
+          //   updateLatest(
+          //     data,
+          //     false,
+          //     req.body.dkey,
+          //     req.body.opid,
+          //     req.body.quoteid,
+          //     req.body.customer,
+          //     req.body.accountId
+          //   );
+          // }
+          res.status(201).json({
+            success: true,
+            // id: data._id,
+            // data: data,
+            // url: `http://10.228.19.14:3000/files/${data.name}`,
+            message: "Document found from cherwell"
+          });
+        })
+        .catch(error => {
+          return res.status(400).json({
+            error,
+            message: "document not uploaded!"
+          });
+        });
+      //     (err) => {
+      // if (err) console.log(`db error @@@@ ${err}`);
+      // console.log('successfully added to db')
+      // });
+
+      //return res.status(200).send(req.file)
     });
   }
-})
-
+});
 
 router.post("/upload", (req, res) => {
   var data = new Doc();
@@ -808,10 +875,9 @@ router.post("/upload", (req, res) => {
     ) {
       return res.status(400).json({
         error,
-        message:
-          "document not uploaded! One of the required fields were empty"
+        message: "document not uploaded! One of the required fields were empty"
       });
-    } 
+    }
     // else if(
     //   !req.body.dkey || //req.body.dkey === undefined) ||
     //   !req.body.opid || //req.body.opid === undefined) ||
@@ -950,7 +1016,7 @@ router.get("/getLatest", (req, res) => {
   Latest.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
-  }).sort({'updatedAt': -1});
+  }).sort({ updatedAt: -1 });
 });
 
 // get all individual docs
@@ -958,7 +1024,7 @@ router.get("/getAllDocs", (req, res) => {
   Doc.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
-  }).sort({'updatedAt': -1});
+  }).sort({ updatedAt: -1 });
 });
 
 // get all documents that have a specific "ogName"
