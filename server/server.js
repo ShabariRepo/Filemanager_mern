@@ -592,9 +592,10 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
 };
 
 // pull doc from cherwell
-pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
+pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
   // need to get token first
   // check if time has elapsed
+  var data = new Doc();
   let now = new Date();
   var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
   // if (cherwellToken === "") {
@@ -914,12 +915,16 @@ router.post("/cherwelldoc", async (req, res) => {
     console.log('no blank data will try to get file and upload');
     // get the file from cherwell
     await pullDocFromCherwell(
+      req,
+      res,
       req.body.AttachmentID,
       req.body.busobid,
       req.body.busobrecid
     )
       .then((file) => {
-        
+        return res.status(201).json({
+          message: "document uploaded successfully!"
+        });
       })
       .catch(error => {
         return res.status(400).json({
