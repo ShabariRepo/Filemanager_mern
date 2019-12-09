@@ -626,7 +626,7 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
         tokenDateTime = new Date();
         console.log(result.data);
         // pushToDestC(ogName, link, busObId, busObPubicId);
-        return axios
+        axios
           .get(
             `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
             {
@@ -638,7 +638,7 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
           )
           .then(response => {
             console.log("success getting the file");
-            console.log(response);
+            console.log(response.data);
             return response.data;
           });
       })
@@ -650,7 +650,7 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
       });
   } else {
     // then post to cherwell with new json
-    return axios
+    axios
       .get(
         `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
         {
@@ -662,7 +662,7 @@ pullDocFromCherwell = async (attachmentid, busobid, busobrecid) => {
       )
       .then(response => {
         console.log("success getting the file");
-        console.log(response);
+        console.log(response.data);
         return response.data;
       })
       .catch(err => {
@@ -763,12 +763,12 @@ router.post("/cherwelldoc", async (req, res) => {
 
     console.log('no blank data will try to get file and upload');
     // get the file from cherwell
-    var file = await pullDocFromCherwell(
+    const file = await pullDocFromCherwell(
       req.body.AttachmentID,
       req.body.busobid,
       req.body.busobrecid
     );
-    await file;
+    //await file;
 
     var requ = {
       file: file
@@ -842,7 +842,7 @@ router.post("/cherwelldoc", async (req, res) => {
       // console.log('successfully added to db')
       // });
 
-      //return res.status(200).send(req.file)
+      return res.status(200).send("ok");
     });
   }
 });
