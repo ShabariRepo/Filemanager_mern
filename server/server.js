@@ -592,12 +592,13 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
 };
 
 // pull doc from cherwell
-pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
+pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid, filename) => {
   // need to get token first
   // check if time has elapsed
   var data = new Doc();
   let now = new Date();
   var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
+
   // if (cherwellToken === "") {
   if (exp > 10) {
     // getCherwellToken();
@@ -631,6 +632,7 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
           .get(
             `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
             {
+              responseType: "stream",
               headers: {
                 Authorization: "bearer " + cherwellToken,
                 "Content-Type": "application/octet-stream"
@@ -642,6 +644,7 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
             console.log(response);
             // return response.data;
 
+            response.data.pipe(fs.createWriteStream(`./${filename}`));
             var requ = {
               file: response.data
             };
@@ -732,6 +735,7 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
       .get(
         `https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/getbusinessobjectattachment/attachmentid/${attachmentid}/busobid/${busobid}/busobrecid/${busobrecid}`,
         {
+          responseType: "stream",
           headers: {
             Authorization: "bearer " + cherwellToken,
             "Content-Type": "application/octet-stream"
@@ -743,6 +747,7 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid) => {
         console.log(response);
         // return response.data;
 
+        response.data.pipe(fs.createWriteStream(`./${filename}`));
         var requ = {
           file: response.data
         };
@@ -919,7 +924,8 @@ router.post("/cherwelldoc", async (req, res) => {
       res,
       req.body.AttachmentID,
       req.body.busobid,
-      req.body.busobrecid
+      req.body.busobrecid,
+      req.body.FileName
     )
       .then((file) => {
         return res.status(201).json({
