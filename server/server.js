@@ -592,7 +592,14 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
 };
 
 // pull doc from cherwell
-pullDocFromCherwell = async (req, attachmentid, busobid, busobrecid, filename) => {
+pullDocFromCherwell = async (
+  req,
+  res,
+  attachmentid,
+  busobid,
+  busobrecid,
+  filename
+) => {
   // need to get token first
   // check if time has elapsed
   var data = new Doc();
@@ -645,11 +652,11 @@ pullDocFromCherwell = async (req, attachmentid, busobid, busobrecid, filename) =
             // return response.data;
             console.log("inside the token method");
             console.log("inside then pull doc outputting file details now");
-    
+
             response.data.pipe(
               fs.createWriteStream(`./public/files/${Date.now()}-${filename}`)
             );
-    
+
             data.name = `${Date.now()}-${filename}`;
             data.ogName = filename;
             data.required = ["1", "2", "3"];
@@ -666,27 +673,28 @@ pullDocFromCherwell = async (req, attachmentid, busobid, busobrecid, filename) =
                   req.body.AcctName, //req.body.customer
                   req.body.AcctId
                 );
-                return {
+                return res.status(201).json({
                   success: true,
                   // id: data._id,
                   // data: data,
                   url: `http://10.228.19.14:3000/files/${data.name}`,
                   message: "Document found from cherwell"
-                };
+                });
               })
               .catch(error => {
                 // return res.status(400).json({
                 //   error,
                 //   message: "document not uploaded!"
                 // });
-                return {
+                return res.status(400).json({
                   error,
                   message: "document not uploaded!"
-                };
+                });
               });
-          }).catch(error => {
-            console.log('Issue getting the cherwell document');
-            return(error);
+          })
+          .catch(error => {
+            console.log("Issue getting the cherwell document");
+            return error;
           });
       })
       .catch(err => {
@@ -734,19 +742,19 @@ pullDocFromCherwell = async (req, attachmentid, busobid, busobrecid, filename) =
               req.body.AcctName, //req.body.customer
               req.body.AcctId
             );
-            return {
+            return res.status(201).json({
               success: true,
               // id: data._id,
               // data: data,
               url: `http://10.228.19.14:3000/files/${data.name}`,
               message: "Document found from cherwell"
-            };
+            });
           })
           .catch(error => {
-            return {
+            return res.status(400).json({
               error,
               message: "document not uploaded!"
-            };
+            });
           });
       })
       .catch(error => {
@@ -844,26 +852,21 @@ router.post("/cherwelldoc", async (req, res) => {
         "document not uploaded! Please provide all of busObId, AccountId and busObPubicId. One or many of these are empty."
     });
   } else {
-
-    console.log('no blank data will try to get file and upload');
+    console.log("no blank data will try to get file and upload");
     // get the file from cherwell
     await pullDocFromCherwell(
       req,
+      res,
       req.body.AttachmentID,
       req.body.busobid,
       req.body.busobrecid,
       req.body.FileName
-    )
-      .then((responseObj) => {
-        return res.status(201).json(responseObj);
-      })
-      .catch(error => {
-        return res.status(400).json({
-          error,
-          message: "document not found!"
-        });
+    ).catch(error => {
+      return res.status(400).json({
+        error,
+        message: "document not found!"
       });
-    //await file;
+    });
   }
 });
 
