@@ -592,7 +592,7 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
 };
 
 // pull doc from cherwell
-pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid, filename) => {
+pullDocFromCherwell = async (req, attachmentid, busobid, busobrecid, filename) => {
   // need to get token first
   // check if time has elapsed
   var data = new Doc();
@@ -641,83 +641,49 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid, filena
           )
           .then(response => {
             console.log("success getting the file");
-            console.log(response);
+            // console.log(response);
             // return response.data;
-
-            response.data.pipe(fs.createWriteStream(`./${filename}`));
-            var requ = {
-              file: response.data
-            };
-    
+            console.log("inside the token method");
             console.log("inside then pull doc outputting file details now");
-            console.log(file);
-            upload(requ, res, function(err) {
-              if (err instanceof multer.MulterError) {
-                console.log("error 500");
-                return res.status(500).json(err);
-              } else if (err) {
-                return res.status(500).json(err);
-              }
     
-              console.log("successful upload");
-              console.log(requ.file);
-              //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
-              //console.log(exists);
+            response.data.pipe(
+              fs.createWriteStream(`./public/files/${Date.now()}-${filename}`)
+            );
     
-              data.name = requ.file.filename;
-              data.ogName = requ.file.originalname;
-              data.required = ["1", "2", "3"];
-              data
-                .save()
-                .then(() => {
-                  //if (req.body.cherwell) {
-                  updateLatest(
-                    data,
-                    false,
-                    "cherwell",
-                    req.body.Type, //req.body.orderId,
-                    req.body.ID,
-                    req.body.AcctName, //req.body.customer
-                    req.body.AcctId
-                  );
-                  // postToCherwell(
-                  //   data.ogName,
-                  //   `http://10.228.19.14:3000/files/${data.name}`,
-                  //   req.body.busObId,
-                  //   req.body.busObPublicId
-                  // );
-                  // } else {
-                  //   updateLatest(
-                  //     data,
-                  //     false,
-                  //     req.body.dkey,
-                  //     req.body.opid,
-                  //     req.body.quoteid,
-                  //     req.body.customer,
-                  //     req.body.accountId
-                  //   );
-                  // }
-                  res.status(201).json({
-                    success: true,
-                    // id: data._id,
-                    // data: data,
-                    // url: `http://10.228.19.14:3000/files/${data.name}`,
-                    message: "Document found from cherwell"
-                  });
-                })
-                .catch(error => {
-                  return res.status(400).json({
-                    error,
-                    message: "document not uploaded!"
-                  });
-                });
-              //     (err) => {
-              // if (err) console.log(`db error @@@@ ${err}`);
-              // console.log('successfully added to db')
-              // });
-    
-              // return res.status(200).send("ok");
-            });
+            data.name = `${Date.now()}-${filename}`;
+            data.ogName = filename;
+            data.required = ["1", "2", "3"];
+            data
+              .save()
+              .then(() => {
+                //if (req.body.cherwell) {
+                updateLatest(
+                  data,
+                  false,
+                  "cherwell",
+                  req.body.Type, //req.body.orderId,
+                  req.body.ID,
+                  req.body.AcctName, //req.body.customer
+                  req.body.AcctId
+                );
+                return {
+                  success: true,
+                  // id: data._id,
+                  // data: data,
+                  url: `http://10.228.19.14:3000/files/${data.name}`,
+                  message: "Document found from cherwell"
+                };
+              })
+              .catch(error => {
+                // return res.status(400).json({
+                //   error,
+                //   message: "document not uploaded!"
+                // });
+                return {
+                  error,
+                  message: "document not uploaded!"
+                };
+              });
           }).catch(error => {
             console.log('Issue getting the cherwell document');
             return(error);
@@ -746,84 +712,46 @@ pullDocFromCherwell = async (req, res, attachmentid, busobid, busobrecid, filena
         console.log("success getting the file");
         console.log(response);
         // return response.data;
-
-        response.data.pipe(fs.createWriteStream(`./${filename}`));
-        var requ = {
-          file: response.data
-        };
-
         console.log("inside then pull doc outputting file details now");
-        console.log(file);
-        upload(requ, res, function(err) {
-          if (err instanceof multer.MulterError) {
-            console.log("error 500");
-            return res.status(500).json(err);
-          } else if (err) {
-            return res.status(500).json(err);
-          }
 
-          console.log("successful upload");
-          console.log(requ.file);
-          //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
-          //console.log(exists);
+        response.data.pipe(
+          fs.createWriteStream(`./public/files/${Date.now()}-${filename}`)
+        );
 
-          data.name = requ.file.filename;
-          data.ogName = requ.file.originalname;
-          data.required = ["1", "2", "3"];
-          data
-            .save()
-            .then(() => {
-              //if (req.body.cherwell) {
-              updateLatest(
-                data,
-                false,
-                "cherwell",
-                req.body.Type, //req.body.orderId,
-                req.body.ID,
-                req.body.AcctName, //req.body.customer
-                req.body.AcctId
-              );
-              // postToCherwell(
-              //   data.ogName,
-              //   `http://10.228.19.14:3000/files/${data.name}`,
-              //   req.body.busObId,
-              //   req.body.busObPublicId
-              // );
-              // } else {
-              //   updateLatest(
-              //     data,
-              //     false,
-              //     req.body.dkey,
-              //     req.body.opid,
-              //     req.body.quoteid,
-              //     req.body.customer,
-              //     req.body.accountId
-              //   );
-              // }
-              res.status(201).json({
-                success: true,
-                // id: data._id,
-                // data: data,
-                // url: `http://10.228.19.14:3000/files/${data.name}`,
-                message: "Document found from cherwell"
-              });
-            })
-            .catch(error => {
-              return res.status(400).json({
-                error,
-                message: "document not uploaded!"
-              });
-            });
-          //     (err) => {
-          // if (err) console.log(`db error @@@@ ${err}`);
-          // console.log('successfully added to db')
-          // });
-
-          // return res.status(200).send("ok");
-        });
-      }).catch(error => {
-        console.log('Issue getting the cherwell document');
-        return(error);
+        data.name = `${Date.now()}-${filename}`;
+        data.ogName = filename;
+        data.required = ["1", "2", "3"];
+        data
+          .save()
+          .then(() => {
+            //if (req.body.cherwell) {
+            updateLatest(
+              data,
+              false,
+              "cherwell",
+              req.body.Type, //req.body.orderId,
+              req.body.ID,
+              req.body.AcctName, //req.body.customer
+              req.body.AcctId
+            );
+            return {
+              success: true,
+              // id: data._id,
+              // data: data,
+              url: `http://10.228.19.14:3000/files/${data.name}`,
+              message: "Document found from cherwell"
+            };
+          })
+          .catch(error => {
+            return {
+              error,
+              message: "document not uploaded!"
+            };
+          });
+      })
+      .catch(error => {
+        console.log("Issue getting the cherwell document");
+        return error;
       });
   }
 };
@@ -921,16 +849,13 @@ router.post("/cherwelldoc", async (req, res) => {
     // get the file from cherwell
     await pullDocFromCherwell(
       req,
-      res,
       req.body.AttachmentID,
       req.body.busobid,
       req.body.busobrecid,
       req.body.FileName
     )
-      .then((file) => {
-        return res.status(201).json({
-          message: "document uploaded successfully!"
-        });
+      .then((responseObj) => {
+        return res.status(201).json(responseObj);
       })
       .catch(error => {
         return res.status(400).json({
