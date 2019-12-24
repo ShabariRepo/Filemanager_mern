@@ -202,8 +202,9 @@ var upload = multer({ storage: storage }).single("file");
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ API ENDPOINT SECTION (EXPRESS) */
 // delete the file from the file system
 const deleteFile = file => {
-  console.log(`inside delete file to unlink:  ${file}`);
-  fs.unlink("public/files/" + file, err => {
+  var { name } = file;
+  console.log(`inside delete file to unlink:  ${name}`);
+  fs.unlink("public/files/" + name, err => {
     if (err) console.log(err);
   });
 };
@@ -327,8 +328,13 @@ async function updateLatest(
         // return latest;
       })
       .catch(error => {
-        console.log("latest not loaded someshit happened");
+        console.log("latest not loaded someshit happened deleting file");
         console.log(error);
+
+        Doc.findOneAndRemove({ name: document.name }, (err, doc, result) => {
+          if (err) return res.send(err);
+          deleteFile(document.name);
+        });
         // return error;
       });
   } else {
