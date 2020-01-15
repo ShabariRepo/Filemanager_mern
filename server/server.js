@@ -563,7 +563,7 @@ postToCherwell = async (ogName, link, busObId, busObPubicId) => {
     const requestBody = {
       client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
       grant_type: "password",
-      username: "Cherwell\\esbtester",
+      username: "btcms",
       password: "Testtest1"
     };
 
@@ -619,7 +619,7 @@ pullDocFromCherwell = async (
     const requestBody = {
       client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
       grant_type: "password",
-      username: "Cherwell\\esbtester",
+      username: "btcms",
       password: "Testtest1"
     };
 
@@ -803,7 +803,7 @@ getCherwellToken = () => {
   const requestBody = {
     client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
     grant_type: "password",
-    username: "Cherwell\\esbtester",
+    username: "btcms",
     password: "Testtest1"
   };
 
