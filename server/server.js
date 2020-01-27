@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 var express = require("express");
-const mongoosastic = require("mongoosastic");
+// const mongoosastic = require("mongoosastic");
 
 var multer = require("multer");
 var cors = require("cors");
@@ -9,6 +9,7 @@ const logger = require("morgan");
 
 const Latest = require("./models/data");
 const Doc = require("./models/document");
+const CherwellCustBasic = require("./models/cherwellCust");
 const fs = require("fs");
 
 /* elastic part */
@@ -132,8 +133,90 @@ Doc.createMapping(
   }
 );
 
+// create index for nested fields object from cherwell cust mongo doc
+CherwellCustBasic.createMapping(
+  {
+    settings: {
+      number_of_shards: 1,
+      number_of_replicas: 0,
+      analysis: {
+        filter: {
+          nGram_filter: {
+            type: "nGram",
+            min_gram: 2,
+            max_gram: 20,
+            token_chars: ["letter", "digit", "punctuation", "symbol"]
+          }
+        },
+        analyzer: {
+          nGram_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding", "nGram_filter"]
+          },
+          whitespace_analyzer: {
+            type: "custom",
+            tokenizer: "whitespace",
+            filter: ["lowercase", "asciifolding"]
+          }
+        }
+      }
+    },
+    mappings: {
+      cherwellcustbasic: {
+        _all: {
+          analyzer: "nGram_analyzer",
+          search_analyzer: "whitespace_analyzer"
+        },
+        properties: {
+          busObId: {
+            type: "text"
+          },
+          busObPublicId: {
+            type: "text"
+          },
+          busObRecId: {
+            type: "text"
+          },
+          fields: {
+            type: "nested",
+            properties: {
+              dirty: {
+                type: "boolean"
+              },
+              displayName: {
+                type: "text"
+              },
+              fieldId: {
+                type: "text"
+              },
+              html: {
+                type: "text"
+              },
+              name: {
+                type: "text"
+              },
+              value: {
+                type: "text"
+              }
+            }
+          }
+          // links: {
+          //   type: "nested"
+          // }
+        }
+      }
+    }
+  },
+  (err, mapping) => {
+    console.log("mapping created for cherwell customer basic info");
+    if (err) console.log(err);
+  }
+);
+
 Latest.synchronize();
 Doc.synchronize();
+CherwellCustBasic.synchronize();
 /* end elastic part */
 
 const path = require("path");
@@ -184,6 +267,9 @@ app.use(logger("dev"));
 
 /// FUNCTIONS TO BE USED BY APIs
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FILE STORAGE SECTION (MULTER) */
+var isEmpty = (obj) => {
+  return !obj || Object.keys(obj).length === 0;
+}
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -543,10 +629,81 @@ searchByQuery = async (req, res) => {
   );
 };
 
+// search elastic for cherwell customers by customer name
+searchByCustName = async (req, res) => {
+/*
+// havent tried
+{"query": {
+bool: {
+          must: [
+            {
+              nested: {
+                path: "fields",
+                query: {
+                  bool: {
+                    //must: [{ match: { "fields.name": "ID" } }, { match: { "fields.value": custName } }]
+                    must: [{ match: { "fields.name": "Name" } }, { match: { "fields.value": custName } }]
+                  }
+                }
+              }
+            }
+          ]
+        }}
+}
+*/
+/*
+"nested": {
+      "path": "task",
+      "query": {
+        "match": {
+          "name": "alfa33"
+        }
+      } 
+*/
+console.log("inside search by customer name (install base) query");
+  const { custName } = req.body;
+  // console.log(req);
+  await CherwellCustBasic.search(
+    {
+      // nested: {
+      //   path: "fields",
+      //   query: {
+      //     match: {
+      //       name: custName
+      //     }
+      //   }
+      // }
+      bool: {
+        must: [
+          {
+            nested: {
+              path: "fields",
+              query: {
+                bool: {
+                  //must: [{ match: { "fields.name": "ID" } }, { match: { "fields.value": custName } }]
+                  must: [{ match: { "fields.name": "Name" } }, { match: { "fields.value": custName } }]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    (err, data) => {
+      if (err) return res.json({ success: false, error: err });
+      return res.status(200).json({
+        success: true,
+        data: data
+      });
+    }
+  );
+};
+
 // Cherwell token & integration section
 const cTokenUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/token";
 const cPushUrl =
   "https://cherwell-uat.centrilogic.com/CherwellAPI/api/V1/savebusinessobjectattachmenturl";
+const cSrcUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults";
 var cherwellToken = "";
 var tokenDateTime = "";
 
@@ -829,6 +986,175 @@ getCherwellToken = () => {
     });
 };
 
+// update local token and timer
+localCherwellToken = async () => {
+  const requestBody = {
+    client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+    grant_type: "password",
+    username: "Cherwell\\btcms",
+    password: "Testtest1"
+  };
+
+  const config = {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  };
+
+  var ret = false;
+
+  await axios
+    .post(cTokenUrl, qs.stringify(requestBody), config)
+    .then(result => {
+      // save token in var
+      console.log(
+        `success requesting token from cherwell: ${result.data.access_token}`
+      );
+      cherwellToken = result.data.access_token;
+      cherwellRefToken = result.data.refresh_token;
+      tokenDateTime = new Date();
+      ret = true;
+    })
+    .catch(err => {
+      // Do somthing
+      console.log("There was an issue with getting cherwell token");
+      console.log(err);
+    });
+  return ret;
+};
+
+// fetch cust info from cherwell single function
+getBasicCustInfo = async () => {
+  var config = {
+    headers: { Authorization: "bearer " + cherwellToken }
+  };
+
+  /*
+  "busObId": "94530cad6a08f5e1badb824e75a5fd0053585106b0",
+  "pageSize": 5000,
+  //"fields": [
+	//"94530cad6ab096de45e94a4093af484382d4d42135",
+    //"94530cad6a3a6ff1cf9b8f485f87a2353e44c5126c",
+	//"94530cad6ab586b9e6c5a04ce681d331b73d80da29"
+  //],
+  "includeAllFields": true,
+  "includeSchema": false,
+  */
+
+  var bodyParameters = {
+    busObId: "94530cad6a08f5e1badb824e75a5fd0053585106b0",
+    pageSize: 5000,
+    includeAllFields: true,
+    includeSchema: false
+  };
+
+  custData = {};
+  await axios
+    .post(cSrcUrl, bodyParameters, config)
+    .then(response => {
+      console.log("successfully got basic customer info from cherwell");
+      // console.log(response);
+      custData = response.data.businessObjects;
+    })
+    .catch(error => {
+      console.log("some shit happened while getting basic customer info from cherwell :| ");
+      console.log(error);
+      // custData = error
+    });
+  
+  return custData;
+};
+
+deleteChCustBasic = async () => {
+  var ret = {};
+  ret = await CherwellCustBasic.deleteMany({}, err => {
+    var rr = {};
+    if (err) rr = {success: false, message: err};
+    rr = { success: true, message: "all basic customer data from cherwell deleted" };
+
+    console.log("deleting cherwell cust basic status", rr);
+    // return rr;
+  });
+  
+  console.log("return value", ret);
+  return ret;
+}
+
+// update cherwell cust basic info and send back hash
+getCherwellCustInfoBasic = async (req, res) => {
+  let now = new Date();
+  var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
+  // if (cherwellToken === "") {
+  if (exp > 10) {
+    // getCherwellToken();
+    // console.log("await token needed if displayed before request comes back");
+
+    var tokenized = await localCherwellToken();
+    console.log("local cherwell auth token updated: ", tokenized);
+    if(tokenized){
+      console.log("Going to fetch all the customers basic info now");
+      var del = await deleteChCustBasic();
+      console.log("back in getCherwellBasic func ", del);
+      if (del.ok == 1) {
+        var data = await getBasicCustInfo();
+
+        if(isEmpty(data)){
+          res.json({ success: false, error: data })
+        }
+
+        CherwellCustBasic.insertMany(data)
+          .then(response => {
+            console.log("/updateSchema");
+            res.status(200).send({ success: true, data: data, message: "Inserted updated basic cherwell customer information" });
+            // return res.json({ success: true, data: data, message: "Inserted new doc" });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(400).send({ success: false, data: {}, message: "Failed to update table with cherwell queried info" });
+          });
+      }
+    } else {
+      console.log("something went wrong getting token from cherwell and tokenized is not set", tokenized);
+      return res.json({ success: false, error: del.message });
+    }
+
+  } else {
+    var del = await deleteChCustBasic();
+    if (del) {
+      var data = await getBasicCustInfo();
+
+      if(isEmpty(data)){
+        res.json({ success: false, error: data })
+      }
+
+      CherwellCustBasic.insertMany(data)
+        .then(response => {
+          console.log("/updateSchema");
+          res
+            .status(200)
+            .send({
+              success: true,
+              data: data,
+              message: "Inserted updated basic cherwell customer information"
+            });
+          // return res.json({ success: true, data: data, message: "Inserted new doc" });
+        })
+        .catch(err => {
+          console.log(err);
+          res
+            .status(400)
+            .send({
+              success: false,
+              data: {},
+              message: "Failed to update table with cherwell queried info"
+            });
+        });
+    } else {
+      console.log("something went wrong, its below the refresh time for token cherwell");
+      return res.json({ success: false, error: "Below refresh time but something went wrong, check logs for more details" });
+    }
+  }
+};
 /**
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * API API API API API API API API API
@@ -1075,6 +1401,11 @@ router.get("/getAllDkeyHash", getDistinctHashMap);
 
 // search elastic
 router.post("/search", searchByQuery);
+//search by customer name via elastic
+router.post("/searchChCust", searchByCustName);
+
+// get all customers basic info from cherwell (update mongo)
+router.get("/updateCustomer", getCherwellCustInfoBasic);
 /*  sample apis
 
 // this method fetches all available data in our database

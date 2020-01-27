@@ -3,6 +3,9 @@ FROM node:alpine
 WORKDIR '/app'
 
 COPY package.json .
+RUN npm install --save mysql
+
+RUN npm install -g nodemon
 RUN npm install
 
 copy . .
