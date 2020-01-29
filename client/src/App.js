@@ -7,6 +7,7 @@ import {
   Grid,
   Input,
   Menu,
+  Image
 } from "semantic-ui-react";
 import "./App.css";
 
@@ -22,7 +23,13 @@ function App() {
         <Grid padded className="tablet computer only">
           <Menu borderless inverted fluid fixed="top">
             <Menu.Item header as={Link} to="/">
-              CL File Repository
+              {/* CL File Repository */}
+              <Image
+                centered
+                circular
+                size="small"
+                src={window.location.origin + "/images/th1-footer-CentriLogic-logo.png"}
+              />
             </Menu.Item>
             <Menu.Menu position="right">
               {/* <Menu.Item>
