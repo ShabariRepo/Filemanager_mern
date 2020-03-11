@@ -12,6 +12,17 @@ const Doc = require("./models/document");
 const CherwellCustBasic = require("./models/cherwellCust");
 const fs = require("fs");
 
+// solr
+var SolrNode = require('solr-node');
+
+// Create client
+var solrClient = new SolrNode({
+  host: '10.228.19.13',//'127.0.0.1',
+  port: '8983',
+  core: 'kb2',
+  protocol: 'http'
+});
+
 /* elastic part */
 Latest.createMapping(
   {
@@ -598,6 +609,20 @@ getDistinctHashMap = async (req, res) => {
     return res.json({ success: true, data: dhash });
   }).sort({ dkey: 1 }).th;
 };
+
+// search solr for KB articles
+router.get("/getKbs", (req, res) => {
+// app.get("/getProduct", function(req, res) {
+  var strQuery = solrClient.query().q("nid:*");
+  solrClient.search(strQuery, function(err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log("Response:", result.response);
+    res.send(result.response);
+  });
+}); 
 
 // search elastic
 searchByQuery = async (req, res) => {
