@@ -618,7 +618,7 @@ router.get("/getKbs", (req, res) => {
   var strQuery = solrClient
     .query()
     .q(`nid:*`)
-    .addParams([
+    .fq([
       {
         field: "title",
         value: `*${title}*`
