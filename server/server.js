@@ -623,7 +623,7 @@ router.get("/getKbs", (req, res) => {
       console.log(err);
       return;
     }
-    console.log("Success, found: ", result.response.docs.count);
+    console.log("Success, found: count = ", result.response.docs.count);
     // console.log("Response:", result.response);
     res.send(result.response);
   });
