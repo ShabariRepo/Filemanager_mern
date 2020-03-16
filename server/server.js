@@ -613,16 +613,23 @@ getDistinctHashMap = async (req, res) => {
 // search solr for KB articles
 router.get("/getKbs", (req, res) => {
   const { title } = req.body;
+  console.log("this is the title searching for: ", title);
 // app.get("/getProduct", function(req, res) {
-  var strQuery = solrClient.query().q(`nid:*`).facetQuery({
-    field: "title",
-    // contains: `${title}`,
-    query: `*${title}*`
-  });
-  // .addParams({
-  //   field: 'title',
-  //   value: `${title}*`
+  var strQuery = solrClient
+    .query()
+    .q(`nid:*`)
+    .addParams([
+      {
+        field: "title",
+        value: `*${title}*`
+      }
+    ]);
+  // .facetQuery({
+  //   field: "title",
+  //   // contains: `${title}`,
+  //   query: `*${title}*`
   // });
+  
   solrClient.search(strQuery, function(err, result) {
     if (err) {
       console.log(err);
