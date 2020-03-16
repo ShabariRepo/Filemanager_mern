@@ -616,7 +616,8 @@ router.get("/getKbs", (req, res) => {
 // app.get("/getProduct", function(req, res) {
   var strQuery = solrClient.query().q(`nid:*`).facetQuery({
     field: "title",
-    contains: `${title}`
+    // contains: `${title}`,
+    query: `*${title}*`
   });
   // .addParams({
   //   field: 'title',
