@@ -612,8 +612,9 @@ getDistinctHashMap = async (req, res) => {
 
 // search solr for KB articles
 router.get("/getKbs", (req, res) => {
+  const { title } = req.body;
 // app.get("/getProduct", function(req, res) {
-  var strQuery = solrClient.query().q("nid:*");
+  var strQuery = solrClient.query().q(`title:*${title}*`);
   solrClient.search(strQuery, function(err, result) {
     if (err) {
       console.log(err);
