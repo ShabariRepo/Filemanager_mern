@@ -620,8 +620,8 @@ router.get("/getKbs", (req, res) => {
       console.log(err);
       return;
     }
-    console.log("new");
-    console.log("Response:", result.response);
+    console.log("Success, found: ", result.response.count);
+    // console.log("Response:", result.response);
     res.send(result.response);
   });
 }); 
