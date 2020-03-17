@@ -639,7 +639,38 @@ router.get("/getKbs", (req, res) => {
     // console.log("Response:", result.response);
     res.send(result.response);
   });
-}); 
+});
+
+// same as above but post
+router.post("/getKbs", (req, res) => {
+  const { title } = req.body;
+  console.log("this is the title searching for: ", title);
+// app.get("/getProduct", function(req, res) {
+  var strQuery = solrClient
+    .query()
+    .q(`nid:*`)
+    .fq([
+      {
+        field: "title",
+        value: `*${title}*`
+      }
+    ]);
+  // .facetQuery({
+  //   field: "title",
+  //   // contains: `${title}`,
+  //   query: `*${title}*`
+  // });
+  
+  solrClient.search(strQuery, function(err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log("Success, found: count = ", result.response.docs.count);
+    // console.log("Response:", result.response);
+    res.send(result.response);
+  });
+});
 
 // search elastic
 searchByQuery = async (req, res) => {
