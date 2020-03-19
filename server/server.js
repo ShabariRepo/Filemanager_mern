@@ -781,6 +781,135 @@ const cSrcUrl = "https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsear
 var cherwellToken = "";
 var tokenDateTime = "";
 
+// get services subscriptions
+getServiceSubs = async (req, res) => {
+  console.log("inside get services subs (install base) query");
+  const { custName } = req.body;
+
+  if (exp > 10) {
+    // getCherwellToken();
+    // console.log("await token needed if displayed before request comes back");
+    const requestBody = {
+      client_id: "c349db90-3ccf-4ec2-b138-360baec64782",
+      grant_type: "password",
+      username: "Cherwell\\btcms",
+      password: "Testtest1"
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+
+    axios
+      .post(cTokenUrl, qs.stringify(requestBody), config)
+      .then(result => {
+        // save token in var
+        console.log(
+          `success requesting token from cherwell: ${result.data.access_token}`
+        );
+        cherwellToken = result.data.access_token;
+        cherwellRefToken = result.data.refresh_token;
+        tokenDateTime = new Date();
+        console.log(result.data);
+
+        // now get the service subs
+        var config = {
+          headers: { Authorization: "bearer " + cherwellToken }
+        };
+
+        var bodyParameters = {
+          busObId: "94530ccd6986aa0190d95b42d29c81aa3ce416be6a",
+          pageSize: 10000,
+          filters: [{
+            fieldId: "BO:94530ccd6986aa0190d95b42d29c81aa3ce416be6a,FI:94530ccd69fe0a89a2edfe4aef8f07e538ef588446",
+            operator: "eq",
+            value: `${custName}`
+          }],
+          includeAllFields: true,
+          includeSchema: false
+        };
+
+        axios
+          .post("https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults", bodyParameters, config)
+          .then(response => {
+            console.log("successfully fetched service subscriptions from cherwell for ", custName);
+            return res.status(200).json({
+              success: true,
+              data: response
+            });
+          })
+          .catch(error => {
+            console.log("some shit happened while getting service subscriptions from cherwell :|  for ", custName);
+            console.log(error);
+            return res.status(200).json({
+              success: false,
+              data: error
+            });
+          });
+      })
+      .catch(err => {
+        // Do somthing
+        console.log("There was an issue with getting cherwell token");
+        console.log(err);
+        return res.status(200).json({
+          success: false,
+          data: err
+        });
+      });
+  } else {
+    // then post to cherwell with new json
+    // now get the service subs
+    var config = {
+      headers: { Authorization: "bearer " + cherwellToken }
+    };
+
+    var bodyParameters = {
+      busObId: "94530ccd6986aa0190d95b42d29c81aa3ce416be6a",
+      pageSize: 10000,
+      filters: [
+        {
+          fieldId:
+            "BO:94530ccd6986aa0190d95b42d29c81aa3ce416be6a,FI:94530ccd69fe0a89a2edfe4aef8f07e538ef588446",
+          operator: "eq",
+          value: `${custName}`
+        }
+      ],
+      includeAllFields: true,
+      includeSchema: false
+    };
+
+    axios
+      .post(
+        "https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults",
+        bodyParameters,
+        config
+      )
+      .then(response => {
+        console.log(
+          "successfully fetched service subscriptions from cherwell for ",
+          custName
+        );
+        return res.status(200).json({
+          success: true,
+          data: response
+        });
+      })
+      .catch(error => {
+        console.log(
+          "some shit happened while getting service subscriptions from cherwell :|  for ",
+          custName
+        );
+        console.log(error);
+        return res.status(200).json({
+          success: false,
+          data: error
+        });
+      });
+  }
+};
+
 // post new url to CHERWELL with bearer token
 postToCherwell = async (ogName, link, busObId, busObPubicId) => {
   // need to get token first
@@ -1477,6 +1606,8 @@ router.get("/getAllDkeyHash", getDistinctHashMap);
 router.post("/search", searchByQuery);
 //search by customer name via elastic
 router.post("/searchChCust", searchByCustName);
+//get services subscription by customer name via elastic & cherwell
+router.post("/getServiceSub", getServiceSubs);
 
 // get all customers basic info from cherwell (update mongo)
 router.get("/updateCustomer", getCherwellCustInfoBasic);
