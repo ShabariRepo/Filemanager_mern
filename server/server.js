@@ -838,18 +838,20 @@ getServiceSubs = async (req, res) => {
           .post("https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults", bodyParameters, config)
           .then(response => {
             console.log("successfully fetched service subscriptions from cherwell for ", custName);
-            return res.status(200).json({
-              success: true,
-              data: response
-            });
+            res.send(response);
+            // return res.status(200).json({
+            //   success: true,
+            //   data: response
+            // });
           })
           .catch(error => {
             console.log("some shit happened while getting service subscriptions from cherwell :|  for ", custName);
             console.log(error);
-            return res.status(200).json({
-              success: false,
-              data: error
-            });
+            res.send(error);
+            // return res.status(200).json({
+            //   success: false,
+            //   data: error
+            // });
           });
       })
       .catch(err => {
