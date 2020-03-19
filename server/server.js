@@ -254,7 +254,7 @@ router.use("/api-docs", swaggerUi.serve);
 router.get("/api-docs", swaggerUi.setup(swaggerDocument));
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DATABASE SECTION (MongoDB) */
 // this is our MongoDb database
-const dbRoute = "mongodb://10.228.19.13:27018/documents";
+const dbRoute = "mongodb://10.228.19.14:27018/documents";
 //'mongodb://docuser:admin@127.0.0.1:27017/documents?ssl=false'
 
 //'mongodb://<your-db-username-here>:<your-db-password-here>@ds249583.mlab.com:49583/fullstack_app';
