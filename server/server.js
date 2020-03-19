@@ -785,6 +785,9 @@ var tokenDateTime = "";
 getServiceSubs = async (req, res) => {
   console.log("inside get services subs (install base) query");
   const { custName } = req.body;
+  // check if time has elapsed
+  let now = new Date();
+  var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
 
   if (exp > 10) {
     // getCherwellToken();
