@@ -838,6 +838,7 @@ getServiceSubs = async (req, res) => {
           .post("https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults", bodyParameters, config)
           .then(response => {
             console.log("successfully fetched service subscriptions from cherwell for ", custName);
+            console.log(response);
             res.send(response);
             // return res.status(200).json({
             //   success: true,
