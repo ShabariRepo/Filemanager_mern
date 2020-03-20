@@ -784,7 +784,7 @@ var tokenDateTime = "";
 // get services subscriptions
 getServiceSubs = async (req, res) => {
   console.log("inside get services subs (install base) query");
-  const { custName } = req.body;
+  const { custName, relevant } = req.body;
   // check if time has elapsed
   let now = new Date();
   var exp = Math.floor((now - tokenDateTime) / 1000 / 60);
@@ -838,21 +838,30 @@ getServiceSubs = async (req, res) => {
           .post("https://cherwell-uat.centrilogic.com/cherwellapi/api/V1/getsearchresults", bodyParameters, config)
           .then(response => {
             console.log("successfully fetched service subscriptions from cherwell for ", custName);
-            console.log(response.data);
-            res.send(response.data);
-            // return res.status(200).json({
-            //   success: true,
-            //   data: response
-            // });
+            // console.log(response.data);
+            // res.send(response.data);
+            var data = response.data;
+            let result = data.map(({ fields }) => {
+              return fields.filter(field => {
+                return (field.name === "StatusName" && field.value === "Active")
+              })
+            });
+
+            console.log(result);
+            return res.status(200).json({
+              success: true,
+              data: response.data,
+              res: result
+            });
           })
           .catch(error => {
             console.log("some shit happened while getting service subscriptions from cherwell :|  for ", custName);
             console.log(error);
-            res.send(error);
-            // return res.status(200).json({
-            //   success: false,
-            //   data: error
-            // });
+            // res.send(error);
+            return res.status(200).json({
+              success: false,
+              data: error
+            });
           });
       })
       .catch(err => {
