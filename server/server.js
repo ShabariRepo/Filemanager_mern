@@ -841,7 +841,7 @@ getServiceSubs = async (req, res) => {
             // console.log(response.data);
             // res.send(response.data);
             var data = response.data;
-            // console.log(result);
+            console.log(data);
 
             if(relevant){
               let result = data.businessObjects.filter(({ fields }) =>
