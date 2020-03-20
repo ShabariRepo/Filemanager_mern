@@ -841,7 +841,7 @@ getServiceSubs = async (req, res) => {
             // console.log(response.data);
             // res.send(response.data);
             var data = response.data;
-            console.log(data);
+            // console.log(data);
 
             if(relevant){
               let result = data.businessObjects.filter(({ fields }) =>
@@ -908,17 +908,31 @@ getServiceSubs = async (req, res) => {
       )
       .then(response => {
         console.log(
-          "successfully fetched service subscriptions from cherwell for ",
+          "token existed, successfully fetched service subscriptions from cherwell for ",
           custName
         );
-        return res.status(200).json({
-          success: true,
-          data: response
-        });
+        var data = response.data;
+        // console.log(data);
+
+        if (relevant) {
+          let result = data.businessObjects.filter(({ fields }) =>
+            fields.filter(field => field.value === "Active")
+          );
+
+          return res.status(200).json({
+            success: true,
+            data: result
+          });
+        } else {
+          return res.status(200).json({
+            success: true,
+            data: data
+          });
+        }
       })
       .catch(error => {
         console.log(
-          "some shit happened while getting service subscriptions from cherwell :|  for ",
+          "token existed but some shit happened while getting service subscriptions from cherwell :|  for ",
           custName
         );
         console.log(error);
