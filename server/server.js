@@ -842,10 +842,7 @@ getServiceSubs = async (req, res) => {
             // res.send(response.data);
             var data = response.data;
             let result = data.businessObjects.map(({ fields }) => {
-              return fields.map(field => {
-                // return (field.name === "StatusName" && field.value === "Active")
-                return field.value === "Active"
-              })
+              return fields.filter(field => field.value === "Active");
             });
 
             console.log(result);
