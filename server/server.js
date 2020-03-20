@@ -841,7 +841,7 @@ getServiceSubs = async (req, res) => {
             // console.log(response.data);
             // res.send(response.data);
             var data = response.data;
-            let result = data.map(({ fields }) => {
+            let result = data.businessObjects.map(({ fields }) => {
               return fields.filter(field => {
                 return (field.name === "StatusName" && field.value === "Active")
               })
