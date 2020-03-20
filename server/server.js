@@ -841,16 +841,23 @@ getServiceSubs = async (req, res) => {
             // console.log(response.data);
             // res.send(response.data);
             var data = response.data;
-            let result = data.businessObjects.filter(({ fields }) =>
-              fields.filter(field => field.value === "Active")
-            );
+            // console.log(result);
 
-            console.log(result);
-            return res.status(200).json({
-              success: true,
-              data: response.data,
-              res: result
-            });
+            if(relevant){
+              let result = data.businessObjects.filter(({ fields }) =>
+                fields.filter(field => field.value === "Active")
+              );
+
+              return res.status(200).json({
+                success: true,
+                data: result
+              });
+            } else {
+              return res.status(200).json({
+                success: true,
+                data: data
+              });
+            }
           })
           .catch(error => {
             console.log("some shit happened while getting service subscriptions from cherwell :|  for ", custName);
