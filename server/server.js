@@ -33,7 +33,7 @@ Latest.createMapping(
         filter: {
           nGram_filter: {
             type: "nGram",
-            min_gram: 2,
+            min_gram: 18,
             max_gram: 20,
             token_chars: ["letter", "digit", "punctuation", "symbol"]
           }

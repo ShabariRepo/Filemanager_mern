@@ -26,8 +26,8 @@ function App() {
               {/* CL File Repository */}
               <Image
                 centered
-                circular
-                size="small"
+                //circular
+                size="tiny"
                 src={window.location.origin + "/images/th1-footer-CentriLogic-logo.png"}
               />
             </Menu.Item>

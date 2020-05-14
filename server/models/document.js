@@ -15,7 +15,7 @@ const Document = new Schema(
 
 Document.plugin(mongoosastic, {
     "host": "10.228.19.14",
-    "port": 8200
+    "port": 9200
   });
 
 module.exports = mongoose.model('files', Document);

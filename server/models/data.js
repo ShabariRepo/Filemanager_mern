@@ -22,7 +22,7 @@ const Latest = new Schema(
 
 Latest.plugin(mongoosastic, {
   "host": "10.228.19.14",
-  "port": 8200
+  "port": 9200
 });
 // export the new Schema so we could modify it using Node.js
 module.exports = mongoose.model("latest", Latest);
