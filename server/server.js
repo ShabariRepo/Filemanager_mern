@@ -1476,8 +1476,8 @@ router.post("/upload", (req, res) => {
       req.body.opid === undefined ||
       req.body.quoteid === undefined ||
       req.body.customer === undefined ||
-      req.body.accountId === undefined ||
-      req.body === undefined
+      req.body.accountId === undefined //||
+      // req.body === undefined
     ) {
       return res.status(400).json({
         error,
@@ -1511,6 +1511,13 @@ router.post("/upload", (req, res) => {
     console.log(req.body);
     //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
     //console.log(exists);
+
+    if(req.file.filename === undefined){
+      return res.status(400).json({
+        error,
+        message: "document not uploaded! File name was empty"
+      });
+    }
 
     data.name = req.file.filename;
     data.ogName = req.file.originalname;
