@@ -1464,8 +1464,8 @@ router.post("/upload", (req, res) => {
       req.body.opid === "" || //req.body.opid === undefined) ||
       req.body.quoteid === "" || //req.body.quoteid === undefined) ||
       req.body.customer === "" || //req.body.customer === undefined) ||
-      req.body.accountId === "" ||
-      req.body === undefined
+      req.body.accountId === "" //||
+      // req.body === undefined
     ) {
       return res.status(400).json({
         error,
