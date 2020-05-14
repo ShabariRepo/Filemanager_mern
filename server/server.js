@@ -1472,20 +1472,21 @@ router.post("/upload", (req, res) => {
         message: "document not uploaded! One of the required fields were empty",
         sent: req.body
       });
-    } else if (
-      req.body.dkey === undefined ||
-      req.body.opid === undefined ||
-      req.body.quoteid === undefined ||
-      req.body.customer === undefined ||
-      req.body.accountId === undefined //||
-      // req.body === undefined
-    ) {
-      return res.status(400).json({
-        // error,
-        message: "document not uploaded! One of the required fields were undefined",
-        sent: req.body
-      });
-    }
+    } 
+    // else if (
+    //   req.body.dkey === undefined ||
+    //   req.body.opid === undefined ||
+    //   req.body.quoteid === undefined ||
+    //   req.body.customer === undefined ||
+    //   req.body.accountId === undefined //||
+    //   // req.body === undefined
+    // ) {
+    //   return res.status(400).json({
+    //     // error,
+    //     message: "document not uploaded! One of the required fields were undefined",
+    //     sent: req.body
+    //   });
+    // }
     // else if(
     //   !req.body.dkey || //req.body.dkey === undefined) ||
     //   !req.body.opid || //req.body.opid === undefined) ||
