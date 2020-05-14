@@ -1515,7 +1515,7 @@ router.post("/upload", (req, res) => {
     //let exists = Doc.find({"ogName": "sampledoc.txt"}).count() > 0;
     //console.log(exists);
 
-    if(req.file.filename === undefined){
+    if(req.file === undefined){
       return res.status(400).json({
         // error,
         message: "document not uploaded! File name was empty",
@@ -1560,7 +1560,7 @@ router.post("/upload", (req, res) => {
           success: true,
           id: data._id,
           data: data,
-          url: `http://10.228.19.14:3000/files/${data.name}`,
+          url: `http://10.228.19.14:8096/files/${data.name}`,
           message: "Document uploaded!"
         });
       })
