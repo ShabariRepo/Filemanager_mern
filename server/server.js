@@ -1469,7 +1469,8 @@ router.post("/upload", (req, res) => {
     ) {
       return res.status(400).json({
         // error,
-        message: "document not uploaded! One of the required fields were empty"
+        message: "document not uploaded! One of the required fields were empty",
+        sent: req.body
       });
     } else if (
       req.body.dkey === undefined ||
@@ -1481,7 +1482,8 @@ router.post("/upload", (req, res) => {
     ) {
       return res.status(400).json({
         // error,
-        message: "document not uploaded! One of the required fields were empty"
+        message: "document not uploaded! One of the required fields were undefined",
+        sent: req.body
       });
     }
     // else if(
@@ -1515,7 +1517,8 @@ router.post("/upload", (req, res) => {
     if(req.file.filename === undefined){
       return res.status(400).json({
         // error,
-        message: "document not uploaded! File name was empty"
+        message: "document not uploaded! File name was empty",
+        sent: req.file
       });
     }
 
