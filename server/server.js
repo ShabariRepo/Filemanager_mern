@@ -336,7 +336,7 @@ addToCms = async doc => {
     .replace("T", " ");
   var cmsdoc = {
     title: doc.ogName,
-    file: `http://10.228.19.14:3000/files/${doc.latestName}`,
+    file: `http://systemstest.centrilogic.com:8096/files/${doc.latestName}`,
     collection_id: 1,
     file_hash: "ccbd55c2102e4a3d10919ee387b7cef823459e01",
     created_at: dt
@@ -359,12 +359,12 @@ UpdateCms = async (doc, prev) => {
   console.log("UPDATE in CMS DB");
   // var cmsdoc = {
   //   title: doc.ogName,
-  //   file: `http://10.228.19.14:3000/files/${doc.latestName}`,
+  //   file: `http://systemstest.centrilogic.com:8096/files/${doc.latestName}`,
   //   collection_id: 1,
   //   file_hash: "ccbd55c2102e4a3d10919ee387b7cef823459e01"
   // };
 
-  var docFile = `http://10.228.19.14:3000/files/${doc.latestName}`;
+  var docFile = `http://systemstest.centrilogic.com:8096/files/${doc.latestName}`;
   sql.query(
     "UPDATE wagtail.wagtaildocs_document SET file = ? WHERE file = ?",
     [docFile, prev],
@@ -496,7 +496,7 @@ async function updateLatest(
           );
           UpdateCms(
             exists,
-            `http://10.228.19.14:3000/files/${oldExists.latsetName}`
+            `http://systemstest.centrilogic.com:8096/files/${oldExists.latsetName}`
           );
         })
         .catch(err => {
@@ -524,7 +524,7 @@ async function updateLatest(
           );
           UpdateCms(
             exists,
-            `http://10.228.19.14:3000/files/${oldExists.latsetName}`
+            `http://systemstest.centrilogic.com:8096/files/${oldExists.latsetName}`
           );
         })
         .catch(err => {
@@ -1077,7 +1077,7 @@ pullDocFromCherwell = async (
                   success: true,
                   // id: data._id,
                   // data: data,
-                  url: `http://10.228.19.14:3000/files/${data.name}`,
+                  url: `http://10.228.19.14:8096/files/${data.name}`,
                   message: "Document found from cherwell"
                 });
               })
@@ -1146,7 +1146,7 @@ pullDocFromCherwell = async (
               success: true,
               // id: data._id,
               // data: data,
-              url: `http://10.228.19.14:3000/files/${data.name}`,
+              url: `http://systemstest.centrilogic.com:8096/files/${data.name}`,
               message: "Document found from cherwell"
             });
           })
@@ -1541,7 +1541,7 @@ router.post("/upload", (req, res) => {
           );
           postToCherwell(
             data.ogName,
-            `http://10.228.19.14:3000/files/${data.name}`,
+            `http://systemstest.centrilogic.com:8096/files/${data.name}`,
             req.body.busObId,
             req.body.busObPublicId
           );
