@@ -155,7 +155,7 @@ CherwellCustBasic.createMapping(
           nGram_filter: {
             type: "nGram",
             min_gram: 2,
-            max_gram: 20,
+            max_gram: 3,
             token_chars: ["letter", "digit", "punctuation", "symbol"]
           }
         },
