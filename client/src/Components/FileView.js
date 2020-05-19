@@ -170,7 +170,7 @@ class File extends Component {
             style={{ marginTop: 20 }}
             onClick={() =>
               this.download(
-                `http://10.228.19.14:3000/files/${element.name}`,
+                `http://10.228.19.14:8096/files/${element.name}`,
                 element.name
               )
             }
